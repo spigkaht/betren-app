@@ -7,3 +7,25 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+contract = Contract.new(
+  contract_number: "123993",
+  contract_status: "Closed",
+  contract_branch: "001",
+  start_date_time: DateTime.now,
+  end_date_time: DateTime.now,
+  customer_name: "Benjamin Jackson",
+  po_number: "S345",
+  price_total: "0034.00",
+  price_tax: "0003.40",
+  contract_info: "Ready",
+  notes: "Stuff stuff stuff",
+  delivery: "",
+  pickup: ""
+)
+
+if contract.save
+  puts "Contract created succesfully"
+else
+  puts "Error creating contract"
+end

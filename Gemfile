@@ -47,6 +47,8 @@ gem "bootsnap", require: false
 gem "devise"
 gem "autoprefixer-rails"
 gem "simple_form", github: "heartcombo/simple_form"
+gem "tiny_tds"
+gem "activerecord-sqlserver-adapter"
 
 group :development, :test do
   gem "dotenv-rails"
@@ -70,3 +72,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "tailwindcss-rails", "~> 2.6"

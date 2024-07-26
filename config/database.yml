@@ -21,9 +21,9 @@ default: &default
 
 development:
   <<: *default
-  host: 203.143.84.5
+  host: <%= ENV.fetch("POR_DB_HOST") %>
   port: 9676
-  username: sa
+  username: <%= ENV.fetch("POR_DB_USERNAME") %>
   password: <%= ENV.fetch("POR_DB_PASSWORD") %>
   database: POR
   azure: false

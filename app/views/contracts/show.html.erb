@@ -1,0 +1,74 @@
+<div class="flex flex-col">
+  <div class="header flex">
+    <div>
+      <p>ABN 38 368 029 290</p>
+      <div class="border-solid border-2 border-sky-500">
+        <p>Better Rentals</p>
+        <p>Hired from: <%= @contract.branch.AddressCity %>, <%= @contract.branch.AddressLine1 %></p>
+        <p>Phone: <%= @contract.branch.Phone %></p>
+        <p>hello@betterrentals.com.au</p>
+      </div>
+    </div>
+    <div>
+      <%= image_tag "br-logo.png" %>
+    </div>
+    <div>
+      <h1>Paid in Full</h1>
+      <div>
+        <p class="border-solid border-2 border-sky-500">Completed</p>
+        <p class="border-solid border-2 border-sky-500"><%= @contract.Completed %></p>
+        <p class="border-solid border-2 border-sky-500">Tax Invoice #</p>
+        <p class="border-solid border-2 border-sky-500"><%= @contract.CNTR %></p>
+      </div>
+    </div>
+  </div>
+  <div class="customer-info">
+    <p>Bill to:</p>
+    <div class="border-solid border-2 border-sky-500">
+      <p><%= @contract.customer.NAME %></p>
+      <p><%= @contract.customer.Address %></p>
+      <p><%= @contract.customer.CITY %></p>
+    </div>
+    <p>Customer #: <%= @contract.customer.CNUM %></p>
+    <p>Date Out <%= @contract.DATE %>
+  </div>
+  <div class="terms">
+    <p class="border-solid border-2 border-sky-500">Terms</p>
+    <p class="border-solid border-2 border-sky-500">Invoice Date</p>
+    <p class="border-solid border-2 border-sky-500">Due upon receipt</p>
+    <p class="border-solid border-2 border-sky-500"><%= @contract.Completed %></p>
+  </div>
+  <div class="line-items">
+    <p>Ordered By: <%= @contract.OrderedBy %></p>
+    <lr>
+    <div class="grid grid-rows-<%= @contract.contract_items.count + 1 %> grid-cols-7 grid-flow-row">
+      <div class="border-solid border-2 border-sky-500">
+        <p>Qty</p>
+        <p>Days Out</p>
+        <p>Items</p>
+        <p>Hire Start</p>
+        <p>Status</p>
+        <p>Returned Date</p>
+        <p>Price</p>
+      </div>
+      <% @contract.contract_items.each do |item| %>
+      <div class="border-solid border-2 border-sky-500">
+        <p><%= item.QTY %></p>
+        <p><%# item.DaysOut %></p>
+        <p><%= item.ITEM %></p>
+        <p><%= item.OutDate %></p>
+        <p><%= item.TXTY %></p>
+        <p><%= item.DDT %></p>
+        <p><%= item.PRIC %></p>
+      </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="gear-focus">
+  </div>
+  <div class="totals">
+  </div>
+  <div class="link">
+    <%= link_to "Back to Contracts", contracts_path %>
+  </div>
+</div>

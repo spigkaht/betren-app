@@ -3,35 +3,22 @@
 
   <div>
     <table>
-      <th>Number</th>
-      <th>Status</th>
-      <th>Branch</th>
-      <th>Start Date</th>
-      <th>End Date</th>
-      <th>Cust Name</th>
-      <th>PO Number</th>
-      <th>Price</th>
-      <th>GST</th>
-      <th>Contract Info</th>
-      <th>Notes</th>
-      <th>Delivery</th>
-      <th>Pickup</th>
+        <thead>
+          <tr>
+            <th>CNTR</th>
+            <% @contracts.first.attributes.each do |attr_name, attr_value| %>
+              <th><%= attr_name %></th>
+            <% end %>
+          </tr>
+        </thead>
       <% @contracts.each do |contract| %>
-        <tr>
-          <td><%= contract.contract_number %></td>
-          <td><%= contract.contract_status %></td>
-          <td><%= contract.contract_branch %></td>
-          <td><%= contract.start_date_time %></td>
-          <td><%= contract.end_date_time %></td>
-          <td><%= contract.customer_name %></td>
-          <td><%= contract.po_number %></td>
-          <td><%= contract.price_total %></td>
-          <td><%= contract.price_tax %></td>
-          <td><%= contract.contract_info %></td>
-          <td><%= contract.notes %></td>
-          <td><%= contract.delivery %></td>
-          <td><%= contract.pickup %></td>
-        <tr>
+        <tbody>
+          <tr>
+              <th scope="row"><%= link_to contract.CNTR, contract_path(contract.CNTR) %>
+            <% contract.attributes.each do |attr_name, attr_value| %>
+              <td><%= attr_value %></td>
+            <% end %>
+          </tr>
       <% end %>
     </table>
   </div>

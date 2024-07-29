@@ -54,8 +54,9 @@
       <% @contract.contract_items.each do |item| %>
       <div class="border-solid border-2 border-sky-500">
         <p><%= item.QTY %></p>
-        <p><%# item.DaysOut %></p>
-        <p><%= item.ITEM %></p>
+        <p><%= ((item.DDT - item.OutDate) / 86400).round %></p>
+        <%# GET DAYS OUT IN MODEL %>
+        <p><%= item.item.Name %></p>
         <p><%= item.OutDate %></p>
         <p><%= item.TXTY %></p>
         <p><%= item.DDT %></p>

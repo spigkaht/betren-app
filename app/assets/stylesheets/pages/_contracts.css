@@ -6,3 +6,8 @@ th, td {
 th {
   background-color: aquamarine;
 }
+
+.link {
+  margin-top: 100px;
+  font-weight: bold;
+}

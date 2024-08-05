@@ -49,6 +49,8 @@ gem "autoprefixer-rails"
 gem "simple_form", github: "heartcombo/simple_form"
 gem "tiny_tds"
 gem "activerecord-sqlserver-adapter"
+gem 'prawn', '~> 2.5'
+gem 'wicked_pdf', '~> 2.8'
 
 group :development, :test do
   gem "dotenv-rails"

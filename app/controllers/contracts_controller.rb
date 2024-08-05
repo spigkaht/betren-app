@@ -106,18 +106,19 @@ class ContractsController < ApplicationController
         style(columns(1..2), borders: [])
         style(column(2), width: 200)
       end
+      pdf.move_down 10
 
       pdf.text "Tax Invoice#", size: 12, style: :bold
-      pdf.text "Invoice Number: #{contract[:CNTR]}", size: 10
-      pdf.text "Invoice Date: #{contract[:DATE]}", size: 10
+      pdf.text "Invoice Number: #{contract[:CNTR]}"
+      pdf.text "Invoice Date: #{contract[:DATE]}"
       pdf.move_down 10
 
       # Customer Information
-      pdf.text "Customer #: #{contract[:CNUM]}", size: 10
-      pdf.text "Bill to: #{contract[:NAME]}", size: 10
-      pdf.text contract[:custAddress], size: 10
-      pdf.text contract[:custCity], size: 10
-      pdf.text contract[:custZIP], size: 10
+      pdf.text "Customer #: #{contract[:CNUM]}"
+      pdf.text "Bill to: #{contract[:NAME]}"
+      pdf.text contract[:custAddress]
+      pdf.text contract[:custCity]
+      pdf.text contract[:custZIP]
       pdf.move_down 10
 
       # Hire Details
@@ -128,12 +129,13 @@ class ContractsController < ApplicationController
         items_data << [item[:QTY], item[:DAYS], item[:Name], item[:TXTY], item[:OutDate], item[:PRIC]]
       end
 
-      pdf.table(items_data, header: true, row_colors: ["F0F0F0", "FFFFFF"], cell_style: { border_color: "dddddd", padding: [4, 5, 4, 5] }) do
+      pdf.table(items_data, header: true, cell_style: { :size => 8, border_color: "dddddd", padding: [4, 5, 4, 5] }) do
         style(row(0), background_color: 'e9e9e9', font_style: :bold)
         style(row(0).columns(0), borders: [:top, :left, :bottom])
         style(row(0).columns(-1), borders: [:top, :right, :bottom])
         style(columns(0), width: 75)
-        style(columns(1), width: 275)
+        style(columns(1), width: 75)
+        style(columns(2))
       end
 
       pdf.move_down 20

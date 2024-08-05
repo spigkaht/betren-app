@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Contract PDF</title>
+<meta charset="utf-8">
+</head>
+<body>
+  <div class="flex flex-col">
+    <div class="header flex">
+      <div>
+        <p>ABN 38 368 029 290</p>
+        <div class="border-solid border-2 border-sky-500">
+          <p>Better Rentals</p>
+          <p>Hired from: <%= @contract.branch.AddressCity %>, <%= @contract.branch.AddressLine1 %></p>
+          <p>Phone: <%= @contract.branch.Phone %></p>
+          <p>hello@betterrentals.com.au</p>
+        </div>
+      </div>
+      <div>
+        <%= image_tag "br-logo.png" %>
+      </div>
+      <div>
+        <h1>Paid in Full</h1>
+        <div>
+          <p class="border-solid border-2 border-sky-500">Completed</p>
+          <p class="border-solid border-2 border-sky-500"><%= @contract.Completed %></p>
+          <p class="border-solid border-2 border-sky-500">Tax Invoice #</p>
+          <p class="border-solid border-2 border-sky-500"><%= @contract.CNTR %></p>
+        </div>
+      </div>
+    </div>
+    <div class="customer-info">
+      <p>Bill to:</p>
+      <div class="border-solid border-2 border-sky-500">
+        <p><%= @contract.customer.NAME %></p>
+        <p><%= @contract.customer.Address %></p>
+        <p><%= @contract.customer.CITY %></p>
+      </div>
+      <p>Customer #: <%= @contract.customer.CNUM %></p>
+      <p>Date Out <%= @contract.DATE %>
+    </div>
+    <div class="terms">
+      <p class="border-solid border-2 border-sky-500">Terms</p>
+      <p class="border-solid border-2 border-sky-500">Invoice Date</p>
+      <p class="border-solid border-2 border-sky-500">Due upon receipt</p>
+      <p class="border-solid border-2 border-sky-500"><%= @contract.Completed %></p>
+    </div>
+    <div class="line-items">
+      <p>Ordered By: <%= @contract.OrderedBy %></p>
+      <lr>
+      <div class="grid grid-rows-<%= @contract.contract_items.count + 1 %> grid-cols-7 grid-flow-row">
+        <div class="border-solid border-2 border-sky-500">
+          <p>Qty</p>
+          <p>Days Out</p>
+          <p>Items</p>
+          <p>Hire Start</p>
+          <p>Status</p>
+          <p>Returned Date</p>
+          <p>Price</p>
+        </div>
+        <% @contract.contract_items.each do |item| %>
+        <div class="border-solid border-2 border-sky-500">
+          <p><%= item.QTY %></p>
+          <p><%= ((item.DDT - item.OutDate) / 86400).round %></p>
+          <%# GET DAYS OUT IN MODEL %>
+          <p><%= item.item.Name %></p>
+          <p><%= item.OutDate %></p>
+          <p><%= item.TXTY %></p>
+          <p><%= item.DDT %></p>
+          <p><%= item.PRIC %></p>
+        </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="gear-focus flex">
+      <div class="dumper flex flex-col">
+        <%= image_tag "tracked-dumper-hire.jpg", size: "100x100" %>
+        <p>Hi Lift Dumpers</p>
+      </div>
+      <div class="pump150 flex flex-col">
+        <%= image_tag "pump-100mm-silenced.jpg", size: "100x100" %>
+        <p>150mm Pumps</p>
+      </div>
+      <div class="stumpgrinder flex flex-col">
+        <%= image_tag "stump-grinder-hire1.jpg", size: "100x100" %>
+        <p>Stump Grinders</p>
+      </div>
+      <div class="roller3 flex flex-col">
+        <%= image_tag "roller-hire-3t-1.jpg", size: "100x100" %>
+        <p>Cat 3 Tonne Rollers</p>
+      </div>
+      <div class="excavator flex flex-col">
+        <%= image_tag "excavator-hire-micro.jpg", size: "100x100" %>
+        <p>Micro Excavators</p>
+      </div>
+      <div class="scissor flex flex-col">
+        <%= image_tag "scissor-lift.jpg", size: "100x100" %>
+        <p>Scissor Lifts</p>
+      </div>
+    </div>
+    <div class="totals">
+      <h3>Thanks for hiring from Better Rentals...</h3>
+      <p>Rental and Sales:</p>
+      <p><%= number_to_currency(@contract.RENT + @contract.SALE) %></p>
+      <p>GST:</p>
+      <p><%= number_to_currency(@contract.TAX) %></p>
+      <p></p>
+      <p></p>
+      <p>Total Amount:</p>
+      <p><%= number_to_currency(@contract.TOTL) %></p>
+      <p>Total Paid:</p>
+      <p><%= number_to_currency(@contract.PAID) %></p>
+      <p>Total Due:</p>
+      <p><%= number_to_currency(@contract.TOTL - @contract.PAID) %></p>
+      <p>Payments: BSB 013322 Acc: 4830 80489; Credit Card: betterrentals.com.au/pay-your-bill</p>
+      <p>hello@betterrentals.com.au</p>
+    </div>
+    <div class="link">
+      <%= link_to "Back to Contracts", contracts_path %>
+    </div>
+  </div>
+</body>
+</html>

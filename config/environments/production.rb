@@ -95,15 +95,8 @@ Rails.application.configure do
   # ]
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
-
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    user_name: '<%= ENV.fetch("MAILER_USERNAME") %>',
-    password: '<%= ENV.fetch("MAILER_PASSWORD") %>',
-    domain: 'betterrentals.com.au',
-    address: 'smtp-relay.gmail.com',
-    port: 587,
-    authentication: :plain,
-    enable_starttls_auto: true
-  }
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_url_options = { host: 'https://betren-app-b8ef7733c861.herokuapp.com/' }
 end

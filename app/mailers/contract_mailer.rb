@@ -4,7 +4,7 @@ class ContractMailer < ApplicationMailer
 
   def send_contract_email(contract, pdf)
     @contract = contract
-    attachments["contract_#{contract.CNTR}.pdf"] = pdf
-    mail(to: "benj@betterrentals.com.au", subject: "Your Contract PDF")
+    attachments["Invoice ##{contract.CNTR}.pdf"] = pdf
+    mail(to: "benj@betterrentals.com.au", subject: "Invoice ##{contract.CNTR}")
   end
 end

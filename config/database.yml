@@ -16,7 +16,7 @@
 default: &default
   adapter: sqlserver
   host: <%= ENV.fetch("POR_DB_HOST") %>
-  port: <%= ENV.fetch("POR_DB_PORT") %>
+  port: <%= ENV.fetch("POR_DB_PORT", 1433) %>
   username: <%= ENV.fetch("POR_DB_USERNAME") %>
   password: <%= ENV.fetch("POR_DB_PASSWORD") %>
   database: POR

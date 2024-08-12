@@ -34,7 +34,7 @@ class ContractPdfGenerator
             {:image => logopath, :scale => 0.7},
             [
               ["Completed", "Tax Invoice"],
-              [date_completed, @contract.CNTR]
+              [date_completed, "#{@contract.CNTR}-#{@contract.STR.last}"]
             ]
           ]
         ]) do
@@ -110,10 +110,13 @@ class ContractPdfGenerator
       conditional_rows = []
 
       @contract.contract_items.each do |item|
-        item_out = item.OutDate.strftime("%a %d/%m/%Y")
-        item_in = item.DDT.strftime("%a %d/%m/%Y")
+        item_out = item.OutDate.strftime("%a %d/%m/%Y %l:%m%P")
+        item_in = item.DDT.strftime("%a %d/%m/%Y %l:%m%P")
         days_out = ((item.DDT - item.OutDate) / 86400).round()
+        days_out = 1 if days_out == 0
         status = item.item.TYPE == "T" || item.item.TYPE == "H" ? "Returned" : "Sold"
+        days_out = "" if status != "Returned"
+
         if item.PRIC.positive?
           items_data << [item.QTY.round(), days_out, item.item.Name, item_out, status, item_in, number_to_currency(item.PRIC)]
         end
@@ -130,26 +133,26 @@ class ContractPdfGenerator
         month_rate = number_to_currency(item.item.RATE6)
 
         if item.PRIC.positive? && (item.item.TYPE == "T" || item.item.TYPE == "H")
-          items_data << ["", "", "12Hrs #{min_rate}    1day #{day_rate}    2dys #{days_rate}", "1week #{week_rate}", "1month #{month_rate}", ""]
+          items_data << ["", "", "12Hrs #{min_rate}    1day #{day_rate}    2dys #{days_rate}", "1week #{week_rate}  1month #{month_rate}", ""]
           conditional_rows << items_data.size - 1
         end
       end
 
       # Items table
-      pdf.table(items_data, header: true, cell_style: { :overflow => :true, :size => 8, padding: [4, 5, 4, 5] }) do
+      pdf.table(items_data, header: true, cell_style: { :overflow => :true, :size => 7, padding: [4, 5, 4, 5] }) do
         style(row(0), font_style: :bold)
         style(row(0).columns(0), borders: [:top, :left, :bottom, :right])
         style(row(0).columns(-1), borders: [:top, :right, :bottom])
         style(rows(0..-1).columns(1..4), borders: [:top, :bottom])
         style(rows(0..-1).column(0), borders: [:top, :bottom, :right])
         style(rows(0..-1).column(-1), borders: [:top, :bottom, :left])
-        style(columns(0), width: 30)
-        style(columns(1), width: 50)
-        style(columns(2), width: 180)
-        style(columns(3), width: 75)
-        style(columns(4), width: 75)
-        style(columns(5), width: 80)
-        style(columns(6), width: 50)
+        style(columns(0), width: 25)
+        style(columns(1), width: 40)
+        style(columns(2), width: 170)
+        style(columns(3), width: 120)
+        style(columns(4), width: 45)
+        style(columns(5), width: 100)
+        style(columns(6), width: 40)
 
         # Apply conditional styling
         conditional_rows.each do |row_index|

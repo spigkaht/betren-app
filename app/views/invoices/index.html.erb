@@ -1,21 +1,21 @@
 <div class="container">
-  <h1>Contracts</h1>
+  <h1>Invoices</h1>
 
   <div>
     <table>
         <thead>
           <tr>
             <th>CNTR</th>
-            <% @contracts.first.attributes.each do |attr_name, attr_value| %>
+            <% @invoices.first.attributes.each do |attr_name, attr_value| %>
               <th><%= attr_name %></th>
             <% end %>
           </tr>
         </thead>
-      <% @contracts.each do |contract| %>
+      <% @invoices.each do |invoice| %>
         <tbody>
           <tr>
-              <th scope="row"><%= link_to contract.CNTR, contract_path(contract.CNTR) %>
-            <% contract.attributes.each do |attr_name, attr_value| %>
+              <th scope="row"><%= link_to invoice.CNTR, invoice_path(invoice.CNTR) %>
+            <% invoice.attributes.each do |attr_name, attr_value| %>
               <td><%= attr_value %></td>
             <% end %>
           </tr>

@@ -1,9 +1,9 @@
 require 'prawn'
 include ActionView::Helpers::NumberHelper
 
-class ContractPdfGenerator
-  def initialize(contract)
-    @contract = contract
+class InvoicePdfGenerator
+  def initialize(invoice)
+    @invoice = invoice
   end
 
   def generate
@@ -13,8 +13,8 @@ class ContractPdfGenerator
       # Header section text
       header_data =
         "Better Rentals
-        Hired From: #{@contract.branch.AddressCity}, #{@contract.branch.AddressLine1}
-        Tel #{@contract.branch.Phone}
+        Hired From: #{@invoice.branch.AddressCity}, #{@invoice.branch.AddressLine1}
+        Tel #{@invoice.branch.Phone}
         hello@betterrentals.com.au"
 
       pdf.font_size(10)
@@ -25,7 +25,7 @@ class ContractPdfGenerator
         pdf.text_box "Paid in Full", align: :right, size: 16, style: :bold
       end
 
-      date_completed = @contract.Completed.strftime("%a %d/%m/%Y")
+      date_completed = @invoice.Completed.strftime("%a %d/%m/%Y")
 
       # Header section table
       pdf.table([
@@ -34,7 +34,7 @@ class ContractPdfGenerator
             {:image => logopath, :scale => 0.7},
             [
               ["Completed", "Tax Invoice"],
-              [date_completed, "#{@contract.CNTR}-#{@contract.STR.last}"]
+              [date_completed, "#{@invoice.CNTR}-#{@invoice.STR.last}"]
             ]
           ]
         ]) do
@@ -47,19 +47,19 @@ class ContractPdfGenerator
       pdf.move_down 30
 
       # Customer detail header
-      out_date = @contract.DATE.strftime("%a %d/%m/%Y")
+      out_date = @invoice.DATE.strftime("%a %d/%m/%Y")
       pdf.bounding_box([pdf.bounds.left + 20, pdf.cursor], width: 520, height: 20) do
         pdf.text_box "Bill to:"
-        pdf.text_box "Customer # #{@contract.customer.CNUM}", align: :center
+        pdf.text_box "Customer # #{@invoice.customer.CNUM}", align: :center
         pdf.text_box "Date Out: #{out_date}", align: :right
       end
 
       # Customer details
       customer_address =
-      "#{@contract.customer.NAME}
-      #{@contract.customer.Address}
+      "#{@invoice.customer.NAME}
+      #{@invoice.customer.Address}
 
-      #{@contract.customer.CITY} #{@contract.customer.ZIP}"
+      #{@invoice.customer.CITY} #{@invoice.customer.ZIP}"
 
       # Customer detail table
       pdf.move_up 5
@@ -86,18 +86,18 @@ class ContractPdfGenerator
       pdf.font_size 8
 
       # Ordered by, operator details
-      pdf.text "Ordered By: #{@contract.OrderedBy}"
+      pdf.text "Ordered By: #{@invoice.OrderedBy}"
       pdf.move_down 2
-      pdf.text "Operator: #{@contract.operator.OPNM}"
+      pdf.text "Operator: #{@invoice.operator.OPNM}"
       pdf.move_down 2
 
-      del_date = @contract.DeliveryDate.strftime("%a %d/%m/%Y %H:%M")
-      pu_date = @contract.PickupDate.strftime("%a %d/%m/%Y %H:%M")
-      if @contract.Delvr
+      del_date = @invoice.DeliveryDate.strftime("%a %d/%m/%Y %H:%M")
+      pu_date = @invoice.PickupDate.strftime("%a %d/%m/%Y %H:%M")
+      if @invoice.Delvr
         pdf.table([
           ["Delivery #{del_date}", "Pickup #{pu_date}"],
-          [@contract.DeliveryAddress, @contract.DeliveryAddress],
-          ["#{@contract.DeliveryCity} #{@contract.DeliveryZip}", "#{@contract.DeliveryCity} #{@contract.DeliveryZip}"]
+          [@invoice.DeliveryAddress, @invoice.DeliveryAddress],
+          ["#{@invoice.DeliveryCity} #{@invoice.DeliveryZip}", "#{@invoice.DeliveryCity} #{@invoice.DeliveryZip}"]
         ], :position => 100, :width => 450, :cell_style => { :height => 12, padding: [0, 0, 0, 0] }) do
           style(rows(0..-1), borders: [])
           style(row(0), font_style: :bold)
@@ -109,7 +109,7 @@ class ContractPdfGenerator
       items_data = [["Qty", "Days Out", "Items", "Hire Start", "Status", "Returned Date", "Price"]]
       conditional_rows = []
 
-      @contract.contract_items.each do |item|
+      @invoice.contract_items.each do |item|
         item_out = item.OutDate.strftime("%a %d/%m/%Y %l:%m%P")
         item_in = item.DDT.strftime("%a %d/%m/%Y %l:%m%P")
         days_out = ((item.DDT - item.OutDate) / 86400).round()
@@ -211,11 +211,11 @@ class ContractPdfGenerator
           "GST"
         ],
         [
-          number_to_currency(@contract.RENT + @contract.SALE),
+          number_to_currency(@invoice.RENT + @invoice.SALE),
           "",
           "",
           "",
-          number_to_currency(@contract.TAX)
+          number_to_currency(@invoice.TAX)
         ]
       ]
 
@@ -229,10 +229,10 @@ class ContractPdfGenerator
 
       pdf.table([
         [
-          "Total amount:    #{number_to_currency(@contract.TOTL)}",
+          "Total amount:    #{number_to_currency(@invoice.TOTL)}",
           "",
-          "Total Paid:     #{number_to_currency(@contract.PAID)}",
-          "Total Due:     #{number_to_currency(@contract.TOTL - @contract.PAID)}"
+          "Total Paid:     #{number_to_currency(@invoice.PAID)}",
+          "Total Due:     #{number_to_currency(@invoice.TOTL - @invoice.PAID)}"
         ]
       ], width: 550, cell_style: { :size => 8 }) do
         style(columns(0..-1), align: :right)

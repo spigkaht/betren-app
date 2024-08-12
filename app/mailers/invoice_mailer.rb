@@ -5,6 +5,6 @@ class InvoiceMailer < ApplicationMailer
   def send_invoice_email(invoice, pdf)
     @invoice = invoice
     attachments["Invoice ##{invoice.CNTR}.pdf"] = pdf
-    mail(to: "benj@betterrentals.com.au, bradf@betterrentals.com.au", subject: "Invoice ##{invoice.CNTR}")
+    mail(to: "benj@betterrentals.com.au", subject: "Invoice ##{invoice.CNTR}")
   end
 end

@@ -4,8 +4,8 @@
       <p>ABN 38 368 029 290</p>
       <div class="border-solid border-2 border-sky-500">
         <p>Better Rentals</p>
-        <p>Hired from: <%= @contract.branch.AddressCity %>, <%= @contract.branch.AddressLine1 %></p>
-        <p>Phone: <%= @contract.branch.Phone %></p>
+        <p>Hired from: <%= @invoice.branch.AddressCity %>, <%= @invoice.branch.AddressLine1 %></p>
+        <p>Phone: <%= @invoice.branch.Phone %></p>
         <p>hello@betterrentals.com.au</p>
       </div>
     </div>
@@ -16,32 +16,32 @@
       <h1>Paid in Full</h1>
       <div>
         <p class="border-solid border-2 border-sky-500">Completed</p>
-        <p class="border-solid border-2 border-sky-500"><%= @contract.Completed %></p>
+        <p class="border-solid border-2 border-sky-500"><%= @invoice.Completed %></p>
         <p class="border-solid border-2 border-sky-500">Tax Invoice #</p>
-        <p class="border-solid border-2 border-sky-500"><%= @contract.CNTR %></p>
+        <p class="border-solid border-2 border-sky-500"><%= @invoice.CNTR %></p>
       </div>
     </div>
   </div>
   <div class="customer-info">
     <p>Bill to:</p>
     <div class="border-solid border-2 border-sky-500">
-      <p><%= @contract.customer.NAME %></p>
-      <p><%= @contract.customer.Address %></p>
-      <p><%= @contract.customer.CITY %></p>
+      <p><%= @invoice.customer.NAME %></p>
+      <p><%= @invoice.customer.Address %></p>
+      <p><%= @invoice.customer.CITY %></p>
     </div>
-    <p>Customer #: <%= @contract.customer.CNUM %></p>
-    <p>Date Out <%= @contract.DATE %>
+    <p>Customer #: <%= @invoice.customer.CNUM %></p>
+    <p>Date Out <%= @invoice.DATE %>
   </div>
   <div class="terms">
     <p class="border-solid border-2 border-sky-500">Terms</p>
     <p class="border-solid border-2 border-sky-500">Invoice Date</p>
     <p class="border-solid border-2 border-sky-500">Due upon receipt</p>
-    <p class="border-solid border-2 border-sky-500"><%= @contract.Completed %></p>
+    <p class="border-solid border-2 border-sky-500"><%= @invoice.Completed %></p>
   </div>
   <div class="line-items">
-    <p>Ordered By: <%= @contract.OrderedBy %></p>
+    <p>Ordered By: <%= @invoice.OrderedBy %></p>
     <lr>
-    <div class="grid grid-rows-<%= @contract.contract_items.count + 1 %> grid-cols-7 grid-flow-row">
+    <div class="grid grid-rows-<%= @invoice.contract_items.count + 1 %> grid-cols-7 grid-flow-row">
       <div class="border-solid border-2 border-sky-500">
         <p>Qty</p>
         <p>Days Out</p>
@@ -51,7 +51,7 @@
         <p>Returned Date</p>
         <p>Price</p>
       </div>
-      <% @contract.contract_items.each do |item| %>
+      <% @invoice.contract_items.each do |item| %>
       <div class="border-solid border-2 border-sky-500">
         <p><%= item.QTY %></p>
         <p><%= ((item.DDT - item.OutDate) / 86400).round %></p>
@@ -94,21 +94,21 @@
   <div class="totals">
     <h3>Thanks for hiring from Better Rentals...</h3>
     <p>Rental and Sales:</p>
-    <p><%= number_to_currency(@contract.RENT + @contract.SALE) %></p>
+    <p><%= number_to_currency(@invoice.RENT + @invoice.SALE) %></p>
     <p>GST:</p>
-    <p><%= number_to_currency(@contract.TAX) %></p>
+    <p><%= number_to_currency(@invoice.TAX) %></p>
     <p></p>
     <p></p>
     <p>Total Amount:</p>
-    <p><%= number_to_currency(@contract.TOTL) %></p>
+    <p><%= number_to_currency(@invoice.TOTL) %></p>
     <p>Total Paid:</p>
-    <p><%= number_to_currency(@contract.PAID) %></p>
+    <p><%= number_to_currency(@invoice.PAID) %></p>
     <p>Total Due:</p>
-    <p><%= number_to_currency(@contract.TOTL - @contract.PAID) %></p>
+    <p><%= number_to_currency(@invoice.TOTL - @invoice.PAID) %></p>
     <p>Payments: BSB 013322 Acc: 4830 80489; Credit Card: betterrentals.com.au/pay-your-bill</p>
     <p>hello@betterrentals.com.au</p>
   </div>
   <div class="link">
-    <%= link_to "Back to Contracts", contracts_path %>
+    <%= link_to "Back to invoices", invoices_path %>
   </div>
 </div>

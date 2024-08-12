@@ -14,23 +14,23 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_24_013257) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "contracts", force: :cascade do |t|
-    t.string "contract_number"
-    t.string "contract_status"
-    t.string "contract_branch"
-    t.datetime "start_date_time"
-    t.datetime "end_date_time"
-    t.string "customer_name"
-    t.string "po_number"
-    t.decimal "price_total", precision: 6, scale: 2
-    t.decimal "price_tax", precision: 6, scale: 2
-    t.string "contract_info"
-    t.text "notes"
-    t.string "delivery"
-    t.string "pickup"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
+  # create_table "contracts", force: :cascade do |t|
+  #   t.string "contract_number"
+  #   t.string "contract_status"
+  #   t.string "contract_branch"
+  #   t.datetime "start_date_time"
+  #   t.datetime "end_date_time"
+  #   t.string "customer_name"
+  #   t.string "po_number"
+  #   t.decimal "price_total", precision: 6, scale: 2
+  #   t.decimal "price_tax", precision: 6, scale: 2
+  #   t.string "contract_info"
+  #   t.text "notes"
+  #   t.string "delivery"
+  #   t.string "pickup"
+  #   t.datetime "created_at", null: false
+  #   t.datetime "updated_at", null: false
+  # end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false

@@ -1,6 +1,6 @@
 require "test_helper"
 
-class GenerateAndEmailContractsJobTest < ActiveJob::TestCase
+class GenerateAndEmailInvoicesJobTest < ActiveJob::TestCase
   # test "the truth" do
   #   assert true
   # end

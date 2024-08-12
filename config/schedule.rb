@@ -20,5 +20,5 @@
 # Learn more: http://github.com/javan/whenever
 
 every 1.day, at: '10:00 am' do
-  runner "Contract.generate_and_send_contract_pdfs"
+  runner "Invoice.generate_and_send_contract_pdfs"
 end

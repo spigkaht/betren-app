@@ -1,5 +1,9 @@
-<div class="flex flex-col">
-  <h1 class="text-3xl font-bold underline flex flex-col">
+<div class="flex">
+  <div class="border">
     Better Rentals
-  </h1>
+  </div>
+  <div class="flex flex-col">
+    <%= button_to "signout", destroy_user_session_path, method: :delete %>
+    <%= button_to "settings", root_path %>
+  </div>
 </div>

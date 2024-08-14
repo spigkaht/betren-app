@@ -8,10 +8,11 @@
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   </head>
 
   <body>
-    <main class="container mx-auto mt-2 px-5 flex flex-col">
+    <main class="container mx-auto px-2 flex flex-col h-dvh">
       <%= yield %>
     </main>
   <%= render "shared/flashes" %>

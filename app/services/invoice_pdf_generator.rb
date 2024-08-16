@@ -8,14 +8,34 @@ class InvoicePdfGenerator
 
   def generate
     Prawn::Document.new do |pdf|
+      # set initial variables
       logopath = Rails.root.join('app/assets/images/br-logo.png')
+
+      if @invoice.branch.Id == "001"
+        @invoice.branch.Phone = "03 5996 6088"
+      end
+
+      case @invoice.branch.Id
+      when "001"
+        @invoice.branch.Phone = "03 5996 6088"
+        email = "cran@betterrentals.com.au"
+      when "002"
+        email = "pak@betterrentals.com.au"
+      when "003"
+        email = "morn@betterrentals.com.au"
+      when "004"
+        email = "ftg@betterrentals.com.au"
+      else
+        email = "hello@betterrentals.com.au"
+      end
+
 
       # Header section text
       header_data =
         "Better Rentals
         Hired From: #{@invoice.branch.AddressCity}, #{@invoice.branch.AddressLine1}
         Tel #{@invoice.branch.Phone}
-        hello@betterrentals.com.au"
+        #{email}"
 
       pdf.font_size(10)
 
@@ -49,8 +69,7 @@ class InvoicePdfGenerator
       # Customer detail header
       out_date = @invoice.DATE.strftime("%a %d/%m/%Y")
       pdf.bounding_box([pdf.bounds.left + 20, pdf.cursor], width: 520, height: 20) do
-        pdf.text_box "Bill to:"
-        pdf.text_box "Customer # #{@invoice.customer.CNUM}", align: :center
+        pdf.text_box "Bill to:                Customer # #{@invoice.customer.CNUM}"
         pdf.text_box "Date Out: #{out_date}", align: :right
       end
 
@@ -88,7 +107,7 @@ class InvoicePdfGenerator
       # Ordered by, operator details
       pdf.text "Ordered By: #{@invoice.OrderedBy}"
       pdf.move_down 2
-      pdf.text "Operator: #{@invoice.operator.OPNM}"
+      pdf.text "Picked up by: #{@invoice.PickedUpBy}                                                                                                 Rates don't include GST"
       pdf.move_down 2
 
       del_date = @invoice.DeliveryDate.strftime("%a %d/%m/%Y %H:%M")

@@ -3,7 +3,7 @@ class Admin::UsersController < ApplicationController
   before_action :authenticate_admin!
 
   def index
-    @users = User.establish_connection(:secondary).all
+    @users = User.all
   end
 
   def new
@@ -12,7 +12,6 @@ class Admin::UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    @user.establish_connection(:secondary)
     if @user.save
       redirect_to admin_users_path, notice: "User created successfully."
     else
@@ -21,11 +20,11 @@ class Admin::UsersController < ApplicationController
   end
 
   def edit
-    @user = User.establish_connection(:secondary).find(params[:id])
+    @user = User.find(params[:id])
   end
 
   def update
-    @user = User.establish_connection(:secondary).find(params[:id])
+    @user = User.find(params[:id])
     if @user.update(user_params)
       redirect_to admin_users_path, notice: "User updated successfully."
     else
@@ -34,7 +33,7 @@ class Admin::UsersController < ApplicationController
   end
 
   def destroy
-    @user = User.establish_connection(:secondary).find(params[:id])
+    @user = User.find(params[:id])
     @user.destroy
     redirect_to admin_users_path, notice: "User deleted successfully."
   end

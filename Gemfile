@@ -52,6 +52,7 @@ gem "tiny_tds"
 gem "prawn"
 gem "prawn-table", "~> 0.1.0"
 gem "bundler"
+gem "heroicon"
 
 group :development, :test do
   gem "dotenv-rails"

@@ -1,0 +1,13 @@
+<div class="flex my-2" id="header">
+  <div class="p-1 flex-grow flex justify-center">
+    <%= image_tag("br-logo.png") %>
+  </div>
+  <div class="flex flex-col my-1 mx-2">
+    <% if user_signed_in? %>
+      <%= button_to "signout", destroy_user_session_path, method: :delete, class: "flex-shrink border border-2 border-gray-600 rounded p-0.5 m-1 w-16 text-center text-xxs font-bold" %>
+    <% else %>
+      <%= button_to "signin", new_user_session_path, class: "flex-shrink border border-2 border-gray-600 rounded p-0.5 m-1 w-16 text-center text-xxs font-bold" %>
+    <% end %>
+    <%= button_to "settings", root_path, class: "flex-shrink border border-2 border-gray-600 rounded p-0.5 m-1 w-16 text-center text-xxs font-bold" %>
+  </div>
+</div>

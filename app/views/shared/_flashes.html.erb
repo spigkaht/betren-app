@@ -1,12 +1,22 @@
 <% if notice %>
-  <div class="relative px-3 py-3 mb-4 border rounded bg-teal-200 border-teal-300 text-teal-800 block m-1" role="alert">
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <div data-controller="flash-message"
+       class="relative flex justify-between px-3 py-3 mb-4 border rounded bg-teal-200 border-teal-300 text-teal-800 m-1"
+       role="alert">
     <%= notice %>
+    <%= heroicon 'x-mark',
+        options: { 'data-action': 'click->flash-message#close',
+        class: 'w-6 h-6 fill-current',
+        role: 'button' } %>
   </div>
 <% end %>
 <% if alert %>
-  <div class="relative px-3 py-3 mb-4 border rounded bg-teal-200 border-teal-300 text-teal-800 block m-1" role="alert">
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <div data-controller="flash-message"
+       class="relative justify-between flex px-3 py-3 mb-4 border rounded bg-teal-200 border-teal-300 text-teal-800 m-1"
+       role="alert">
     <%= alert %>
+    <%= heroicon 'x-mark',
+        options: { 'data-action': 'click->flash-message#close',
+        class: 'w-6 h-6 fill-current',
+        role: 'button' } %>
   </div>
 <% end %>

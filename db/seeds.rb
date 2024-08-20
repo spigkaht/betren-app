@@ -8,24 +8,12 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-# contract = Contract.new(
-#   contract_number: "123993",
-#   contract_status: "Closed",
-#   contract_branch: "001",
-#   start_date_time: DateTime.now,
-#   end_date_time: DateTime.now,
-#   customer_name: "Benjamin Jackson",
-#   po_number: "S345",
-#   price_total: "0034.00",
-#   price_tax: "0003.40",
-#   contract_info: "Ready",
-#   notes: "Stuff stuff stuff",
-#   delivery: "",
-#   pickup: ""
-# )
+Job.establish_connection(:secondary)
 
-# if contract.save
-#   puts "Contract created succesfully"
-# else
-#   puts "Error creating contract"
-# end
+jobs = Job.all
+
+jobs.each do |job|
+  job.completed_at = nil
+  puts job.completed_at
+  job.save
+end

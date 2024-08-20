@@ -1,0 +1,9 @@
+:concurrency: 5
+:queues:
+  - default
+
+:scheduler:
+  :schedule:
+    generate_jobs:
+      cron: "*/10 * * * *"
+      class: GenerateJobsJob

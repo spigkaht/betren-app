@@ -22,3 +22,7 @@
 every 1.day, at: '10:00 am' do
   runner "Invoice.generate_and_send_contract_pdfs"
 end
+
+every 10.minutes do
+  runner "GenerateJobsJob.perform_now"
+end

@@ -7,3 +7,10 @@ namespace :scheduler do
     GenerateAndEmailInvoicesJob.perform_now
   end
 end
+
+namespace :generate_jobs do
+  desc "Queue GenerateJobsJob to be performed"
+  task perform: :environment do
+    GenerateJobsJob.perform_later
+  end
+end

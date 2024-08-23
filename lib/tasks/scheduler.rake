@@ -11,6 +11,7 @@ end
 namespace :generate_jobs do
   desc "Queue GenerateJobsJob to be performed"
   task perform: :environment do
+    puts "Starting Rake Task"
     GenerateJobsJob.perform_later
   end
 end

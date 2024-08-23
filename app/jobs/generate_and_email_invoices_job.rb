@@ -1,12 +1,13 @@
 # app/jobs/generate_and_email_invoices_job.rb
 class GenerateAndEmailInvoicesJob < ApplicationJob
   queue_as :default
+  EMAIL_REGEX = /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
 
   def perform
     puts "Starting GenerateAndEmailInvoicesJob"
 
-    today_beginning = 3.days.ago.beginning_of_day
-    today_end = 1.days.ago.end_of_day
+    today_beginning = 0.days.ago.beginning_of_day
+    today_end = 0.days.ago.end_of_day
 
     puts "Fetching invoices completed between #{today_beginning and today_end}"
 
@@ -22,8 +23,8 @@ class GenerateAndEmailInvoicesJob < ApplicationJob
     invoices.each do |invoice|
       puts "Processing invoice ##{invoice.CNTR}"
 
-      if !invoice.customer.Email.include?("@")
-        puts "Missing valid email"
+      if !(invoice.customer.Email =~ EMAIL_REGEX)
+        puts "Missing valid email => #{invoice.customer.Email}"
       elsif invoice.JOBN == "NP"
         puts "NO PRINT"
       else

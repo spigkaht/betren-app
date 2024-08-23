@@ -8,6 +8,7 @@ class InvoiceMailer < ApplicationMailer
     mail(
       to: "#{@invoice.customer.Email}",
       bcc: "bradf@betterrentals.com.au, benj@betterrentals.com.au",
+      # to: "benj@betterrentals.com.au",
       subject: "Invoice ##{invoice.CNTR}"
       )
   end

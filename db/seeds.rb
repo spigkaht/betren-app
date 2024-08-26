@@ -13,7 +13,8 @@ Job.establish_connection(:secondary)
 jobs = Job.all
 
 jobs.each do |job|
-  job.completed_at = nil
+  job.completed_at = Time.now
   puts job.completed_at
+  puts "Job updated"
   job.save
 end

@@ -3,15 +3,16 @@
   </div>
   <div id="cards">
     <% @jobs.each do |job| %>
-      <div class="flex flex-col p-2 m-2 border-2 rounded-lg border-gray-800">
-        <div class="border-b-2">
-          <p><%= job.item.KEY %> Store: <%= job.item.CurrentStore %></p>
+      <div class="flex flex-col m-2 border-2 rounded-lg border-gray-800">
+        <div class="flex justify-between border-b-2 p-2">
+          <p><%= job.item.KEY %></p>
+          <p>Store: <%= job.item.CurrentStore %></p>
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col p-2">
           <p><%= job.item.Name %></p>
           <p><%= job.item.PartNumber %></p>
           <p>Returned Date: <%= job.item.LDATE %></p>
-          <p>Job Completed: <%= job.completed_at %></p>
+          <p>Last Contract: <%= link_to "#{job.item.CNTR}", contract_path(job.item.CNTR) %></p>
         </div>
       </div>
     <% end %>

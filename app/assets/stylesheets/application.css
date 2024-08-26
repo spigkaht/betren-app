@@ -17,3 +17,8 @@
 @import "pages/invoices.css";
 @import "pages/index.css";
 @import "pages/users.css";
+
+th, td {
+  padding: 0;
+  border: none;
+}

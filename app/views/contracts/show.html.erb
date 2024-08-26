@@ -1,0 +1,18 @@
+<div class="flex flex-col mb-auto px-2 pt-5" id="main">
+  <h1><%= @contract.CNTR %></h2>
+  <p><%= @contract.customer.NAME %></p>
+  <p><%= @contract.Completed %></p>
+  <table>
+    <% @contract.contract_items.each do |item| %>
+      <tr class="border-t">
+        <td class="text-xxs border-none"><%= item.item.KEY %></td>
+        <td class="text-xxs"><%= item.item.Name %></td>
+      </tr>
+      <tr class="border-b">
+        <td class="text-xxs"><%= item.item.PartNumber %></td>
+        <td class="text-xxs"><%= item.DDT.strftime("%a %d/%m/%Y") %></td>
+        <td class="text-xxs"><%= item.TXTY %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>

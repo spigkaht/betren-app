@@ -1,7 +1,30 @@
 <div class="flex flex-col mb-auto px-2 pt-5" id="main">
   <h1><%= @contract.CNTR %></h2>
-  <p><%= @contract.customer.NAME %></p>
-  <p><%= @contract.Completed %></p>
+  <div class="flex justify-between">
+    <p><%= @contract.customer.NAME %></p>
+    <p><%= @contract.DATE.strftime("%a %d/%m/%Y %H:%M") %></p>
+  </div>
+  <div class="flex justify-between">
+    <p><%= @contract.status %></p>
+    <p><%= @contract.payment_type %></p>
+    <p>Store <%= @contract.STR %></p>
+  </div>
+  <div class="flex justify-between">
+    <p>Rent: <%= number_to_currency(@contract.RENT) %></p>
+    <p>Sale: <%= number_to_currency(@contract.SALE) %></p>
+    <p>Total: <%= number_to_currency(@contract.TOTL) %></p>
+  </div>
+  <div class="flex justify-between">
+    <p>Paid: <%= number_to_currency(@contract.PAID) %></p>
+    <p>Dep: <%= number_to_currency(@contract.DEPP) %></p>
+    <p>Owed? <%= number_to_currency(@contract.DEPR) %></p>
+  </div>
+  <p>Contract Info: <%= @contract.JOBN %></p>
+  <p>Purchase Order: <%= @contract.JBPO %></p>
+  <p>Ordered By: <%= @contract.OrderedBy %></p>
+  <p>Picked Up By: <%= @contract.PickedUpBy %></p>
+  <p><%= "Review Billing" if @contract.ReviewBilling %></p>
+
   <table>
     <% @contract.contract_items.each do |item| %>
       <tr class="border-t">
@@ -16,3 +39,17 @@
     <% end %>
   </table>
 </div>
+
+<%#
+
+key
+name
+status
+reading out
+reading in
+hours out
+out date
+due date
+total price
+
+%>

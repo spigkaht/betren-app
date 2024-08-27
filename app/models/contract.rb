@@ -9,4 +9,32 @@ class Contract < ApplicationRecord
   belongs_to :operation, foreign_key: "Operation", primary_key: "OperationNumber"
   belongs_to :payment_type, foreign_key: "PYMT", primary_key: "PayMeth"
   belongs_to :branch, foreign_key: "STR", primary_key: "Id"
+
+  def status
+    case self.STAT
+    when "RJ"
+      "Reservation"
+    when "Q"
+      "Quote"
+    when "O", "OI", "OJ"
+      "Open"
+    when " C"
+      "Voided"
+    when " R", "CR", "OR"
+      "Closed"
+    when "OH"
+      "Offrent"
+    else
+      STAT
+    end
+  end
+
+  def payment_type
+    case self.PYMT
+    when "D"
+      "Credit Card"
+    when "E"
+      "On Account"
+    end
+  end
 end

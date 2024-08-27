@@ -12,7 +12,7 @@ class JobsController < ApplicationController
       item = Item.find_by(NUM: contract_item.ITEM)
 
       #only process if item isn't inactive, bulk item, part number ends with 000
-      if item.Inactive || item.BulkItem || item.PartNumber !~ /\A\d+\z/ || item.PartNumber.end_with?("000")
+      if item.Inactive || item.BulkItem || item.PartNumber !~ /\A\d+\z/ || item.PartNumber.end_with?("000") || contract_item.contract.STR != "001"
         puts "------------- item does not meet criteria ------------------"
         puts "Inactive: #{item.Inactive} BulkItem: #{item.BulkItem} Numeric PN: #{item.PartNumber !~ /\A\d+\z/} Ends 000: #{item.PartNumber.end_with?("000")}"
         puts "PART NUMBER: #{item.PartNumber}"
@@ -36,5 +36,9 @@ class JobsController < ApplicationController
     end
 
     @jobs = Job.where(completed_at: nil).order(created_at: :desc)
+  end
+
+  def show
+    @job = Job.find(params[:id])
   end
 end

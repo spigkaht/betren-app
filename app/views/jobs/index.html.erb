@@ -6,13 +6,13 @@
       <div class="flex flex-col m-2 border-2 rounded-lg border-gray-800">
         <div class="flex justify-between border-b-2 p-2">
           <p><%= job.item.KEY %></p>
-          <p>Store: <%= job.item.CurrentStore %></p>
+          <p><%= link_to "J#{job.id}", job_path(job.id), class: "text-blue-600 hover:underline" %> | Store: <%= job.item.CurrentStore %></p>
         </div>
         <div class="flex flex-col p-2">
           <p><%= job.item.Name %></p>
           <p><%= job.item.PartNumber %></p>
           <p>Returned Date: <%= job.item.LDATE %></p>
-          <p>Last Contract: <%= link_to "#{job.item.CNTR}", contract_path(job.item.CNTR) %></p>
+          <p>Last Contract: <%= link_to "#{job.item.CNTR}", contract_path(job.item.CNTR), class: "text-blue-600 hover:underline" %></p>
         </div>
       </div>
     <% end %>

@@ -1,9 +1,12 @@
 class ContractsController < ApplicationController
   def index
-    @contracts = Contract.all
+    @contracts = Contract.where('STAT IN (?)', ["O", "OI", "OJ"])
   end
 
   def show
-    @contract = Contract.find(params[:id])
+    @contract = Contract.includes(:contract_items)
+                        .find(params[:id])
+
+    @contract_items = @contract.contract_items.order('TransactionItems.SUBF')
   end
 end

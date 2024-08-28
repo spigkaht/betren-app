@@ -25,7 +25,7 @@ class Contract < ApplicationRecord
     when "OH"
       "Offrent"
     else
-      STAT
+      self.STAT
     end
   end
 
@@ -35,6 +35,8 @@ class Contract < ApplicationRecord
       "Credit Card"
     when "E"
       "On Account"
+    else
+      self.PYMT
     end
   end
 end

@@ -1,18 +1,29 @@
 <div class="flex flex-col mb-auto px-2 pt-5" id="main">
   <div id="filters">
+    <%= form_with(url: jobs_path, method: :get, local: true, class: "my-4") do %>
+      <div class="mb-4 mx-4 flex justify-between items-center">
+        <label for="store" class="block -mr-4 text-sm font-medium text-gray-700">Select Store</label>
+        <%= select_tag :store, options_for_select(@stores, selected: params[:store]), prompt: "Choose a store", class: "block w-[11rem] pl-3 pr-3 py-1 text-sm border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md" %>
+        <%= submit_tag "Filter", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-0.5 px-4 rounded" %>
+      </div>
+    <% end %>
   </div>
   <div id="cards">
     <% @jobs.each do |job| %>
-      <div class="flex flex-col m-2 border-2 rounded-lg border-gray-800">
-        <div class="flex justify-between border-b-2 p-2">
-          <p><%= job.item.KEY %></p>
-          <p><%= link_to "J#{job.id}", job_path(job.id), class: "text-blue-600 hover:underline" %> | Store: <%= job.item.CurrentStore %></p>
-        </div>
+      <div class="flex flex-col m-2 border-2 rounded-lg border-gray-700">
+        <%= link_to job_path(job.id) do %>
+          <div class="flex justify-between border-b-2 rounded-t-lg p-2 bg-green-300">
+            <p><%= job.item.KEY %></p>
+            <p>J<%= job.id %> | Store: <%= job.item.CurrentStore %></p>
+          </div>
+        <% end %>
         <div class="flex flex-col p-2">
-          <p><%= job.item.Name %></p>
-          <p><%= job.item.PartNumber %></p>
-          <p>Returned Date: <%= job.item.LDATE %></p>
-          <p>Last Contract: <%= link_to "#{job.item.CNTR}", contract_path(job.item.CNTR), class: "text-blue-600 hover:underline" %></p>
+          <div class="flex justify-between">
+            <p><%= job.item.Name %></p>
+            <p><%= job.item.PartNumber %></p>
+          </div>
+          <p>Returned Date: <%= job.last_return.strftime("%a %d/%m/%Y %H:%M") %></p>
+          <p>Last Contract: <%= link_to "#{job.last_contract}", contract_path(job.last_contract), class: "text-blue-600 hover:underline" %></p>
         </div>
       </div>
     <% end %>

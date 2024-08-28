@@ -1,4 +1,23 @@
 <div class="flex flex-col mb-auto px-2 pt-5" id="main">
   <h1>Job <%= @job.id %></h1>
+
+  <% @job.template.questions.each do |template_contents| %>
+    <p><%= template_contents.title %> </p>
+  <% end %>
+
+  <% if @template %>
+    <%= simple_form_for([@template, @template.images.build], html: { multipart: true }) do |f| %>
+      <%= f.input :photo, as: :file, label: "Upload Image" %>
+      <%= f.submit "Upload", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+    <% end %>
+
+    <% @job.template.images.each do |image| %>
+      <% if image.photo.attached? %>
+        <%= cl_image_tag image.photo.key, height: 300, width: 400, crop: :fill %>
+      <% end %>
+    <% end %>
+
+  <% end %>
+
   <%= link_to "Back to Jobs", jobs_path, class: "text-blue-600 hover:underline"  %>
 </div>

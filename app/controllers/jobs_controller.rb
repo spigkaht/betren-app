@@ -36,7 +36,7 @@ class JobsController < ApplicationController
                  .distinct
                  .pluck(:store)
                  .sort
-                 
+
     @jobs = Job.where(completed_at: nil)
 
     if params[:store].present?
@@ -50,5 +50,13 @@ class JobsController < ApplicationController
 
   def show
     @job = Job.find(params[:id])
+    item = @job.item
+
+    @template = Template.find_by(header: item.Header)
+    if @template
+      @job.template = @template
+    else
+      @job.template = Template.find(2)
+    end
   end
 end

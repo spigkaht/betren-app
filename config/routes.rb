@@ -21,4 +21,7 @@ Rails.application.routes.draw do
   resources :contracts, only: [:index, :show]
   resources :invoices, only: [:index, :show]
   resources :jobs, only: [:index, :show]
+  resources :templates do
+    resources :images, only: [:create]
+  end
 end

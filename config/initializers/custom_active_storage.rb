@@ -1,5 +1,11 @@
 Rails.application.config.to_prepare do
-  ActiveStorage::Attachment.class_eval do
-    belongs_to :blob, class_name: 'CustomBlob', inverse_of: :attachments
+  ActiveStorage::Blob.class_eval do
+    def self.build_after_unfurling(...)
+      CustomBlob.new(...)
+    end
+
+    def self.create_after_unfurling(...)
+      CustomBlob.create!(...)
+    end
   end
 end

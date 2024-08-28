@@ -3,9 +3,5 @@ class Image < ApplicationRecord
 
   belongs_to :template
 
-  has_one_attached :photo, service: :custom_blob_service
-
-  def self.custom_blob_service
-    CustomBlob
-  end
+  has_one_attached :photo
 end

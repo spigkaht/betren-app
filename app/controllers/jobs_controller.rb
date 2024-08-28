@@ -20,13 +20,13 @@ class JobsController < ApplicationController
         puts "------------- item does not meet criteria ------------------"
       else
         last_job = Job.where(item_num: item.NUM).order(completed_at: :desc).first
-
+        template = Template.find_by(header: item.Header)
         if last_job.nil?
-          Job.create(item_num: item.NUM, store: item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil)
+          Job.create(item_num: item.NUM, store: item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil, template: template)
         elsif last_job.completed_at.nil?
           puts "--------------- last job not completed ------------------"
         elsif contract_item.DDT > last_job.completed_at
-          Job.create(item_num: item.NUM, store: item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil)
+          Job.create(item_num: item.NUM, store: item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil, template: template)
         end
       end
     end

@@ -11,15 +11,15 @@
     <%= form_with model: @job, url: job_path(@job), method: :patch, local: true do |f| %>
       <% @job.template.questions.each_with_index do |question, index| %>
         <div class="flex justify-between">
-          <p><%= question.content %></p>
+          <p class="flex-1"><%= question.content %></p>
           <% if question.qtype == "bool" %>
-            <%= f.check_box "answers_attributes[#{index}][value]", {}, "true", "false" %>
+            <%= f.check_box "bool#{index}", { class: "my-1" }, "true", "false" %>
           <% elsif question.qtype == "text" %>
-            <%= f.text_field "answers_attributes[#{index}][value]" %>
+            <%= f.text_field "text#{index}", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 my-1" %>
           <% elsif question.qtype == "num" %>
-            <%= f.number_field "answers_attributes[#{index}][value]", step: "any" %>
+            <%= f.number_field "num#{index}", step: "any", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 my-1" %>
           <% end %>
-          <%= f.hidden_field "answers_attributes[#{index}][question_id]", value: question.id %>
+          <%# f.hidden_field "answers_attributes[#{index}][question_id]", value: question.id %>
         </div>
       <% end %>
       <%= f.submit "Complete", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>

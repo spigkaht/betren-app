@@ -63,8 +63,8 @@ class JobsController < ApplicationController
   def update
     @job.completed_at = Time.now
     if @job.update(job_params)
-      create_answers(@job, params[:job][:answers_attributes])
-      redirect to job_path(@job), notice: 'Job was successfully updated'
+      create_answers(@job, params[:job])
+      redirect_to job_path(@job), notice: 'Job was successfully updated'
     else
       render :show
     end
@@ -80,11 +80,10 @@ class JobsController < ApplicationController
     params.require(:job).permit(:item_num, :last_return, :last_contract, :store, :completed_at)
   end
 
-  def create_answers(job, answers_attributes)
-    answers_attributes.each do |answer_params|
+  def create_answers(job, answers_params)
+    answers_params.each do |answer_params|
       job.answers.create(
-        question_id: answer_params[:question_id],
-        value: answer_params[:value]
+        content: answer_params
       )
     end
   end

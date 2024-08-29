@@ -42,5 +42,13 @@ items.each do |item|
   puts job.save ? "Completed item ##{item.NUM}, job #{job.id}" : "No template exists for this item"
   count += 1
 end
+
+template = Template.find_by(header: "ROLLER3")
+unless template.questions.any?
+  Question.create(template: template, content: "Is the equipment clean?", qtype: "bool")
+  Question.create(template: template, content: "Enter any notes:", qtype: "text")
+  Question.create(template: template, content: "Enter fuel taken:", qtype: "num")
+end
+
 puts "Item processing complete!"
 puts "#{count} jobs created"

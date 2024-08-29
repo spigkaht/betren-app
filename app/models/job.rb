@@ -3,6 +3,7 @@ class Job < ApplicationRecord
 
   belongs_to :item, primary_key: 'NUM', foreign_key: 'item_num', class_name: 'Item'
   belongs_to :template
+  has_many :answers, dependent: :destroy
 
   scope :completed, -> { where.not(completed_at: nil) }
   scope :incomplete, -> { where(completed_at: nil) }

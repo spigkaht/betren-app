@@ -17,11 +17,9 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  #
+
   resources :contracts, only: [:index, :show]
   resources :invoices, only: [:index, :show]
-  resources :jobs, only: [:index, :show]
-  resources :templates do
-    resources :images, only: [:create]
-  end
+  resources :jobs, only: [:index, :show, :update]
+  resources :templates, param: :header, only: [:show, :edit, :update]
 end

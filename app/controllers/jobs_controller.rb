@@ -1,4 +1,5 @@
 class JobsController < ApplicationController
+  before_action :set_job, only: [:show, :update]
   def index
     one_day_ago = 1.day.ago
     contract_items = ContractItem.joins(:item)
@@ -49,14 +50,42 @@ class JobsController < ApplicationController
   end
 
   def show
-    @job = Job.find(params[:id])
     item = @job.item
 
     @template = Template.find_by(header: item.Header)
     if @template
       @job.template = @template
     else
-      @job.template = Template.find(2)
+      @job.template = Template.find_by!(header: "NOTEMPLATE")
+    end
+  end
+
+  def update
+    @job.completed_at = Time.now
+    if @job.update(job_params)
+      create_answers(@job, params[:job][:answers_attributes])
+      redirect to job_path(@job), notice: 'Job was successfully updated'
+    else
+      render :show
+    end
+  end
+
+  private
+
+  def set_job
+    @job = Job.find(params[:id])
+  end
+
+  def job_params
+    params.require(:job).permit(:item_num, :last_return, :last_contract, :store, :completed_at)
+  end
+
+  def create_answers(job, answers_attributes)
+    answers_attributes.each do |answer_params|
+      job.answers.create(
+        question_id: answer_params[:question_id],
+        value: answer_params[:value]
+      )
     end
   end
 end

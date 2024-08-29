@@ -12,9 +12,12 @@ Job.establish_connection(:secondary)
 
 puts "Clearing out your junk.."
 Job.destroy_all
+Template.destroy_all
 puts "All clean!"
 
-if Template.count == 0
+if Template.count < 5
+  template = Template.new(header: "NOTEMPLATE")
+  template.save
   headers = Item.where(TYPE: "V").where(Inactive: false).pluck(:Header)
   headers.each do |header|
     template = Template.new(header: header)

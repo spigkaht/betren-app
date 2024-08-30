@@ -19,15 +19,14 @@
           <% elsif question.qtype == "num" %>
             <%= f.number_field "num#{index}", step: "any", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 my-1" %>
           <% end %>
-          <%# f.hidden_field "answers_attributes[#{index}][question_id]", value: question.id %>
         </div>
       <% end %>
-      <%= f.submit "Complete", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+      <%= f.hidden_field :id, value: @job.id %>
+      <div class="flex justify-between mt-8 mx-8">
+        <%= f.submit "Complete", class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+        <%= link_to "Back to Jobs", jobs_path, class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+      </div>
     <% end %>
-
-    <h1><%= @job.last_contract %></h1>
-    <p><%= @job.store %></p>
   </div>
 
-  <%= link_to "Back to Jobs", jobs_path, class: "text-blue-600 hover:underline" %>
 </div>

@@ -63,8 +63,8 @@ class JobsController < ApplicationController
   def update
     @job.completed_at = Time.now
     if @job.update(job_params)
-      create_answers(@job, params[:job])
-      redirect_to job_path(@job), notice: 'Job was successfully updated'
+      create_answers(@job, params[:job]) if params[:job]
+      redirect_to jobs_path, notice: 'Job was successfully updated'
     else
       render :show
     end

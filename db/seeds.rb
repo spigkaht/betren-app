@@ -46,6 +46,7 @@ end
 template = Template.find_by(header: "ROLLER3")
 unless template.questions.any?
   Question.create(template: template, content: "Is the equipment clean?", qtype: "bool")
+  Question.create(template: template, content: "Does the flashing light work?", qtype: "bool")
   Question.create(template: template, content: "Enter any notes:", qtype: "text")
   Question.create(template: template, content: "Enter fuel taken:", qtype: "num")
 end

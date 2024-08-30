@@ -1,29 +1,49 @@
-<div class="flex flex-col mb-auto px-2 pt-5" id="main">
-  <div class="flex justify-between">
+<div class="flex flex-col mb-auto px-2 pt-5" id="main" data-controller="questions" data-questions-url="<%= reorder_template_questions_path(@template) %>">
+  <div class="flex justify-between border-b pb-2">
     <h1><%= @template.header %></h1>
     <h2>Template Edit</h2>
   </div>
-  <div class="flex-1">
+  <div class="flex-1 border-b pb-2" data-questions-target="list">
     <% @template.questions.each do |question| %>
-      <div class="flex justify-between mt-4">
-        <p><%= question.content %></p>
-        <% if question.qtype == "bool" %>
-          <input type="checkbox" name="" />
-        <% elsif question.qtype == "text" %>
-          <input type="text" name="" />
-        <% elsif question.qtype == "num" %>
-          <input type="number" name="" />
-        <% end %>
-      </div>
-      <div>
-        <%# buttons to edit / delete questions.... %>
-      </div>
+      <% if question.id.present? %>
+        <div class="flex justify-between mt-4" data-id="<%= question.id %>" data-action="dragstart->questions#start dragend->questions#end">
+          <% if question.qtype == "bool" %>
+            <p class="cursor-move"><%= question.content %></p>
+            <input type="checkbox" name="" />
+          <% elsif question.qtype == "text" %>
+            <p class="cursor-move"><%= question.content %></p>
+            <input type="text" name="" />
+          <% elsif question.qtype == "num" %>
+            <p class="cursor-move"><%= question.content %></p>
+            <input type="number" name="" />
+          <% elsif question.qtype == "img" %>
+            <%= image_tag "#{question.content}", class: "w-full" %>
+          <% elsif question.qtype == "alrt" %>
+            <p class="cursor-move text-red-600 font-semibold"><%= question.content %></p>
+          <% end %>
+        </div>
+        <div class="flex justify-end mt-1">
+          <%= link_to "Edit", edit_template_question_path(@template.header, question.id), class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xxs px-2 py-1 mx-2 focus:outline-none" %>
+          <%= link_to "Delete", template_question_path(@template.header, question.id), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xxs px-2 py-1 focus:outline-none" %>
+        </div>
+      <% end %>
     <% end %>
   </div>
-  <div class="flex justify-between items-center mt-8">
-    <%# change this button to a regulard button_to or link_to to create a new question.... %>
-    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none">Add Question</button>
-    <%= link_to "Update", template_path(@template), class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-4 py-2 mx-2 focus:outline-none" %>
-    <%= link_to "Back to Template", template_path(@template), class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+  <div class="flex flex-col py-2">
+    <h3>Add New Question</h3>
+    <%= simple_form_for [@template, @question], html: { class: "space-y-4" } do |f| %>
+      <div class="flex justify-between items-center">
+        <%= f.label :qtype, required: false, class: "text-gray-700 font-medium" %>
+        <%= f.input :qtype, collection: [["Checkbox", "bool"], ["Text input", "text"], ["Number input", "num"], ["Image display (url)", "img"], ["Alert display", "alrt"]], input_html: { class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-1.5" }, include_blank: false, label: false %>
+      </div>
+      <div class="flex justify-between items-center">
+        <%= f.label :content, required: false, class: "text-gray-700 font-medium" %>
+        <%= f.input :content, as: :text, input_html: { class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-1.5" }, label: false %>
+      </div>
+      <div class="flex justify-between items-center mt-10">
+        <%= f.submit "Save Question", class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+        <%= link_to "Back to Template", template_path(@template), class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+      </div>
+    <% end %>
   </div>
 </div>

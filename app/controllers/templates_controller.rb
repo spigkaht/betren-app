@@ -5,7 +5,7 @@ class TemplatesController < ApplicationController
   end
 
   def edit
-    # @question = @template.questions.build
+    @question = @template.questions.build
   end
 
   def update

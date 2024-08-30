@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'questions/new'
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
 
@@ -21,5 +22,12 @@ Rails.application.routes.draw do
   resources :contracts, only: [:index, :show]
   resources :invoices, only: [:index, :show]
   resources :jobs, only: [:index, :show, :update]
-  resources :templates, param: :header, only: [:show, :edit, :update]
+  resources :templates, param: :header, only: [:show, :edit, :update] do
+    resources :questions, only: [:new, :create, :edit, :update, :destroy] do
+      collection do
+        patch :reorder
+      end
+    end
+  end
+  # resources :questions, only: [:edit, :update, :destroy]
 end

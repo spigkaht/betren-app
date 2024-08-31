@@ -1,5 +1,5 @@
 class QuestionsController < ApplicationController
-  before_action :set_template, only: [:new, :create, :edit, :update]
+  before_action :set_template, only: [:new, :create, :edit, :update, :destroy]
   before_action :set_question, only: [:edit, :update, :destroy]
 
   def new
@@ -10,7 +10,7 @@ class QuestionsController < ApplicationController
     @question = Question.new(question_params)
     @question.template = @template
     @question.save
-    redirect_to edit_template_path(@template)
+    redirect_to edit_template_path(@template), notice: 'Question was succesfully added'
   end
 
   def edit

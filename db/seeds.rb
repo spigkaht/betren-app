@@ -10,46 +10,56 @@
 
 Job.establish_connection(:secondary)
 
-puts "Clearing out your junk.."
-Job.destroy_all
-Template.destroy_all
-puts "All clean!"
+Question.destroy_all
 
-if Template.count < 5
-  template = Template.new(header: "NOTEMPLATE")
-  template.save
-  headers = Item.where(TYPE: "V").where(Inactive: false).pluck(:Header)
-  headers.each do |header|
-    template = Template.new(header: header)
-    puts "template #{header} created" if template.save
-  end
+templates = Template.all
+
+templates.each do |template|
+  content = "Clean as necessary - wipe down with rag & cleaning spray OR wash with pressure washer & soap"
+  Question.create!(template: template, qtype: "bool", content: content)
+  puts "question #1 completed"
+  content = "Test operation of machine
+  IE: Does a vibrating plate vibrate?
+  Does a rotary hoe drive / blades turn easily?
+  Does a demo saw blade spin freely / water function correctly?"
+  Question.create!(template: template, qtype: "bool", content: content)
+  puts "question #2 completed"
 end
 
-items = Item.all
-count = 0
+puts "questions completed"
 
-puts "Processing items"
-items.each do |item|
-  next if item.CNTR == "" || item.NUM == "" || item.Inactive || item.BulkItem || item.PartNumber !~ /\A\d+\z/ || item.PartNumber.end_with?("000")
-  puts "Item Num: #{item.NUM}"
-  contract_item = ContractItem.where(ITEM: item.NUM).order(DDT: :asc).last
-  template = Template.find_by(header: item.Header)
-  job = Job.new(item_num: item.NUM, store: item.CurrentStore, completed_at: Time.now, last_return: contract_item.DDT, last_contract: item.CNTR, template: template)
-  if job.last_return.to_date == Date.current
-    job.completed_at = nil
-    puts "JOB COMPLETED AT DATE SET TO NIL"
-  end
-  puts job.save ? "Completed item ##{item.NUM}, job #{job.id}" : "No template exists for this item"
-  count += 1
-end
+# puts "Clearing out your junk.."
+# Job.destroy_all
+# Template.destroy_all
+# puts "All clean!"
 
-template = Template.find_by(header: "ROLLER3")
-unless template.questions.any?
-  Question.create(template: template, content: "Is the equipment clean?", qtype: "bool")
-  Question.create(template: template, content: "Does the flashing light work?", qtype: "bool")
-  Question.create(template: template, content: "Enter any notes:", qtype: "text")
-  Question.create(template: template, content: "Enter fuel taken:", qtype: "num")
-end
+# if Template.count < 5
+#   template = Template.new(header: "NOTEMPLATE")
+#   template.save
+#   headers = Item.where(TYPE: "V").where(Inactive: false).pluck(:Header)
+#   headers.each do |header|
+#     template = Template.new(header: header)
+#     puts "template #{header} created" if template.save
+#   end
+# end
 
-puts "Item processing complete!"
-puts "#{count} jobs created"
+# items = Item.all
+# count = 0
+
+# puts "Processing items"
+# items.each do |item|
+#   next if item.CNTR == "" || item.NUM == "" || item.Inactive || item.BulkItem || item.PartNumber !~ /\A\d+\z/ || item.PartNumber.end_with?("000")
+#   puts "Item Num: #{item.NUM}"
+#   contract_item = ContractItem.where(ITEM: item.NUM).order(DDT: :asc).last
+#   template = Template.find_by(header: item.Header)
+#   job = Job.new(item_num: item.NUM, store: item.CurrentStore, completed_at: Time.now, last_return: contract_item.DDT, last_contract: item.CNTR, template: template)
+#   if job.last_return.to_date == Date.current
+#     job.completed_at = nil
+#     puts "JOB COMPLETED AT DATE SET TO NIL"
+#   end
+#   puts job.save ? "Completed item ##{item.NUM}, job #{job.id}" : "No template exists for this item"
+#   count += 1
+# end
+
+# puts "Item processing complete!"
+# puts "#{count} jobs created"

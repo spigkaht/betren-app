@@ -1,27 +1,29 @@
 <div class="flex flex-col mb-auto px-2 pt-5" id="main">
-  <div class="flex justify-between">
+  <div class="flex justify-between border-b pb-2">
     <h1><%= @template.header %></h1>
     <h2>Template View</h2>
   </div>
   <div class="flex-1">
     <% if @template.questions.any? %>
       <% @template.questions.each do |question| %>
-        <div class="flex justify-between mt-4">
-          <p><%= question.content %></p>
+        <div class="flex justify-between border-b mt-4 pb-4">
+          <%= simple_format question.content unless question.qtype == "alrt" || question.qtype == "img" %>
           <% if question.qtype == "bool" %>
-            <input type="checkbox" name="" />
+            <input type="checkbox" name="" class="cursor-pointer w-4 h-4 ml-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" />
           <% elsif question.qtype == "text" %>
-            <input type="text" name="" />
+            <input type="text" name="" class="bg-gray-50 border border-gray-300 text-gray-900 h-8 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-1.5 ml-3 mt-0.25" />
           <% elsif question.qtype == "num" %>
-            <input type="number" name="" />
+            <input type="number" name="" class="bg-gray-50 border border-gray-300 text-gray-900 h-8 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-1.5 ml-3 mt-0.25" />
+          <% elsif question.qtype == "img" %>
+            <%= image_tag "#{question.content}", class: "w-full" %>
+          <% elsif question.qtype == "alrt" %>
+            <%= simple_format question.content, class: "text-red-600 font-semibold" %>
           <% end %>
-        </div>
-        <div>
         </div>
       <% end %>
     <% end %>
   </div>
-  <div class="flex justify-between items-center mt-8">
+  <div class="flex justify-between items-center my-8">
     <%= link_to "Edit Template", edit_template_path(@template), class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-4 py-2 mx-2 focus:outline-none" %>
     <% if params[:job_id].present? %>
       <%= link_to "Back to Job", job_path(@job), class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>

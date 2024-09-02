@@ -3,7 +3,11 @@ class JobsController < ApplicationController
   def index
     one_day_ago = 1.day.ago
     contract_items = ContractItem.joins(:item)
-                                 .where(item: { CurrentStore: "004" })
+                                 .where(item: { CurrentStore: '004' })
+                                 .where(item: { Inactive: false })
+                                 .where(item: { BulkItem: false })
+                                 .where.not('item.PartNumber LIKE ?', '%000')
+                                 .where('item.PartNumber LIKE ?', '%[^0-9]%')
                                  .where('TransactionItems.DDT >= ?', one_day_ago)
                                  .where('TransactionItems.TXTY IN (?)', ["RR", "RX"])
                                  .where('TransactionItems.HRSC > ?', 0)
@@ -17,18 +21,14 @@ class JobsController < ApplicationController
       item = Item.find_by(NUM: contract_item.ITEM)
 
       #only process if item isn't inactive, bulk item, part number ends with 000
-      if item.Inactive || item.BulkItem || item.PartNumber !~ /\A\d+\z/ || item.PartNumber.end_with?("000")
-        puts "------------- item does not meet criteria ------------------"
-      else
-        last_job = Job.where(item_num: item.NUM).order(completed_at: :desc).first
-        template = Template.find_by(header: item.Header)
-        if last_job.nil?
-          Job.create(item_num: item.NUM, store: item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil, template: template)
-        elsif last_job.completed_at.nil?
-          puts "--------------- last job not completed ------------------"
-        elsif contract_item.DDT > last_job.completed_at
-          Job.create(item_num: item.NUM, store: item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil, template: template)
-        end
+      last_job = Job.where(item_num: item.NUM).order(completed_at: :desc).first
+      template = Template.find_by(header: item.Header)
+      if last_job.nil?
+        Job.create(item_num: item.NUM, store: item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil, template: template)
+      elsif last_job.completed_at.nil?
+        puts "--------------- last job not completed ------------------"
+      elsif contract_item.DDT > last_job.completed_at
+        Job.create(item_num: item.NUM, store: item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil, template: template)
       end
     end
 

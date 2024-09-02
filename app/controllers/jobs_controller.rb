@@ -3,6 +3,7 @@ class JobsController < ApplicationController
   def index
     one_day_ago = 1.day.ago
     contract_items = ContractItem.joins(:item)
+                                 .includes(:items)
                                  .where(item: { CurrentStore: '004' })
                                  .where(item: { Inactive: false })
                                  .where(item: { BulkItem: false })

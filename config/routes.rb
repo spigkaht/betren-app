@@ -1,8 +1,4 @@
 Rails.application.routes.draw do
-  get 'questions/new'
-  require 'sidekiq/web'
-  mount Sidekiq::Web => '/sidekiq'
-
   devise_for :users, controllers: { registrations: "users/registrations" }
 
   namespace :admin do

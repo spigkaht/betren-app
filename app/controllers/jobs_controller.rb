@@ -3,10 +3,8 @@ class JobsController < ApplicationController
   def index
     one_day_ago = 1.day.ago
     contract_items = ContractItem.joins(:item)
-                                 .includes(:items)
-                                 .where(item: { CurrentStore: '004' })
-                                 .where(item: { Inactive: false })
-                                 .where(item: { BulkItem: false })
+                                #  .includes(:item)
+                                 .where(item: { CurrentStore: '004', Inactive: false, BulkItem: false })
                                  .where.not('item.PartNumber LIKE ?', '%000')
                                  .where('item.PartNumber LIKE ?', '%[^0-9]%')
                                  .where('TransactionItems.DDT >= ?', one_day_ago)
@@ -17,9 +15,13 @@ class JobsController < ApplicationController
                                  .where.not('TransactionItems.CNTR LIKE ?', 't%')
                                  .select('TransactionItems.id, TransactionItems.ITEM, TransactionItems.CNTR, TransactionItems.DDT')
 
+    item_nums = contract_items.pluck(:ITEM)
+    items = Item.where(NUM: item_nums).index_by(&:NUM)
+
     contract_items.each do |contract_item|
       #find item by contract item NUM
-      item = Item.find_by(NUM: contract_item.ITEM)
+      item = items[contract_item.ITEM]
+      next unless item
 
       #only process if item isn't inactive, bulk item, part number ends with 000
       last_job = Job.where(item_num: item.NUM).order(completed_at: :desc).first

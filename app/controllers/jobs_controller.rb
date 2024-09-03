@@ -19,7 +19,7 @@ class JobsController < ApplicationController
 
     contract_items.each do |contract_item|
       item = items[contract_item.ITEM]
-      next unless item
+      next unless item || contract_item.contract.STAT != ""
 
       last_job = Job.where(item_num: item.NUM).order(completed_at: :desc).first
       template = Template.find_by(header: item.Header)

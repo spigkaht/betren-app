@@ -1,0 +1,16 @@
+<div class="flex flex-col m-2 border-2 rounded-lg border-gray-700">
+  <%= link_to job_path(job.id) do %>
+    <div class="flex justify-between border-b-2 rounded-t-lg p-2 bg-green-300">
+      <p><%= job.item.KEY %></p>
+      <p>J<%= job.id %> | Store: <%= job.item.CurrentStore %></p>
+    </div>
+    <div class="flex flex-col p-2">
+      <div class="flex justify-between">
+        <p><%= job.item.Name %></p>
+        <p><%= job.item.PartNumber %></p>
+      </div>
+      <p>Returned Date: <%= job.last_return.strftime("%a %d/%m/%Y %H:%M") %></p>
+    <% end %>
+    <p>Last Contract: <%= link_to "#{job.last_contract}", contract_path(job.last_contract), class: "text-blue-600 hover:underline" %></p>
+  </div>
+</div>

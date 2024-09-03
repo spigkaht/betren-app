@@ -11,13 +11,17 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   </head>
 
-  <body>
-    <main class="container max-w-md border mx-auto px-2 flex flex-col h-dvh">
+  <body class="container max-w-md border mx-auto px-2 flex flex-col min-h-dvh">
+    <div>
       <%= render "shared/header" %>
       <%= render "shared/flashes" %>
+    </div>
+    <main class="flex-grow">
       <%= yield %>
-      <%= render "shared/footer" if user_signed_in? %>
     </main>
+    <footer class="sticky bottom-0 bg-white">
+      <%= render "shared/footer" if user_signed_in? %>
+    </footer>
 
   </body>
 </html>

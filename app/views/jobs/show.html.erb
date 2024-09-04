@@ -1,6 +1,6 @@
 <div class="flex flex-col mb-auto px-2 pt-5" id="main">
   <div class="flex justify-between pb-2">
-    <h1>Job <%= @job.id %></h1>
+    <h1>Pre-hire Check <%= @job.id %></h1>
     <%= link_to "View Template", template_path(@job.template, job_id: @job.id), class: "text-green-600 hover:underline" if current_user.admin? %>
   </div>
   <div class="flex justify-between border-b pb-4">
@@ -28,7 +28,7 @@
       <%= f.hidden_field :id, value: @job.id %>
       <div class="flex justify-between m-8">
         <%= f.submit "Complete", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
-        <%= link_to "Back to Jobs", jobs_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+        <%= link_to "Back to PHCs", jobs_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
       </div>
     <% end %>
   </div>

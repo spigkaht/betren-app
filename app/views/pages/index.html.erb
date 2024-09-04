@@ -4,19 +4,31 @@
       <span class="material-symbols-outlined !text-4xl text-green-800">
         home_repair_service
       </span>
-      <p class="text-xxs -mt-2">jobs</p>
+      <p class="text-xxs -mt-2">PHC</p>
     <% end %>
     <div class="flex flex-col justify-center ml-2">
-      <h2>Jobs</h2>
+      <h2>Pre-hire Checks</h2>
       <p>View jobs such as prehire checks</p>
     </div>
   </div>
+  <div class="flex" id="main-returns">
+    <%= link_to returns_path, class: "border-4 border-green-600 rounded m-2 w-16 text-center opacity-50" do %>
+      <span class="material-symbols-outlined !text-4xl text-green-800">
+        assignment_returned
+      </span>
+      <p class="text-xxs -mt-2">Returns</p>
+    <% end %>
+    <div class="flex flex-col justify-center ml-2">
+      <h2>Yard Returns</h2>
+      <p>Check off items and process a yard return</p>
+    </div>
+  </div>
   <div class="flex" id="main-contracts">
-    <%= link_to contracts_path, class: "border-4 border-green-600 rounded m-2 w-16 text-center" do %>
+    <%= link_to contracts_path, class: "border-4 border-green-600 rounded m-2 w-16 text-center opacity-50" do %>
       <span class="material-symbols-outlined !text-4xl text-green-800">
         description
       </span>
-      <p class="text-xxs -mt-2">contracts</p>
+      <p class="text-xxs -mt-2">Contracts</p>
     <% end %>
     <div class="flex flex-col justify-center ml-2">
       <h2>Contracts</h2>
@@ -24,11 +36,11 @@
     </div>
   </div>
   <div class="flex" id="main-transport">
-    <%= link_to root_path, class: "border-4 border-green-600 rounded m-2 w-16 text-center" do %>
+    <%= link_to root_path, class: "border-4 border-green-600 rounded m-2 w-16 text-center opacity-50" do %>
       <span class="material-symbols-outlined !text-4xl text-green-800">
         local_shipping
       </span>
-      <p class="text-xxs -mt-2">del pu</p>
+      <p class="text-xxs -mt-2">DEL PU</p>
     <% end %>
     <div class="flex flex-col justify-center ml-2">
       <h2>Transport</h2>
@@ -36,11 +48,11 @@
     </div>
   </div>
   <div class="flex" id="main-messages">
-  <%= link_to root_path, class: "border-4 border-green-600 rounded m-2 w-16 text-center" do %>
+  <%= link_to root_path, class: "border-4 border-green-600 rounded m-2 w-16 text-center opacity-50" do %>
       <span class="material-symbols-outlined !text-4xl text-green-800">
         forum
       </span>
-      <p class="text-xxs -mt-2">messages</p>
+      <p class="text-xxs -mt-2">Messages</p>
     <% end %>
     <div class="flex flex-col justify-center ml-2">
       <h2>Messages</h2>

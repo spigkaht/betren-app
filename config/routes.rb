@@ -15,15 +15,17 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  resources :contracts, only: [:index, :show]
-  resources :invoices, only: [:index, :show]
-  resources :jobs, only: [:index, :show, :update]
-  resources :templates, param: :header, only: [:show, :edit, :update] do
-    resources :questions, only: [:new, :create, :edit, :update, :destroy] do
-      collection do
-        patch :reorder
+  scope format: false do
+    resources :contracts, only: [:index, :show]
+    resources :invoices, only: [:index, :show]
+    resources :jobs, only: [:index, :show, :update]
+    resources :returns, only: [:index, :show]
+    resources :templates, param: :header, only: [:show, :edit, :update] do
+      resources :questions, only: [:new, :create, :edit, :update, :destroy] do
+        collection do
+          patch :reorder
+        end
       end
     end
   end
-  # resources :questions, only: [:edit, :update, :destroy]
 end

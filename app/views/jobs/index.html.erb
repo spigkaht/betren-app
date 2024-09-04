@@ -16,6 +16,9 @@
       <span>Loading...</span>
   </div>
   <div id="cards" data-loading-target="content">
+    <% if @jobs.empty? %>
+      <h3 class="font-bold text-center mt-10">No items to load</h3>
+    <% end %>
     <%= render @jobs %>
   </div>
 </div>

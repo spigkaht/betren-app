@@ -152,13 +152,13 @@ class InvoicePdfGenerator
         month_rate = number_to_currency(item.item.RATE6)
 
         if item.PRIC.positive? && (item.item.TYPE == "T" || item.item.TYPE == "H")
-          items_data << ["", "", "12Hrs #{min_rate}    1day #{day_rate}    2dys #{days_rate}", "1week #{week_rate}  1month #{month_rate}", ""]
+          items_data << ["", "", "12Hrs #{min_rate}        1day #{day_rate}        2dys #{days_rate}", "1week #{week_rate}      1month #{month_rate}", ""]
           conditional_rows << items_data.size - 1
         end
       end
 
       # Items table
-      pdf.table(items_data, header: true, cell_style: { :overflow => :true, :size => 7, padding: [4, 5, 4, 5] }) do
+      pdf.table(items_data, header: true, cell_style: { :overflow => :true, :size => 6, padding: [4, 5, 4, 5] }) do
         style(row(0), font_style: :bold)
         style(row(0).columns(0), borders: [:top, :left, :bottom, :right])
         style(row(0).columns(-1), borders: [:top, :right, :bottom])

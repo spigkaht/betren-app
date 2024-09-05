@@ -14,7 +14,7 @@
     <p>Last Contract: <%= link_to "#{job.last_contract}", contract_path(job.last_contract), class: "text-blue-600 hover:underline" %></p>
     <div class="flex justify-between">
       <p>Sort: <%= job.item.Location %></p>
-      <p>Avail QTY: <%= job.item.Location %></p>
+      <p>Avail QTY: <%= @min_sum_hash[job.item.Header] %></p>
     </div>
   </div>
 </div>

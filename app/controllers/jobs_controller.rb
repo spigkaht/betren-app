@@ -7,17 +7,18 @@ class JobsController < ApplicationController
     one_day_ago = 1.day.ago
 
     contract_items = ContractItem.joins(:item)
-                                  .where(item: { Inactive: false, BulkItem: false, CurrentStore: current_store })
-                                  .where('TransactionItems.DDT >= ?', one_day_ago)
-                                  .where.not('item.PartNumber LIKE ?', '%000')
-                                  .where.not('item.PartNumber LIKE ?', '%[^0-9]%')
-                                  .where.not('item.PartNumber LIKE ?', '')
-                                  .where('TransactionItems.TXTY IN (?)', ["RR", "RX"])
-                                  .where('TransactionItems.HRSC > ?', 0)
-                                  .where('TransactionItems.QTY > ?', 0)
-                                  .where.not('TransactionItems.CNTR LIKE ?', 'r%')
-                                  .where.not('TransactionItems.CNTR LIKE ?', 't%')
-                                  .select('TransactionItems.id, TransactionItems.ITEM, TransactionItems.CNTR, TransactionItems.DDT, item.Header, item.CurrentStore')
+                                 .includes(:contract)
+                                 .where(item: { Inactive: false, BulkItem: false, CurrentStore: current_store })
+                                 .where('TransactionItems.DDT >= ?', one_day_ago)
+                                 .where.not('item.PartNumber LIKE ?', '%000')
+                                 .where.not('item.PartNumber LIKE ?', '%[^0-9]%')
+                                 .where.not('item.PartNumber LIKE ?', '')
+                                 .where('TransactionItems.TXTY IN (?)', ["RR", "RX"])
+                                 .where('TransactionItems.HRSC > ?', 0)
+                                 .where('TransactionItems.QTY > ?', 0)
+                                 .where.not('TransactionItems.CNTR LIKE ?', 'r%')
+                                 .where.not('TransactionItems.CNTR LIKE ?', 't%')
+                                 .select('TransactionItems.id, TransactionItems.ITEM, TransactionItems.CNTR, TransactionItems.DDT, item.Header, item.CurrentStore')
 
     item_nums = contract_items.map(&:ITEM)
     templates = Template.where(header: contract_items.map(&:Header)).index_by(&:header)
@@ -26,7 +27,7 @@ class JobsController < ApplicationController
     item_headers = contract_items.map(&:Header).uniq
     @min_sum_hash = GroupItems.new(item_headers, current_store).group_and_calculate_min_sum
 
-    @jobs = Job.includes(:item).where(completed_at: nil)
+    @jobs = Job.includes(item: :contract_items).where(completed_at: nil)
     @jobs = @jobs.where(store: params[:store] || current_store)
     @jobs = @jobs.sort_by do |job|
       [

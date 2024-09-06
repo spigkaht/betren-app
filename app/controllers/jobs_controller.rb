@@ -39,6 +39,7 @@ class JobsController < ApplicationController
   end
 
   def show
+    @operators = Operator.where(Inactive: false)
     item = @job.item
 
     @template = Template.find_by(header: item.Header)

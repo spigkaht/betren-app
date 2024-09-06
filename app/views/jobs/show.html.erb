@@ -7,8 +7,38 @@
     <p><%= @job.item.Name %></p>
     <p><%= @job.item.PartNumber %></p>
   </div>
-  <div class="mt-1">
-    <%= form_with model: @job, url: job_path(@job), method: :patch, local: true do |f| %>
+  <div class="flex justify-between border-b pb-2 mt-2">
+      <p>Branch <%= @job.item.CurrentStore %></p>
+      <p><%= Time.now.strftime("%a %d/%m/%Y %H:%M") %></p>
+      <%# Date/time / branch %>
+  </div>
+  <%= form_with model: @job, url: job_path(@job), method: :patch, local: true do |f| %>
+    <div data-controller="operator" data-operator-operators='<%= @operators.to_json(only: [:OPID, :OPNM]) %>'>
+      <div class="flex items-center justify-between border-b pb-3 mt-3">
+        <div class="flex justify-between items-center">
+          <%= f.label :opid, "Enter initials:", class: "text-sm"%>
+          <%= f.text_field :opid, class: "block w-12 px-2 py-1 mx-4 text-sm border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { action: "input->operator#updateName" } %>
+          <%= f.label :opnm, "User", class: "text-sm ml-10" %>
+        </div>
+        <div>
+          <p id="opnm-display" data-operator-target="name" class="text-sm text-gray-700"></p>
+          <%= f.hidden_field :opnm, data: { operator_target: "hiddenName" } %>
+        </div>
+      </div>
+    </div>
+    <div>
+      <%# Current hour reading %>
+    </div>
+    <div>
+      <%# Item full of fuel? cFUEL etc %>
+    </div>
+    <div>
+      <%# Accessory check (list) %>
+    </div>
+    <div>
+      <%# Photo entry %>
+    </div>
+    <div class="mt-1">
       <% @job.template.questions.each_with_index do |question, index| %>
         <div class="flex justify-between border-b pb-4 mt-4">
           <%= simple_format question.content unless question.qtype == "alrt" || question.qtype == "img" %>

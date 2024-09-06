@@ -19,5 +19,3 @@ export default class extends Controller {
     }
   }
 }
-
-// const operators = JSON.parse(this.updateName.get("operators"));

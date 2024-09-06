@@ -41,6 +41,8 @@ class JobsController < ApplicationController
   def show
     @operators = Operator.where(Inactive: false)
     item = @job.item
+    item_header = Item.find_by(KEY: item.Header)
+    @accessories = item_header.accessories
 
     @template = Template.find_by(header: item.Header)
     if @template

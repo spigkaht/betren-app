@@ -13,6 +13,12 @@
       <%# Date/time / branch %>
   </div>
   <%= form_with model: @job, url: job_path(@job), method: :patch, local: true do |f| %>
+    <% if @job.item.FUEL == ("cFUEL" || "cUNFUEL") %>
+      <div class="flex justify-end items-center border-b pb-4 mt-4">
+        <%= f.label :fuel, "Fuel taken:", class: "text-gray-700 font-medium" %>
+        <%= f.number_field :fuel, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 ml-4 p-1.5" %>
+      </div>
+    <% end %>
     <div data-controller="operator" data-operator-operators='<%= @operators.to_json(only: [:OPID, :OPNM]) %>'>
       <div class="flex items-center justify-between border-b pb-3 mt-3">
         <div class="flex justify-between items-center">
@@ -56,7 +62,7 @@
         </div>
       <% end %>
       <%= f.hidden_field :id, value: @job.id %>
-      <div class="flex justify-between m-8">
+      <div class="flex justify-between items-center my-8">
         <%= f.submit "Complete", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
         <%= link_to "Back to PHCs", jobs_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
       </div>

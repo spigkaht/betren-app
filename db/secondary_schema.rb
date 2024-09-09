@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_03_232936) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_09_051919) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -30,6 +30,29 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_03_232936) do
     t.index ["template_id"], name: "index_images_on_template_id"
   end
 
+  create_table "job_data", force: :cascade do |t|
+    t.string "item_num"
+    t.string "header"
+    t.string "part_num"
+    t.string "store"
+    t.string "opid"
+    t.string "opnm"
+    t.boolean "fuel_req"
+    t.float "fuel"
+    t.float "hours"
+    t.string "photo1"
+    t.string "photo2"
+    t.string "photo3"
+    t.string "photo4"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.jsonb "bool_fields", default: {}
+    t.jsonb "accessory_fields", default: {}
+    t.bigint "job_id"
+    t.index ["job_id"], name: "index_job_data_on_job_id"
+  end
+
   create_table "jobs", force: :cascade do |t|
     t.string "item_num", null: false
     t.datetime "completed_at"
@@ -39,6 +62,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_03_232936) do
     t.string "last_contract"
     t.string "store"
     t.bigint "template_id"
+    t.string "photo1"
+    t.string "photo2"
+    t.string "photo3"
+    t.string "photo4"
     t.index ["item_num"], name: "index_jobs_on_item_num"
     t.index ["template_id"], name: "index_jobs_on_template_id"
   end
@@ -80,6 +107,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_03_232936) do
 
   add_foreign_key "answers", "jobs"
   add_foreign_key "images", "templates"
+  add_foreign_key "job_data", "jobs"
   add_foreign_key "jobs", "templates"
   add_foreign_key "questions", "templates"
 end

@@ -4,7 +4,7 @@ export default class extends Controller {
   static targets = ["name", "hiddenName"]
 
   updateName(event) {
-    const opid = event.target.value;
+    const opid = event.target.value.toUpperCase();
     const operators = JSON.parse(this.data.get("operators"));
 
     // Find the operator based on the OPID

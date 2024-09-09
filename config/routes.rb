@@ -20,7 +20,7 @@ Rails.application.routes.draw do
     resources :invoices, only: [:index, :show]
     resources :jobs, only: [:index, :show, :update]
     resources :returns, only: [:index, :show]
-    resources :templates, param: :header, only: [:show, :edit, :update] do
+    resources :templates, param: :header, only: [:show, :edit, :update], constraints: { header: /[^\/]+/ } do
       resources :questions, only: [:new, :create, :edit, :update, :destroy] do
         collection do
           patch :reorder

@@ -9,7 +9,7 @@
         <div class="flex justify-between border-b mt-4 pb-4">
           <%= simple_format question.content unless question.qtype == "alrt" || question.qtype == "img" %>
           <% if question.qtype == "bool" %>
-            <input type="checkbox" name="" class="cursor-pointer w-4 h-4 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2" />
+            <input type="checkbox" name="" class="cursor-pointer w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2" />
           <% elsif question.qtype == "text" %>
             <input type="text" name="" class="bg-gray-50 border border-gray-300 text-gray-900 h-8 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-40 p-1.5 ml-3 mt-0.25" />
           <% elsif question.qtype == "num" %>

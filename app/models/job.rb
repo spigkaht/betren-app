@@ -1,5 +1,9 @@
 class Job < ApplicationRecord
   establish_connection :secondary
+  mount_uploader :photo1, PhotoUploader
+  mount_uploader :photo2, PhotoUploader
+  mount_uploader :photo3, PhotoUploader
+  mount_uploader :photo4, PhotoUploader
 
   belongs_to :item, primary_key: 'NUM', foreign_key: 'item_num', class_name: 'Item'
   belongs_to :template

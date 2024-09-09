@@ -9,9 +9,12 @@ class GroupItems
                         .where(Header: @item_headers)
                         .group_by(&:Header)
 
+    puts "GROUPED ITEMS: #{grouped_items}"
+
     min_sum_hash = {}
     grouped_items.each do |header, items|
       min_sum_hash[header] = items.sum { |item| item.QTY.to_i - item.QYOT.to_i }
+      puts "MIN_SUM: #{min_sum_hash[header]}"
     end
 
     min_sum_hash

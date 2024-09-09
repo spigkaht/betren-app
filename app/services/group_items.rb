@@ -9,7 +9,7 @@ class GroupItems
                         .where(Header: @item_headers)
                         .group_by(&:Header)
 
-    puts "GROUPED ITEMS: #{grouped_items}"
+    # puts "GROUPED ITEMS: #{grouped_items}"
 
     min_sum_hash = {}
     grouped_items.each do |header, items|

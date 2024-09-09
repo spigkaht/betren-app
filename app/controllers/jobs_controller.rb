@@ -54,27 +54,7 @@ class JobsController < ApplicationController
 
   def update
     if @job.update(job_params)
-      JobData.create(
-        job_id: @job.id,
-        item_num: job_data_params[:item_num],
-        header: job_data_params[:header],
-        part_num: job_data_params[:part_num],
-        store: job_data_params[:store],
-        completed_at: job_data_params[:completed_at],
-        opid: job_data_params[:opid],
-        opnm: job_data_params[:opnm],
-        fuel_req: job_data_params[:fuel_req],
-        fuel: job_data_params[:fuel],
-        hours: job_data_params[:hours],
-        photo1: job_data_params[:photo1],
-        photo2: job_data_params[:photo2],
-        photo3: job_data_params[:photo3],
-        photo4: job_data_params[:photo4],
-        bool_fields: collect_dynamic_fields(job_data_params, /^bool\d+$/),
-        accessory_fields: collect_dynamic_fields(job_data_params, /^accessory\d+$/)
-      )
-
-      create_answers(@job, params[:job]) if params[:job]
+      # create_answers(@job, params[:job]) if params[:job]
       redirect_to jobs_path, notice: 'Job was successfully updated'
     else
       render :show, alert: "Error updating job."
@@ -88,30 +68,16 @@ class JobsController < ApplicationController
   end
 
   def job_params
-    params.require(:job).permit(:id, :item_num, :completed_at)
+    params.require(:job).permit(
+      :id, :item_num, :completed_at, :store, :photo1, :photo2, :photo3, :photo4, :header, :part_num, :opid, :opnm, :fuel_req, :fuel, :hours, bool_fields: {}, accessory_fields: {}
+    )
   end
 
-  def job_data_params
-    puts params.inspect
-
-    params[:job].require(:job_data).permit(
-      :item_num, :header, :part_num, :store, :completed_at, :opid, :opnm, :fuel_req, :fuel, :hours, :photo1, :photo2, :photo3, :photo4
-    ).tap do |whitelisted|
-      bool_fields = params[:job][:job_data].keys.select { |key| key.match(/^bool\d+$/) }
-      accessory_fields = params[:job][:job_data].keys.select { |key| key.match(/^accessory\d+$/) }
-      whitelisted.merge!(params[:job][:job_data].permit(bool_fields + accessory_fields))
-    end
-  end
-
-  def collect_dynamic_fields(params, regex)
-    params.to_unsafe_h.select { |key, value| key.match(regex) }
-  end
-
-  def create_answers(job, answers_params)
-    answers_params.each do |answer_params|
-      job.answers.create(
-        content: answer_params
-      )
-    end
-  end
+  # def create_answers(job, answers_params)
+  #   answers_params.each do |answer_params|
+  #     job.answers.create(
+  #       content: answer_params
+  #     )
+  #   end
+  # end
 end

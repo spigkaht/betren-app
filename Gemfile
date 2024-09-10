@@ -55,7 +55,7 @@ gem "prawn"
 gem "prawn-table", "~> 0.1.0"
 gem "bundler"
 gem "heroicon"
-gem "cloudinary"
+gem "cloudinary", "~> 1.24.0"
 gem "carrierwave"
 gem "font-awesome-rails"
 

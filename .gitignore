@@ -40,6 +40,5 @@
 *.swp
 .DS_Store
 
-/config/initializers/carrierwave.rb
 /app/assets/builds/*
 !/app/assets/builds/.keep

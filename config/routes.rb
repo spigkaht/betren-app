@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   scope format: false do
+    get "/settings", to: "pages#settings", as: "settings"
     resources :contracts, only: [:index, :show]
     resources :invoices, only: [:index, :show]
     resources :jobs, only: [:index, :show, :update]

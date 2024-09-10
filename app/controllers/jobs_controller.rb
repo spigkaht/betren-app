@@ -5,7 +5,7 @@ class JobsController < ApplicationController
     # generate stores from all jobs
     @stores = Job.where(store: ["001", "002", "003", "004"]).distinct.pluck(:store).sort
     # set current store based on params
-    current_store = params[:store].presence || "004"
+    current_store = params[:store].presence || current_user.store
     # set cutoff for searching for new items to create jobs from
     one_day_ago = 1.day.ago
 
@@ -24,17 +24,24 @@ class JobsController < ApplicationController
                                  .where.not('TransactionItems.CNTR LIKE ?', 't%')
                                  .select('TransactionItems.id, TransactionItems.ITEM, TransactionItems.CNTR, TransactionItems.DDT, item.Header, item.CurrentStore')
 
-    # collect list of item nums only
+    # collect list of item nums only for all contract items
     item_nums = contract_items.map(&:ITEM)
-    puts item_nums
+    # collect list of templates for all contract items
     templates = Template.where(header: contract_items.map(&:Header)).index_by(&:header)
+    # process jobs for all contract items
+    # checks if any jobs exist for item, creates a job if none exist or last job has been completed
     ProcessJobs.new(contract_items, item_nums, templates).process_jobs
 
-    item_headers = contract_items.map(&:Header).uniq
-    @min_sum_hash = GroupItems.new(item_headers, current_store).group_and_calculate_min_sum
-
+    # collect all jobs that have not been completed
     @jobs = Job.includes(item: :contract_items).where(completed_at: nil)
+    # refine jobs to current store
     @jobs = @jobs.where(store: params[:store] || current_store)
+
+    # collect list of headers for all contract items
+    item_headers = @jobs.map { |job| job.item.Header }.uniq
+    # group all items by header, calculate available quantity, collate in hash for each item
+    @min_sum_hash = GroupItems.new(item_headers, current_store).group_and_calculate_min_sum
+    # sort jobs
     @jobs = @jobs.sort_by do |job|
       [
         @min_sum_hash[job.item.Header] || 0,

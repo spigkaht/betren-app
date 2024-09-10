@@ -85,6 +85,7 @@
       <div class="flex flex-col justify-between pb-4 mt-4 border-b">
         <h3 class="mb-1 font-bold">Accessories check (tick all that are returned)</h3>
         <% @accessories.each_with_index do |accessory, index| %>
+          <% next if accessory.MiscName.nil? %>
           <% accessory_key = accessory.MiscName.parameterize(separator: '_') %>
           <div class="flex justify-between items-center my-1">
             <%= label_tag "job[answer_attributes][answers][accessory_#{accessory_key}]", accessory.MiscName, class: "text-sm" %>

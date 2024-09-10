@@ -35,7 +35,7 @@
     <h3>Add New Question</h3>
     <%= simple_form_for [@template, @question], html: { class: "space-y-4" } do |f| %>
       <div class="flex justify-between items-center">
-        <%= f.label :qtype, required: false, class: "text-gray-700 font-medium" %>
+        <%= f.label :qtype, "Question type", required: false, class: "text-gray-700 font-medium" %>
         <%= f.input :qtype, collection: [["Checkbox", "bool"], ["Text input", "text"], ["Number input", "num"], ["Image display (url)", "img"], ["Alert display", "alrt"]], input_html: { class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-40 p-1.5" }, include_blank: false, label: false %>
       </div>
       <div class="flex justify-between items-center">
@@ -44,6 +44,20 @@
       </div>
       <div class="flex justify-between items-center mt-10 pb-2">
         <%= f.submit "Save Question", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 ml-auto focus:outline-none" %>
+      </div>
+    <% end %>
+  </div>
+  <div class="flex flex-col py-3 border-b">
+    <%= simple_form_for @template, html: { class: "space-y-4" } do |f| %>
+      <div>
+        <p>Current photo quantity required: <strong><%= @template.photo_qty %></strong></p>
+      </div>
+      <div class="flex justify-between items-center">
+        <%= f.label :photo_qty, "Photo quantity required:", required: false, class: "text-gray-700 font-medium" %>
+        <%= f.input :photo_qty, collection: 1..8, input_html: { class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-40 p-1.5" }, include_blank: false, label: false %>
+      </div>
+      <div class="flex justify-between items-center mt-10 pb-2">
+        <%= f.submit "Update photo quantity", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 ml-auto focus:outline-none" %>
       </div>
     <% end %>
   </div>

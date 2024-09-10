@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["name", "hiddenName"]
+  static targets = ["name"]
 
   updateName(event) {
     const opid = event.target.value.toUpperCase();
@@ -11,11 +11,9 @@ export default class extends Controller {
     const operator = operators.find(op => op.OPID === opid);
 
     if (operator) {
-      this.nameTarget.textContent = operator.OPNM;
-      this.hiddenNameTarget.value = operator.OPNM;
+      this.nameTarget.value = operator.OPNM;
     } else {
-      this.nameTarget.textContent = "";
-      this.hiddenNameTarget.value = "";
+      this.nameTarget.value = "";
     }
   }
 }

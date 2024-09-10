@@ -23,6 +23,6 @@ class TemplatesController < ApplicationController
   end
 
   def template_params
-    params.require(:template).permit(questions_attributes: [:id, :question_type, :content, :answer, :_destroy])
+    params.require(:template).permit(:photo_qty, questions_attributes: [:id, :question_type, :content, :answer, :_destroy])
   end
 end

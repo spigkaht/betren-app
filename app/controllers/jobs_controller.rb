@@ -39,7 +39,9 @@ class JobsController < ApplicationController
   end
 
   def show
+    @job.build_answer if @job.answer.nil?
     @operators = Operator.where(Inactive: false)
+
     item = @job.item
     item_header = Item.find_by(KEY: item.Header)
     @accessories = item_header.accessories
@@ -54,7 +56,18 @@ class JobsController < ApplicationController
 
   def update
     if @job.update(job_params)
-      # create_answers(@job, params[:job]) if params[:job]
+      if params[:job][:answer_attributes]
+        answers_hash = params[:job][:answer_attributes][:answers].to_unsafe_h
+        @job.answer.update(answers: answers_hash)
+      end
+
+      puts "Job was successfully updated, checking photos..."
+      if @job.photo1.present?
+        puts "Photo1 is present: #{@job.photo1.url}"
+      else
+        puts "No photo1 uploaded"
+      end
+
       redirect_to jobs_path, notice: 'Job was successfully updated'
     else
       render :show, alert: "Error updating job."
@@ -69,15 +82,22 @@ class JobsController < ApplicationController
 
   def job_params
     params.require(:job).permit(
-      :id, :item_num, :completed_at, :store, :photo1, :photo2, :photo3, :photo4, :header, :part_num, :opid, :opnm, :fuel_req, :fuel, :hours, bool_fields: {}, accessory_fields: {}
+      :id,
+      :item_num,
+      :completed_at,
+      :store,
+      :photo1,
+      :photo2,
+      :photo3,
+      :photo4,
+      :header,
+      :part_num,
+      :opid,
+      :opnm,
+      :fuel_req,
+      :fuel,
+      :hours,
+      answer_attributes: [:id, answers: {}]
     )
   end
-
-  # def create_answers(job, answers_params)
-  #   answers_params.each do |answer_params|
-  #     job.answers.create(
-  #       content: answer_params
-  #     )
-  #   end
-  # end
 end

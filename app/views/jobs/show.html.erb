@@ -1,4 +1,5 @@
 <div class="flex flex-col mb-auto px-2 pt-5" id="main">
+  <%= image_tag @job.photo1.url if @job.photo1.present? %>
   <div class="flex justify-between pb-2">
     <h1>Pre-hire Check <%= @job.id %></h1>
     <%= link_to "View Template", template_path(@job.template, job_id: @job.id), class: "text-green-600 hover:underline" if current_user.admin? %>
@@ -11,7 +12,7 @@
       <p>Branch <%= @job.item.CurrentStore %></p>
       <p><%= Time.now.strftime("%a %d/%m/%Y %H:%M") %></p>
   </div>
-  <%= form_with model: @job, url: job_path(@job), method: :patch, local: true do |f| %>
+  <%= form_with model: @job, url: job_path(@job), method: :patch, local: true, multipart: true do |f| %>
     <%= f.hidden_field :id, value: @job.id %>
     <%= f.hidden_field :item_num, value: @job.item_num %>
     <%= f.hidden_field :completed_at, value: Time.now %>
@@ -26,8 +27,7 @@
           <%= f.label :opnm, "User", class: "text-sm ml-10 font-bold" %>
         </div>
         <div>
-          <p id="opnm-display" data-operator-target="name" class="text-sm text-gray-700"></p>
-          <%= f.hidden_field :opnm, data: { operator_target: "hiddenName" } %>
+          <%= f.text_field :opnm, class: "block w-40 px-2 py-1 mx-4 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { operator_target: "name" }, required: true, onfocus: "this.blur();" %>
         </div>
       </div>
     </div>
@@ -49,66 +49,54 @@
           <% if @job.item.TYPE == "H" %>
             <div class="flex justify-end items-center text-sm">
               <%= f.label :hours, "Engine hours:", class: "font-bold" %>
-              <%= f.number_field :hours, step: "any", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 ml-2 py-1 px-2" %>
+              <%= f.number_field :hours, required: true, step: "any", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 ml-2 py-1 px-2" %>
             </div>
           <% end %>
         </div>
       <% end %>
     </div>
-    <div class="flex items-center border-b pb-4 mt-4">
-      <%= f.label :photo1, "Add photo:", class: "flex-1 w-min text-sm font-bold" %>
-      <%= f.file_field :photo1, accept: 'image/*', capture: 'camera', class: "text-sm ml-2 border-gray-300 rounded focus:ring-green-500 focus:ring-2" %>
-    </div>
-    <div class="flex items-center border-b pb-4 mt-4">
-      <%= f.label :photo2, "Add photo:", class: "flex-1 w-min text-sm font-bold" %>
-      <%= f.file_field :photo2, accept: 'image/*', capture: 'camera', class: "text-sm ml-2 border-gray-300 rounded focus:ring-green-500 focus:ring-2" %>
-    </div>
-    <div class="flex items-center border-b pb-4 mt-4">
-      <%= f.label :photo3, "Add photo:", class: "flex-1 w-min text-sm font-bold" %>
-      <%= f.file_field :photo3, accept: 'image/*', capture: 'camera', class: "text-sm ml-2 border-gray-300 rounded focus:ring-green-500 focus:ring-2" %>
-    </div>
-    <div class="flex items-center border-b pb-4 mt-4">
-      <%= f.label :photo4, "Add photo:", class: "flex-1 w-min text-sm font-bold" %>
-      <%= f.file_field :photo4, accept: 'image/*', capture: 'camera', class: "text-sm ml-2 border-gray-300 rounded focus:ring-green-500 focus:ring-2" %>
-    </div>
+    <% @job.template.photo_qty.times do |i| %>
+      <div class="flex items-center border-b pb-4 mt-4">
+        <%= f.label 'photo#{i}', "Add photo:", class: "flex-1 w-min text-sm font-bold" %>
+        <%= f.file_field 'photo#{i}', accept: 'image/*', capture: 'camera', required: true, class: "text-sm ml-2 border-gray-300 rounded focus:ring-green-500 focus:ring-2" %>
+      </div>
+    <% end %>
     <div class="mt-1">
-      <%= f.fields_for :bool_fields, @job.bool_fields || {} do |bool_field| %>
-        <% @job.template.questions.each_with_index do |question, index| %>
-          <div class="flex justify-between border-b pb-4 mt-4">
-            <%= simple_format question.content unless question.qtype == "alrt" || question.qtype == "img" %>
-            <% if question.qtype == "bool" %>
-              <%= bool_field.check_box "bool#{index}", { class: "cursor-pointer w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2" }, "true", "false" %>
-            <% elsif question.qtype == "text" %>
-              <%= bool_field.text_field "text#{index}", class: "bg-gray-50 border border-gray-300 text-gray-900 h-8 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-40 p-1.5 ml-3 mt-0.25" %>
-            <% elsif question.qtype == "num" %>
-              <%= bool_field.number_field "num#{index}", step: "any", class: "bg-gray-50 border border-gray-300 text-gray-900 h-8 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-40 p-1.5 ml-3 mt-0.25" %>
-            <% elsif question.qtype == "img" %>
-              <%= image_tag "#{question.content}", class: "w-full" %>
-            <% elsif question.qtype == "alrt" %>
-              <%= simple_format question.content, class: "text-red-600 font-semibold" %>
-            <% end %>
-          </div>
-        <% end %>
-      <% end %>
-    </div>
-    <% if @accessories %>
-        <div class="flex flex-col justify-between pb-4 mt-4 border-b">
-          <h3 class="mb-1 font-bold">Accessories check (tick all that are returned)</h3>
-          <%= f.fields_for :accessory_fields, @job.accessory_fields || {} do |accessory_field| %>
-            <% @accessories.each_with_index do |accessory, index| %>
-              <div class="flex justify-between items-center my-1">
-                <%= accessory_field.label "accessory#{index}", accessory.MiscName, class: "text-sm" %>
-                <%= accessory_field.check_box "accessory#{index}", { class: "cursor-pointer w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2" }, "true", "false" %>
-              </div>
-            <% end %>
+      <% @job.template.questions.each_with_index do |question, index| %>
+        <div class="flex justify-between border-b pb-4 mt-4">
+          <% label_text = question.content.parameterize(separator: '_') %>
+          <%= simple_format question.content unless question.qtype == "alrt" || question.qtype == "img" %>
+          <% if question.qtype == "bool" %>
+            <%= hidden_field_tag "job[answer_attributes][answers][checkbox_#{label_text}]", false %>
+            <%= check_box_tag "job[answer_attributes][answers][checkbox_#{label_text}]", "true", @job.answer&.answers&.dig("checkbox_#{label_text}") == "true", class: "cursor-pointer w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2" %>
+          <% elsif question.qtype == "text" %>
+            <%= text_field_tag "job[answer_attributes][answers][text_#{label_text}]", @job.answer&.answers&.dig("text_#{label_text}"), required: true, class: "bg-gray-50 border border-gray-300 text-gray-900 h-8 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-40 p-1.5 ml-3 mt-0.25" %>
+          <% elsif question.qtype == "num" %>
+            <%= number_field_tag "job[answer_attributes][answers][number_#{label_text}]", @job.answer&.answers&.dig("number_#{label_text}"), step: "any", required: true, class: "bg-gray-50 border border-gray-300 text-gray-900 h-8 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-40 p-1.5 ml-3 mt-0.25" %>
+          <% elsif question.qtype == "img" %>
+            <%= image_tag "#{question.content}", class: "w-full" %>
+          <% elsif question.qtype == "alrt" %>
+            <%= simple_format question.content, class: "text-red-600 font-semibold" %>
           <% end %>
         </div>
       <% end %>
-      <div class="flex justify-between items-center my-8">
-        <%= f.submit "Complete", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
-        <%= link_to "Back to PHCs", jobs_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+    </div>
+    <% if @accessories.any? %>
+      <div class="flex flex-col justify-between pb-4 mt-4 border-b">
+        <h3 class="mb-1 font-bold">Accessories check (tick all that are returned)</h3>
+        <% @accessories.each_with_index do |accessory, index| %>
+          <% accessory_key = accessory.MiscName.parameterize(separator: '_') %>
+          <div class="flex justify-between items-center my-1">
+            <%= label_tag "job[answer_attributes][answers][accessory_#{accessory_key}]", accessory.MiscName, class: "text-sm" %>
+            <%= hidden_field_tag "job[answer_attributes][answers][accessory_#{accessory_key}]", false %>
+            <%= check_box_tag "job[answer_attributes][answers][accessory_#{accessory_key}]", "true", @job.answer&.answers&.dig("accessory_#{accessory_key}") == "true", class: "cursor-pointer w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2" %>
+          </div>
+        <% end %>
       </div>
     <% end %>
-  </div>
-
+    <div class="flex justify-between items-center my-8">
+      <%= f.submit "Complete", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+      <%= link_to "Back to PHCs", jobs_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+    </div>
+  <% end %>
 </div>

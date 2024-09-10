@@ -2,10 +2,14 @@ class JobsController < ApplicationController
   before_action :set_job, only: [:show, :update]
 
   def index
+    # generate stores from all jobs
     @stores = Job.where(store: ["001", "002", "003", "004"]).distinct.pluck(:store).sort
+    # set current store based on params
     current_store = params[:store].presence || "004"
+    # set cutoff for searching for new items to create jobs from
     one_day_ago = 1.day.ago
 
+    # gather list of contract items to create jobs for
     contract_items = ContractItem.joins(:item)
                                  .includes(:contract)
                                  .where(item: { Inactive: false, BulkItem: false, CurrentStore: current_store })
@@ -20,7 +24,9 @@ class JobsController < ApplicationController
                                  .where.not('TransactionItems.CNTR LIKE ?', 't%')
                                  .select('TransactionItems.id, TransactionItems.ITEM, TransactionItems.CNTR, TransactionItems.DDT, item.Header, item.CurrentStore')
 
+    # collect list of item nums only
     item_nums = contract_items.map(&:ITEM)
+    puts item_nums
     templates = Template.where(header: contract_items.map(&:Header)).index_by(&:header)
     ProcessJobs.new(contract_items, item_nums, templates).process_jobs
 

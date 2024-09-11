@@ -15,15 +15,15 @@ Job.establish_connection(:secondary)
 # Template.destroy_all
 # puts "All clean!"
 
-templates = Template.all
+# templates = Template.all
 
-templates.each_with_index do |template, index|
-  template.photo_qty = 4
-  template.save
-  puts "template ##{index} saved"
-end
+# templates.each_with_index do |template, index|
+#   template.photo_qty = 4
+#   template.save
+#   puts "template ##{index} saved"
+# end
 
-puts "All done!"
+# puts "All done!"
 
 # if Template.count < 5
 #   template = Template.new(header: "NOTEMPLATE")
@@ -74,16 +74,16 @@ puts "All done!"
 # end
 
 
-# jobs = Job.where(completed_at: nil)
+jobs = Job.where(completed_at: nil)
 
-# jobs.each do |job|
-#   time = Time.now
-#   puts "time #{time}"
-#   job.completed_at = time
-#   job.save
-#   puts "job ##{job.id} item #{job.item_num}"
-#   puts "completed date: #{job.completed_at}"
-# end
+jobs.each do |job|
+  time = Time.now
+  puts "time #{time}"
+  job.completed_at = time
+  job.save
+  puts "job ##{job.id} item #{job.item_num}"
+  puts "completed date: #{job.completed_at}"
+end
 
 # one_day_ago = 1.day.ago
 # contract_items = ContractItem.joins(:item)

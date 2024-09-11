@@ -1,0 +1,39 @@
+<div class="flex flex-col mb-auto px-2">
+  <div class="flex justify-center">
+    <h1>PHC Reports</h1>
+  </div>
+    <div id="filters">
+      <% if current_user.admin? %>
+        <%= form_with(url: reports_path, method: :get, local: true, class: "my-4") do %>
+          <div class="mb-4 mx-2 flex justify-between items-center">
+            <label for="store" class="block -mr-4 text-sm font-medium text-gray-700">Select Store</label>
+            <%= select_tag :store, options_for_select(@stores, selected: params[:store]), prompt: "Store", class: "block w-[7rem] pl-3 pr-3 py-1 text-sm border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md" %>
+            <%= submit_tag "Filter", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-1 mx-1 focus:outline-none" %>
+            <%= link_to "Reset", reports_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-1 mx-1 focus:outline-none" %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <div id="cards">
+    <% @reports.each do |report| %>
+      <div class="flex flex-col m-2 border-2 rounded-lg border-gray-700">
+        <%= link_to report_path(report.id) do %>
+          <div class="flex justify-between border-b-2 rounded-t-lg p-2 bg-green-300">
+            <p><%= report.item.KEY %></p>
+            <p>J<%= report.id %> | Store: <%= report.item.CurrentStore %></p>
+          </div>
+          <div class="flex flex-col p-2">
+            <div class="flex justify-between">
+              <p><%= report.item.Name %></p>
+              <p><%= report.item.PartNumber %></p>
+            </div>
+            <p>Completed Date: <%= report.completed_at.strftime("%a %d/%m/%Y %H:%M") %></p>
+          <% end %>
+          <div class="flex justify-between">
+            <p>Last Contract: <%= link_to "#{report.last_contract}", contract_path(report.last_contract), class: "text-blue-600 hover:underline" %></p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

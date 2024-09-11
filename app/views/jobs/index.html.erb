@@ -1,4 +1,7 @@
-<div class="flex flex-col mb-auto px-2 pt-5" id="main" data-controller="loading">
+<div class="flex flex-col mb-auto px-2" id="main" data-controller="loading">
+  <div class="flex justify-center">
+    <h1>Pre-hire Checks</h1>
+  </div>
   <div id="filters">
     <% if current_user.admin? %>
       <%= form_with(url: jobs_path, method: :get, local: true, class: "my-4") do %>

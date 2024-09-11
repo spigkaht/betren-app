@@ -1,0 +1,33 @@
+<div class="flex flex-col mb-auto px-2 pt-5" id="main">
+  <div class="flex justify-between pb-2">
+    <h1>PHC Report <%= @report.id %></h1>
+    <%= link_to "View Template", template_path(@report.template, report_id: @report.id), class: "text-green-600 hover:underline" if current_user.admin? %>
+  </div>
+  <div class="flex justify-between border-b pb-4">
+    <p><%= @report.item.Name %></p>
+    <p><%= @report.item.PartNumber %></p>
+  </div>
+  <div class="flex justify-between pb-2 mt-2">
+    <p>Completed at: <%= @report.completed_at.strftime("%a %d/%m/%Y %H:%M") %></p>
+    <p>Branch <%= @report.item.CurrentStore %></p>
+  </div>
+  <div class="flex justify-between border-b pb-2">
+    <p>User: <%= @report.opnm %></p>
+  </div>
+  <div class="flex flex-col border-b pb-2 mt-4">
+    <% @report.answer.answers.each do |answer| %>
+      <% answer.each do |key, value| %>
+        <% key_val = deparameterize(key) %>
+        <div class="flex justify-between pb-2">
+          <p>
+            <strong><%= key_val.split.first %></strong>
+            <%= key_val.split.drop(1).join(' ') %>
+          </p>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="flex justify-between items-center my-8">
+    <%= link_to "Back to reports", reports_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+  </div>
+</div>

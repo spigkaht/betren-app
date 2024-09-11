@@ -23,3 +23,8 @@ th, td {
   padding: 0;
   border: none;
 }
+
+.flatpickr-calendar.open {
+  left: auto !important; /* Ensure it doesn't push to the side */
+  right: auto !important;
+}

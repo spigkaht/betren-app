@@ -3,15 +3,23 @@
     <h1>PHC Reports</h1>
   </div>
     <div id="filters">
-      <% if current_user.admin? %>
-        <%= form_with(url: reports_path, method: :get, local: true, class: "my-4") do %>
-          <div class="mb-4 mx-2 flex justify-between items-center">
-            <label for="store" class="block -mr-4 text-sm font-medium text-gray-700">Select Store</label>
-            <%= select_tag :store, options_for_select(@stores, selected: params[:store]), prompt: "Store", class: "block w-[7rem] pl-3 pr-3 py-1 text-sm border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md" %>
-            <%= submit_tag "Filter", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-1 mx-1 focus:outline-none" %>
-            <%= link_to "Reset", reports_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-1 mx-1 focus:outline-none" %>
+      <%= form_with(url: reports_path, method: :get, local: true, class: "my-4") do %>
+        <div class="mb-4 mx-2 flex justify-between items-center">
+          <%= label_tag :start_date, "From:", class: "text-sm font-medium text-gray-700" %>
+          <%= text_field_tag :start_date, params[:start_date], class: "w-[8rem] pl-3 pr-3 py-1 text-sm border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { controller: "datepicker" } %>
+          <%= label_tag :end_date, "To:", class: "text-sm font-medium text-gray-700" %>
+          <%= text_field_tag :end_date, params[:end_date], class: "w-[8rem] pl-3 pr-3 py-1 text-sm border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { controller: "datepicker" } %>
+        </div>
+        <% if current_user.admin? %>
+          <div class="mb-4 mx-2 flex justify-center items-center">
+            <label for="store" class="block mx-4 text-sm font-medium text-gray-700">Select Store</label>
+            <%= select_tag :store, options_for_select(@stores, selected: params[:store]), prompt: "Store", class: "block w-[7rem] pl-3 pr-3 py-1 mx-4 text-sm border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md" %>
           </div>
         <% end %>
+        <div class="mb-4 mx-2 flex justify-center items-center">
+          <%= submit_tag "Apply filters", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-1 mx-4 focus:outline-none" %>
+          <%= link_to "Reset", reports_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm mx-4 px-5 py-1 focus:outline-none" %>
+        </div>
       <% end %>
     </div>
   <div id="cards">

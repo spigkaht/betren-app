@@ -14,18 +14,41 @@
   <div class="flex justify-between border-b pb-2">
     <p>User: <%= @report.opnm %></p>
   </div>
+  <% if @report.fuel || @report.hours %>
+    <div class="flex justify-between border-b pb-2 mt-2">
+      <% if @report.fuel %>
+          <p>Req fuel? <strong><%= @report.fuel_req ? "yes" : "no" %></strong></p>
+          <p>Fuel taken: <strong><%= @report.fuel %></strong></p>
+      <% end %>
+      <p>Engine hours: <strong><%= @report.hours %></strong></p>
+    </div>
+  <% end %>
   <div class="flex flex-col border-b pb-2 mt-4">
     <% @report.answer.answers.each do |answer| %>
-      <% answer.each do |key, value| %>
-        <% key_val = deparameterize(key) %>
-        <div class="flex justify-between pb-2">
-          <p>
-            <strong><%= key_val.split.first %></strong>
-            <%= key_val.split.drop(1).join(' ') %>
-          </p>
-        </div>
-      <% end %>
+      <div class="flex justify-between pb-2">
+        <% answer.each_with_index do |(key, value), index| %>
+          <% key_val = deparameterize(key) %>
+          <% if index.even? %>
+            <p class="w-3/4">
+              <strong><%= key_val.split.first %></strong>
+              / <%= key_val.split.drop(1).join(' ').capitalize %>
+            </p>
+          <% else %>
+            <p><%= key_val %></p>
+          <% end %>
+        <% end %>
+      </div>
     <% end %>
+  </div>
+  <div class="flex flex-col border-b pb-2 mt-2">
+    <%= image_tag @report.photo1.url if @report.photo1.present? %>
+    <%= image_tag @report.photo2.url if @report.photo2.present? %>
+    <%= image_tag @report.photo3.url if @report.photo3.present? %>
+    <%= image_tag @report.photo4.url if @report.photo4.present? %>
+    <%= image_tag @report.photo5.url if @report.photo5.present? %>
+    <%= image_tag @report.photo6.url if @report.photo6.present? %>
+    <%= image_tag @report.photo7.url if @report.photo7.present? %>
+    <%= image_tag @report.photo8.url if @report.photo8.present? %>
   </div>
   <div class="flex justify-between items-center my-8">
     <%= link_to "Back to reports", reports_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>

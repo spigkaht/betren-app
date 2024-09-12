@@ -40,7 +40,7 @@
       </div>
       <div class="flex justify-between items-center">
         <%= f.label :content, required: false, class: "text-gray-700 font-medium" %>
-        <%= f.input :content, as: :text, input_html: { class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-60 p-1.5" }, label: false %>
+        <%= f.input :content, as: :text, input_html: { rows: "10", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-60 p-1.5" }, label: false %>
       </div>
       <div class="flex justify-between items-center mt-10 pb-2">
         <%= f.submit "Save Question", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 ml-auto focus:outline-none" %>

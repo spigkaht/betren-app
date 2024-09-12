@@ -74,16 +74,16 @@ Job.establish_connection(:secondary)
 # end
 
 
-jobs = Job.where(completed_at: nil)
+# jobs = Job.where(completed_at: nil)
 
-jobs.each do |job|
-  time = Time.now
-  puts "time #{time}"
-  job.completed_at = time
-  job.save
-  puts "job ##{job.id} item #{job.item_num}"
-  puts "completed date: #{job.completed_at}"
-end
+# jobs.each do |job|
+#   time = Time.now
+#   puts "time #{time}"
+#   job.completed_at = time
+#   job.save
+#   puts "job ##{job.id} item #{job.item_num}"
+#   puts "completed date: #{job.completed_at}"
+# end
 
 # one_day_ago = 1.day.ago
 # contract_items = ContractItem.joins(:item)
@@ -137,3 +137,17 @@ end
 # @jobs = @jobs.where(store: current_store)
 
 # @jobs = @jobs.order(last_return: :desc)
+
+puts "Seeding template questions data"
+
+Question.destroy_all
+
+templates = Template.all
+
+templates.each_with_index do |template, index|
+  question = "Clean as necessary - wipe down with rag & cleaning spray OR wash with pressure washer & soap"
+  template.questions.create!(qtype: "bool", content: question)
+  question = "Test operation of machine\n  IE: Does a vibrating plate vibrate?\n  Does a rotary hoe drive / blades turn easily?\n  Does a demo saw blade spin freely / water function correctly?"
+  template.questions.create!(qtype: "bool", content: question)
+  puts "template ##{index} questions created" if template.save
+end

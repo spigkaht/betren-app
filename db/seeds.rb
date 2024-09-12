@@ -138,120 +138,120 @@ Job.establish_connection(:secondary)
 
 # @jobs = @jobs.order(last_return: :desc)
 
-puts "Seeding template questions data"
+# puts "Seeding template questions data"
 
-electrical_items =
-  [
-    "MIXERELECSM",
-    "CARPETDRY",
-    "FANEXTRACT",
-    "COMP12",
-    "FANMAN",
-    "CONCGRINDHAN",
-    "PUMPSUB50",
-    "PLASTERSAND",
-    "HANDTRUCK",
-    "HEATBLOWDIES",
-    "GRINDER100",
-    "WALLPAPERSTR",
-    "VSHAFT25MMEL",
-    "BREAKTILE",
-    "BRICKSAW",
-    "LEAD240V",
-    "LEAD3PHASE",
-    "HEATRADDIES",
-    "BRICKSAW",
-    "MAGDRILL",
-    "BREAKELLAR",
-    "BREAKELMED",
-    "BREAKELSM",
-    "VACWET"
-  ]
+# electrical_items =
+#   [
+#     "MIXERELECSM",
+#     "CARPETDRY",
+#     "FANEXTRACT",
+#     "COMP12",
+#     "FANMAN",
+#     "CONCGRINDHAN",
+#     "PUMPSUB50",
+#     "PLASTERSAND",
+#     "HANDTRUCK",
+#     "HEATBLOWDIES",
+#     "GRINDER100",
+#     "WALLPAPERSTR",
+#     "VSHAFT25MMEL",
+#     "BREAKTILE",
+#     "BRICKSAW",
+#     "LEAD240V",
+#     "LEAD3PHASE",
+#     "HEATRADDIES",
+#     "BRICKSAW",
+#     "MAGDRILL",
+#     "BREAKELLAR",
+#     "BREAKELMED",
+#     "BREAKELSM",
+#     "VACWET"
+#   ]
 
-genlarge_items =
-  [
-    "GEN30",
-    "GEN60",
-    "GEN20"
-  ]
+# genlarge_items =
+#   [
+#     "GEN30",
+#     "GEN60",
+#     "GEN20"
+#   ]
 
-earthmoving_items =
-  [
-    "SKID3.5TRACK",
-    "STUMPGRINDER",
-    "ROLLER1.2",
-    "ROLLER3",
-    "EXC5T"
-  ]
+# earthmoving_items =
+#   [
+#     "SKID3.5TRACK",
+#     "STUMPGRINDER",
+#     "ROLLER1.2",
+#     "ROLLER3",
+#     "EXC5T"
+#   ]
 
-hydraulic_tools =
-  [
-    "TRENCHER",
-    "ROCKGRAB",
-    "PHDMINILOAD",
-    "PHDEXC1",
-    "PHDEXC1.5",
-    "PHDEXC5",
-    "BREAKEXC5"
-  ]
+# hydraulic_tools =
+#   [
+#     "TRENCHER",
+#     "ROCKGRAB",
+#     "PHDMINILOAD",
+#     "PHDEXC1",
+#     "PHDEXC1.5",
+#     "PHDEXC5",
+#     "BREAKEXC5"
+#   ]
 
-ladders_items =
-  [
-    "LADDER8.3",
-    "LADDER9.8",
-    "LADPLAT2.4",
-    "LADPLAT3",
-    "STEP2.4",
-    "STEP3",
-    "STEP4.2",
-    "TREST2.4",
-    "TREST3"
-  ]
+# ladders_items =
+#   [
+#     "LADDER8.3",
+#     "LADDER9.8",
+#     "LADPLAT2.4",
+#     "LADPLAT3",
+#     "STEP2.4",
+#     "STEP3",
+#     "STEP4.2",
+#     "TREST2.4",
+#     "TREST3"
+#   ]
 
-airtools_items =
-  [
-    "NEEDLEGUN",
-    "CP9",
-    "BREAKAIRMED",
-    "BREAKAIRSM",
-    "SCABBLER"
-  ]
+# airtools_items =
+#   [
+#     "NEEDLEGUN",
+#     "CP9",
+#     "BREAKAIRMED",
+#     "BREAKAIRSM",
+#     "SCABBLER"
+#   ]
 
-twostroke_items =
-  [
-    "BROOMPOWER",
-    "BRUSHCUT",
-    "BLOWER",
-    "HEDGETRIM",
-    "HEDGETRIMPOL",
-    "POLESAW",
-    "PHD1MINI"
-  ]
+# twostroke_items =
+#   [
+#     "BROOMPOWER",
+#     "BRUSHCUT",
+#     "BLOWER",
+#     "HEDGETRIM",
+#     "HEDGETRIMPOL",
+#     "POLESAW",
+#     "PHD1MINI"
+#   ]
 
-petrol_items =
-  [
-    "STARDRIVEPET",
-    "VIBPLATEMED",
-    "VIBPLATESM",
-    "VSHAFTPET",
-    "RAMMER",
-    "RAMMERNARROW",
-    "GEN8",
-    "GEN6.5",
-    "GEN3",
-    "GEN2",
-    "FLEXMOTOR",
-    "FORKLIFT2.5",
-    "MOWER",
-    "PHD1MED",
-    "ROTARYHOE"
-  ]
+# petrol_items =
+#   [
+#     "STARDRIVEPET",
+#     "VIBPLATEMED",
+#     "VIBPLATESM",
+#     "VSHAFTPET",
+#     "RAMMER",
+#     "RAMMERNARROW",
+#     "GEN8",
+#     "GEN6.5",
+#     "GEN3",
+#     "GEN2",
+#     "FLEXMOTOR",
+#     "FORKLIFT2.5",
+#     "MOWER",
+#     "PHD1MED",
+#     "ROTARYHOE"
+#   ]
 
-pumplarge_items =
-  [
-    "PUMP100",
-    "PUMP150"
-  ]
+# pumplarge_items =
+#   [
+#     "PUMP100",
+#     "PUMP150"
+#   ]
 
 trailers_items =
   [
@@ -281,364 +281,373 @@ trailers_items =
     "LIGHTTOWER"
   ]
 
-petrol_items.each do |item, index|
-  template = Template.find_by(header: item)
-  template.questions.destroy_all
-
-  question = "Spray machine down with soap, scrub any areas with grease/oil buildup"
-  qtype = "bool"
-  template.questions.create!(order: 1, qtype: qtype, content: question)
-
-  question = "Pressure wash machine until clean (repeat above if necessary)"
-  qtype = "bool"
-  template.questions.create!(order: 2, qtype: qtype, content: question)
-
-  question = "Refuel petrol tank
-* Unleaded fuel for unleaded machines
-* 2-stroke fuel for 2-stroke machines"
-  qtype = "bool"
-  template.questions.create!(order: 3, qtype: qtype, content: question)
-
-  question = "Start petrol motor"
-  qtype = "bool"
-  template.questions.create!(order: 4, qtype: qtype, content: question)
-
-  question = "Check hydraulic oil level if applicable"
-  qtype = "bool"
-  template.questions.create!(order: 5, qtype: qtype, content: question)
-
-  question = "Test operation of machine
-IE: Does a vibrating plate vibrate?
-Does a rotary hoe drive / blades turn easily?
-Does a demo saw blade spin freely / water function correctly?"
-  qtype = "bool"
-  template.questions.create!(order: 6, qtype: qtype, content: question)
-
-  template.save
-  puts "questions created for template #{template.header}"
-end
-
-electrical_items.each do |item, index|
-  template = Template.find_by(header: item)
-  template.questions.destroy_all
-
-  question = "Clean machine with compressed air and rag"
-  qtype = "bool"
-  template.questions.create!(order: 1, qtype: qtype, content: question)
-
-  question = "Electrical test with test & tag machine as per procedure & training"
-  qtype = "bool"
-  template.questions.create!(order: 2, qtype: qtype, content: question)
-
-  question = "Check body of tool, electrical lead and plug for any signs of damage"
-  qtype = "bool"
-  template.questions.create!(order: 3, qtype: qtype, content: question)
-
-  question = "Test operation of machine
-IE: Does a vibrating plate vibrate?
-Does a rotary hoe drive / blades turn easily?
-Does a demo saw blade spin freely / water function correctly?"
-  qtype = "bool"
-  template.questions.create!(order: 4, qtype: qtype, content: question)
-
-  template.save
-  puts "questions created for template #{template.header}"
-end
-
-genlarge_items.each do |item, index|
-  template = Template.find_by(header: item)
-  template.questions.destroy_all
-
-  question = "Spray machine down with soap, scrub any areas with grease/oil buildup"
-  qtype = "bool"
-  template.questions.create!(order: 1, qtype: qtype, content: question)
-
-  question = "Pressure wash machine until clean (repeat above if necessary)"
-  qtype = "bool"
-  template.questions.create!(order: 2, qtype: qtype, content: question)
-
-  question = "Test 3 phase on Generator
-* Check volts with metre
-* Elect test and re-tag if required"
-  qtype = "bool"
-  template.questions.create!(order: 3, qtype: qtype, content: question)
-
-  question = "Check on trailer:
-* D-Shackle present
-* Brake lever not too tight / loose
-* Trailer lights with trolley tester"
-  qtype = "bool"
-  template.questions.create!(order: 4, qtype: qtype, content: question)
-
-  template.save
-  puts "questions created for template #{template.header}"
-end
-
-earthmoving_items.each do |item, index|
-  template = Template.find_by(header: item)
-  template.questions.destroy_all
-
-  question = "Check for hydraulic leaks (before washing)"
-  qtype = "bool"
-  template.questions.create!(order: 1, qtype: qtype, content: question)
-
-  question = "Remove excess dirt and mud prior to cleaning"
-  qtype = "bool"
-  template.questions.create!(order: 2, qtype: qtype, content: question)
-
-  question = "Spray machine down with soap
-Degreaser for any greasy areas
-Scrub any areas with grease/oil buildup"
-  qtype = "bool"
-  template.questions.create!(order: 3, qtype: qtype, content: question)
-
-  question = "Pressure wash machine until clean (repeat above if necessary)"
-  qtype = "bool"
-  template.questions.create!(order: 4, qtype: qtype, content: question)
-
-  question = "Inspect for damage to hydraulic rams, hydarulic hoses, body panels, tracks"
-  qtype = "bool"
-  template.questions.create!(order: 5, qtype: qtype, content: question)
-
-  question = "Damage = Not ready for hire"
-  qtype = "alrt"
-  template.questions.create!(order: 6, qtype: qtype, content: question)
-
-  question = "Visual check of all rollover protection bolts (if loose = not ready for hire)"
-  qtype = "bool"
-  template.questions.create!(order: 7, qtype: qtype, content: question)
-
-  question = "Check all safety decals & stickers"
-  qtype = "bool"
-  template.questions.create!(order: 8, qtype: qtype, content: question)
-
-  question = "Check reverse beeper & flashing light both function"
-  qtype = "bool"
-  template.questions.create!(order: 9, qtype: qtype, content: question)
-
-  question = "Grease all points on machine
-* Remove excess grease beforehand with rag"
-  qtype = "bool"
-  template.questions.create!(order: 10, qtype: qtype, content: question)
-
-  question = "Check hydraulic oil level"
-  qtype = "bool"
-  template.questions.create!(order: 11, qtype: qtype, content: question)
-
-  question = "Test machine operation
-Does it:
-* Drive backward and forward?
-* Turn?
-* Arm & bucket movement operational and smooth?
-* No sqeauling or grinding noises?
-* Grader bar functions?
-* Roller vibrates?"
-  qtype = "bool"
-  template.questions.create!(order: 12, qtype: qtype, content: question)
-
-  template.save
-  puts "questions created for template #{template.header}"
-end
-
-hydraulic_tools.each do |item, index|
-  template = Template.find_by(header: item)
-  template.questions.destroy_all
-
-  question = "Check for hydraulic leaks (before washing)"
-  qtype = "bool"
-  template.questions.create!(order: 1, qtype: qtype, content: question)
-
-  question = "Remove excess dirt and mud prior to cleaning"
-  qtype = "bool"
-  template.questions.create!(order: 2, qtype: qtype, content: question)
-
-  question = "Spray machine down with soap
-Degreaser for any greasy areas
-Scrub any areas with grease/oil buildup"
-  qtype = "bool"
-  template.questions.create!(order: 3, qtype: qtype, content: question)
-
-  question = "Pressure wash machine until clean (repeat above if necessary)"
-  qtype = "bool"
-  template.questions.create!(order: 4, qtype: qtype, content: question)
-
-  question = "Inspect for damage to hydraulic rams, hydarulic hoses, body panels etc"
-  qtype = "bool"
-  template.questions.create!(order: 5, qtype: qtype, content: question)
-
-  question = "Damage = Not ready for hire"
-  qtype = "alrt"
-  template.questions.create!(order: 6, qtype: qtype, content: question)
-
-  question = "Check all safety decals & stickers"
-  qtype = "bool"
-  template.questions.create!(order: 7, qtype: qtype, content: question)
-
-  question = "Test operation of machine
-IE: Does a vibrating plate vibrate?
-Does a rotary hoe drive / blades turn easily?
-Does a demo saw blade spin freely / water function correctly?"
-  qtype = "bool"
-  template.questions.create!(order: 8, qtype: qtype, content: question)
-
-  question = "Ensure hyraulic fittings are clean and plug male fitting into female fitting before putting attachment away"
-  qtype = "bool"
-  template.questions.create!(order: 9, qtype: qtype, content: question)
-
-  template.save
-  puts "questions created for template #{template.header}"
-end
-
-ladders_items.each do |item, index|
-  template = Template.find_by(header: item)
-  template.questions.destroy_all
-
-  question = "Spray machine down with soap, scrub any areas with grease/oil buildup"
-  qtype = "bool"
-  template.questions.create!(order: 1, qtype: qtype, content: question)
-
-  question = "Pressure wash machine until clean (repeat above if necessary)"
-  qtype = "bool"
-  template.questions.create!(order: 2, qtype: qtype, content: question)
-
-  question = "Check basic operation and safety IE
-Are all rungs in good condition?
-Are feet in good condition and all rubber feet secured?"
-  qtype = "bool"
-  template.questions.create!(order: 3, qtype: qtype, content: question)
-
-  template.save
-  puts "questions created for template #{template.header}"
-end
-
-airtools_items.each do |item, index|
-  template = Template.find_by(header: item)
-  template.questions.destroy_all
-
-  question = "Clean machine with compressed air and rag"
-  qtype = "bool"
-  template.questions.create!(order: 1, qtype: qtype, content: question)
-
-  question = "Wash with pressure washer if necessary, safe to do so and won't damage machine"
-  qtype = "bool"
-  template.questions.create!(order: 2, qtype: qtype, content: question)
-
-  question = "Check all air fittings & hoses for damage"
-  qtype = "bool"
-  template.questions.create!(order: 3, qtype: qtype, content: question)
-
-  question = "Check body of tool for any damage"
-  qtype = "bool"
-  template.questions.create!(order: 4, qtype: qtype, content: question)
-
-  question = "Test operation of machine
-IE: Does a vibrating plate vibrate?
-Does a rotary hoe drive / blades turn easily?
-Does a demo saw blade spin freely / water function correctly?"
-  qtype = "bool"
-  template.questions.create!(order: 5, qtype: qtype, content: question)
-
-  template.save
-  puts "questions created for template #{template.header}"
-end
-
-twostroke_items.each do |item, index|
-  template = Template.find_by(header: item)
-  template.questions.destroy_all
-
-  question = "Spray machine down with soap, scrub any areas with grease/oil buildup"
-  qtype = "bool"
-  template.questions.create!(order: 1, qtype: qtype, content: question)
-
-  question = "Pressure wash machine until clean (repeat above if necessary)"
-  qtype = "bool"
-  template.questions.create!(order: 2, qtype: qtype, content: question)
-
-  question = "Refuel petrol tank
-Unleaded fuel for unleaded machines
-2-stroke fuel for 2-stroke machines"
-  qtype = "bool"
-  template.questions.create!(order: 3, qtype: qtype, content: question)
-
-  question = "Start motor"
-  qtype = "bool"
-  template.questions.create!(order: 4, qtype: qtype, content: question)
-
-  question = "Check hydraulic oil level if applicable"
-  qtype = "bool"
-  template.questions.create!(order: 5, qtype: qtype, content: question)
-
-  question = "Test operation of machine
-IE: Does a vibrating plate vibrate?
-Does a rotary hoe drive / blades turn easily?
-Does a demo saw blade spin freely / water function correctly?"
-  qtype = "bool"
-  template.questions.create!(order: 6, qtype: qtype, content: question)
-
-  template.save
-  puts "questions created for template #{template.header}"
-end
-
-pumplarge_items.each do |item, index|
-  template = Template.find_by(header: item)
-  template.questions.destroy_all
-
-  question = "Spray machine down with soap, scrub any areas with grease/oil buildup"
-  qtype = "bool"
-  template.questions.create!(order: 1, qtype: qtype, content: question)
-
-  question = "Pressure wash machine until clean (repeat above if necessary)"
-  qtype = "bool"
-  template.questions.create!(order: 2, qtype: qtype, content: question)
-
-  question = "Start pump motor"
-  qtype = "bool"
-  template.questions.create!(order: 3, qtype: qtype, content: question)
-
-  question = "Test fitting with pressure gauge (between 60-80psi)"
-  qtype = "bool"
-  template.questions.create!(order: 4, qtype: qtype, content: question)
-
-  question = "Check on trailer:
-* D-Shackle present
-* Brake lever not too tight / loose
-* Trailer lights with trolley tester"
-  qtype = "bool"
-  template.questions.create!(order: 5, qtype: qtype, content: question)
-
-  template.save
-  puts "questions created for template #{template.header}"
-end
+# petrol_items.each do |item, index|
+#   template = Template.find_by(header: item)
+#   template.questions.destroy_all
+
+#   question = "Spray machine down with soap, scrub any areas with grease/oil buildup"
+#   qtype = "bool"
+#   template.questions.create!(order: 1, qtype: qtype, content: question)
+
+#   question = "Pressure wash machine until clean (repeat above if necessary)"
+#   qtype = "bool"
+#   template.questions.create!(order: 2, qtype: qtype, content: question)
+
+#   question = "Refuel petrol tank
+# * Unleaded fuel for unleaded machines
+# * 2-stroke fuel for 2-stroke machines"
+#   qtype = "bool"
+#   template.questions.create!(order: 3, qtype: qtype, content: question)
+
+#   question = "Start petrol motor"
+#   qtype = "bool"
+#   template.questions.create!(order: 4, qtype: qtype, content: question)
+
+#   question = "Check hydraulic oil level if applicable"
+#   qtype = "bool"
+#   template.questions.create!(order: 5, qtype: qtype, content: question)
+
+#   question = "Test operation of machine
+# IE: Does a vibrating plate vibrate?
+# Does a rotary hoe drive / blades turn easily?
+# Does a demo saw blade spin freely / water function correctly?"
+#   qtype = "bool"
+#   template.questions.create!(order: 6, qtype: qtype, content: question)
+
+#   template.save
+#   puts "questions created for template #{template.header}"
+# end
+
+# electrical_items.each do |item, index|
+#   template = Template.find_by(header: item)
+#   template.questions.destroy_all
+
+#   question = "Clean machine with compressed air and rag"
+#   qtype = "bool"
+#   template.questions.create!(order: 1, qtype: qtype, content: question)
+
+#   question = "Electrical test with test & tag machine as per procedure & training"
+#   qtype = "bool"
+#   template.questions.create!(order: 2, qtype: qtype, content: question)
+
+#   question = "Check body of tool, electrical lead and plug for any signs of damage"
+#   qtype = "bool"
+#   template.questions.create!(order: 3, qtype: qtype, content: question)
+
+#   question = "Test operation of machine
+# IE: Does a vibrating plate vibrate?
+# Does a rotary hoe drive / blades turn easily?
+# Does a demo saw blade spin freely / water function correctly?"
+#   qtype = "bool"
+#   template.questions.create!(order: 4, qtype: qtype, content: question)
+
+#   template.save
+#   puts "questions created for template #{template.header}"
+# end
+
+# genlarge_items.each do |item, index|
+#   template = Template.find_by(header: item)
+#   template.questions.destroy_all
+
+#   question = "Spray machine down with soap, scrub any areas with grease/oil buildup"
+#   qtype = "bool"
+#   template.questions.create!(order: 1, qtype: qtype, content: question)
+
+#   question = "Pressure wash machine until clean (repeat above if necessary)"
+#   qtype = "bool"
+#   template.questions.create!(order: 2, qtype: qtype, content: question)
+
+#   question = "Test 3 phase on Generator
+# * Check volts with metre
+# * Elect test and re-tag if required"
+#   qtype = "bool"
+#   template.questions.create!(order: 3, qtype: qtype, content: question)
+
+#   question = "Check on trailer:
+# * D-Shackle present
+# * Brake lever not too tight / loose
+# * Trailer lights with trolley tester"
+#   qtype = "bool"
+#   template.questions.create!(order: 4, qtype: qtype, content: question)
+
+#   template.save
+#   puts "questions created for template #{template.header}"
+# end
+
+# earthmoving_items.each do |item, index|
+#   template = Template.find_by(header: item)
+#   template.questions.destroy_all
+
+#   question = "Check for hydraulic leaks (before washing)"
+#   qtype = "bool"
+#   template.questions.create!(order: 1, qtype: qtype, content: question)
+
+#   question = "Remove excess dirt and mud prior to cleaning"
+#   qtype = "bool"
+#   template.questions.create!(order: 2, qtype: qtype, content: question)
+
+#   question = "Spray machine down with soap
+# Degreaser for any greasy areas
+# Scrub any areas with grease/oil buildup"
+#   qtype = "bool"
+#   template.questions.create!(order: 3, qtype: qtype, content: question)
+
+#   question = "Pressure wash machine until clean (repeat above if necessary)"
+#   qtype = "bool"
+#   template.questions.create!(order: 4, qtype: qtype, content: question)
+
+#   question = "Inspect for damage to hydraulic rams, hydarulic hoses, body panels, tracks"
+#   qtype = "bool"
+#   template.questions.create!(order: 5, qtype: qtype, content: question)
+
+#   question = "Damage = Not ready for hire"
+#   qtype = "alrt"
+#   template.questions.create!(order: 6, qtype: qtype, content: question)
+
+#   question = "Visual check of all rollover protection bolts (if loose = not ready for hire)"
+#   qtype = "bool"
+#   template.questions.create!(order: 7, qtype: qtype, content: question)
+
+#   question = "Check all safety decals & stickers"
+#   qtype = "bool"
+#   template.questions.create!(order: 8, qtype: qtype, content: question)
+
+#   question = "Check reverse beeper & flashing light both function"
+#   qtype = "bool"
+#   template.questions.create!(order: 9, qtype: qtype, content: question)
+
+#   question = "Grease all points on machine
+# * Remove excess grease beforehand with rag"
+#   qtype = "bool"
+#   template.questions.create!(order: 10, qtype: qtype, content: question)
+
+#   question = "Check hydraulic oil level"
+#   qtype = "bool"
+#   template.questions.create!(order: 11, qtype: qtype, content: question)
+
+#   question = "Test machine operation
+# Does it:
+# * Drive backward and forward?
+# * Turn?
+# * Arm & bucket movement operational and smooth?
+# * No sqeauling or grinding noises?
+# * Grader bar functions?
+# * Roller vibrates?"
+#   qtype = "bool"
+#   template.questions.create!(order: 12, qtype: qtype, content: question)
+
+#   template.save
+#   puts "questions created for template #{template.header}"
+# end
+
+# hydraulic_tools.each do |item, index|
+#   template = Template.find_by(header: item)
+#   template.questions.destroy_all
+
+#   question = "Check for hydraulic leaks (before washing)"
+#   qtype = "bool"
+#   template.questions.create!(order: 1, qtype: qtype, content: question)
+
+#   question = "Remove excess dirt and mud prior to cleaning"
+#   qtype = "bool"
+#   template.questions.create!(order: 2, qtype: qtype, content: question)
+
+#   question = "Spray machine down with soap
+# Degreaser for any greasy areas
+# Scrub any areas with grease/oil buildup"
+#   qtype = "bool"
+#   template.questions.create!(order: 3, qtype: qtype, content: question)
+
+#   question = "Pressure wash machine until clean (repeat above if necessary)"
+#   qtype = "bool"
+#   template.questions.create!(order: 4, qtype: qtype, content: question)
+
+#   question = "Inspect for damage to hydraulic rams, hydarulic hoses, body panels etc"
+#   qtype = "bool"
+#   template.questions.create!(order: 5, qtype: qtype, content: question)
+
+#   question = "Damage = Not ready for hire"
+#   qtype = "alrt"
+#   template.questions.create!(order: 6, qtype: qtype, content: question)
+
+#   question = "Check all safety decals & stickers"
+#   qtype = "bool"
+#   template.questions.create!(order: 7, qtype: qtype, content: question)
+
+#   question = "Test operation of machine
+# IE: Does a vibrating plate vibrate?
+# Does a rotary hoe drive / blades turn easily?
+# Does a demo saw blade spin freely / water function correctly?"
+#   qtype = "bool"
+#   template.questions.create!(order: 8, qtype: qtype, content: question)
+
+#   question = "Ensure hyraulic fittings are clean and plug male fitting into female fitting before putting attachment away"
+#   qtype = "bool"
+#   template.questions.create!(order: 9, qtype: qtype, content: question)
+
+#   template.save
+#   puts "questions created for template #{template.header}"
+# end
+
+# ladders_items.each do |item, index|
+#   template = Template.find_by(header: item)
+#   template.questions.destroy_all
+
+#   question = "Spray machine down with soap, scrub any areas with grease/oil buildup"
+#   qtype = "bool"
+#   template.questions.create!(order: 1, qtype: qtype, content: question)
+
+#   question = "Pressure wash machine until clean (repeat above if necessary)"
+#   qtype = "bool"
+#   template.questions.create!(order: 2, qtype: qtype, content: question)
+
+#   question = "Check basic operation and safety IE
+# Are all rungs in good condition?
+# Are feet in good condition and all rubber feet secured?"
+#   qtype = "bool"
+#   template.questions.create!(order: 3, qtype: qtype, content: question)
+
+#   template.save
+#   puts "questions created for template #{template.header}"
+# end
+
+# airtools_items.each do |item, index|
+#   template = Template.find_by(header: item)
+#   template.questions.destroy_all
+
+#   question = "Clean machine with compressed air and rag"
+#   qtype = "bool"
+#   template.questions.create!(order: 1, qtype: qtype, content: question)
+
+#   question = "Wash with pressure washer if necessary, safe to do so and won't damage machine"
+#   qtype = "bool"
+#   template.questions.create!(order: 2, qtype: qtype, content: question)
+
+#   question = "Check all air fittings & hoses for damage"
+#   qtype = "bool"
+#   template.questions.create!(order: 3, qtype: qtype, content: question)
+
+#   question = "Check body of tool for any damage"
+#   qtype = "bool"
+#   template.questions.create!(order: 4, qtype: qtype, content: question)
+
+#   question = "Test operation of machine
+# IE: Does a vibrating plate vibrate?
+# Does a rotary hoe drive / blades turn easily?
+# Does a demo saw blade spin freely / water function correctly?"
+#   qtype = "bool"
+#   template.questions.create!(order: 5, qtype: qtype, content: question)
+
+#   template.save
+#   puts "questions created for template #{template.header}"
+# end
+
+# twostroke_items.each do |item, index|
+#   template = Template.find_by(header: item)
+#   template.questions.destroy_all
+
+#   question = "Spray machine down with soap, scrub any areas with grease/oil buildup"
+#   qtype = "bool"
+#   template.questions.create!(order: 1, qtype: qtype, content: question)
+
+#   question = "Pressure wash machine until clean (repeat above if necessary)"
+#   qtype = "bool"
+#   template.questions.create!(order: 2, qtype: qtype, content: question)
+
+#   question = "Refuel petrol tank
+# Unleaded fuel for unleaded machines
+# 2-stroke fuel for 2-stroke machines"
+#   qtype = "bool"
+#   template.questions.create!(order: 3, qtype: qtype, content: question)
+
+#   question = "Start motor"
+#   qtype = "bool"
+#   template.questions.create!(order: 4, qtype: qtype, content: question)
+
+#   question = "Check hydraulic oil level if applicable"
+#   qtype = "bool"
+#   template.questions.create!(order: 5, qtype: qtype, content: question)
+
+#   question = "Test operation of machine
+# IE: Does a vibrating plate vibrate?
+# Does a rotary hoe drive / blades turn easily?
+# Does a demo saw blade spin freely / water function correctly?"
+#   qtype = "bool"
+#   template.questions.create!(order: 6, qtype: qtype, content: question)
+
+#   template.save
+#   puts "questions created for template #{template.header}"
+# end
+
+# pumplarge_items.each do |item, index|
+#   template = Template.find_by(header: item)
+#   template.questions.destroy_all
+
+#   question = "Spray machine down with soap, scrub any areas with grease/oil buildup"
+#   qtype = "bool"
+#   template.questions.create!(order: 1, qtype: qtype, content: question)
+
+#   question = "Pressure wash machine until clean (repeat above if necessary)"
+#   qtype = "bool"
+#   template.questions.create!(order: 2, qtype: qtype, content: question)
+
+#   question = "Start pump motor"
+#   qtype = "bool"
+#   template.questions.create!(order: 3, qtype: qtype, content: question)
+
+#   question = "Test fitting with pressure gauge (between 60-80psi)"
+#   qtype = "bool"
+#   template.questions.create!(order: 4, qtype: qtype, content: question)
+
+#   question = "Check on trailer:
+# * D-Shackle present
+# * Brake lever not too tight / loose
+# * Trailer lights with trolley tester"
+#   qtype = "bool"
+#   template.questions.create!(order: 5, qtype: qtype, content: question)
+
+#   template.save
+#   puts "questions created for template #{template.header}"
+# end
 
 trailers_items.each do |item, index|
   template = Template.find_by(header: item)
-  template.questions.destroy_all
 
-  question = "Spray machine down with soap, scrub any areas with grease/oil buildup"
-  qtype = "bool"
-  template.questions.create!(order: 1, qtype: qtype, content: question)
+  question = "https://res.cloudinary.com/dp0apr6y4/image/upload/v1726123948/IMG_20240215_105617_sy0jah.jpg"
+  qtype = "img"
+  template.questions.create!(order: 6, qtype: qtype, content: question)
 
-  question = "Pressure wash machine until clean (repeat above if necessary)"
-  qtype = "bool"
-  template.questions.create!(order: 2, qtype: qtype, content: question)
+  question = "https://res.cloudinary.com/dp0apr6y4/image/upload/v1726123948/IMG_20240215_105617_sy0jah.jpg"
+  qtype = "img"
+  template.questions.create!(order: 7, qtype: qtype, content: question)
+#
+#   template.questions.destroy_all
 
-  question = "Test operation of machine
-IE: Does a vibrating plate vibrate?
-Does a rotary hoe drive / blades turn easily?
-Does a demo saw blade spin freely / water function correctly?"
-  qtype = "bool"
-  template.questions.create!(order: 3, qtype: qtype, content: question)
+#   question = "Spray machine down with soap, scrub any areas with grease/oil buildup"
+#   qtype = "bool"
+#   template.questions.create!(order: 1, qtype: qtype, content: question)
 
-  question = "Accessories
-D-Shackle"
-  qtype = "bool"
-  template.questions.create!(order: 4, qtype: qtype, content: question)
+#   question = "Pressure wash machine until clean (repeat above if necessary)"
+#   qtype = "bool"
+#   template.questions.create!(order: 2, qtype: qtype, content: question)
 
-  question = "Check load binders & chains for damage or wear
-(example photos of damaged load binders below)
-Oil load binders"
-  qtype = "bool"
-  template.questions.create!(order: 5, qtype: qtype, content: question)
+#   question = "Test operation of machine
+# IE: Does a vibrating plate vibrate?
+# Does a rotary hoe drive / blades turn easily?
+# Does a demo saw blade spin freely / water function correctly?"
+#   qtype = "bool"
+#   template.questions.create!(order: 3, qtype: qtype, content: question)
+
+#   question = "Accessories
+# D-Shackle"
+#   qtype = "bool"
+#   template.questions.create!(order: 4, qtype: qtype, content: question)
+
+#   question = "Check load binders & chains for damage or wear
+# (example photos of damaged load binders below)
+# Oil load binders"
+#   qtype = "bool"
+#   template.questions.create!(order: 5, qtype: qtype, content: question)
 
   template.save
   puts "questions created for template #{template.header}"

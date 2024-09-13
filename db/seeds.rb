@@ -253,33 +253,33 @@ Job.establish_connection(:secondary)
 #     "PUMP150"
 #   ]
 
-trailers_items =
-  [
-    "TRAIL3.5T",
-    "TRAIL6X4RAMP",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAILMINILD",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAILEXC",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAIL6X4RAMP",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAIL8X5BOX",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAIL8X5CAGE",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAIL8X5TAND",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAILEXC",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAILEXC1",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/COMPLARGE",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TANKTRAILER",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAILMINILD",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAILPLANT",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAILPLANTHI",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAILPLANTLG",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAILPLANTSM",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAILPUMP",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAILSCAFF",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAILSCISSOR",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAILSTUMP",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAILPMP",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/TRAILPUMP",
-    "https://betren-app-b8ef7733c861.herokuapp.com/templates/LIGHTTOWER"
-  ]
+# trailers_items =
+#   [
+#     "TRAIL3.5T",
+#     "TRAIL6X4RAMP",
+#     "TRAILMINILD",
+#     "TRAILEXC",
+#     "TRAIL6X4RAMP",
+#     "TRAIL8X5BOX",
+#     "TRAIL8X5CAGE",
+#     "TRAIL8X5TAND",
+#     "TRAILEXC",
+#     "TRAILEXC1",
+#     "COMPLARGE",
+#     "TANKTRAILER",
+#     "TRAILMINILD",
+#     "TRAILPLANT",
+#     "TRAILPLANTHI",
+#     "TRAILPLANTLG",
+#     "TRAILPLANTSM",
+#     "TRAILPUMP",
+#     "TRAILSCAFF",
+#     "TRAILSCISSOR",
+#     "TRAILSTUMP",
+#     "TRAILPMP",
+#     "TRAILPUMP",
+#     "LIGHTTOWER"
+#   ]
 
 # petrol_items.each do |item, index|
 #   template = Template.find_by(header: item)
@@ -610,17 +610,17 @@ trailers_items =
 #   puts "questions created for template #{template.header}"
 # end
 
-trailers_items.each do |item, index|
-  template = Template.find_by(header: item)
+# trailers_items.each do |item, index|
+#   template = Template.find_by(header: item)
 
-  question = "https://res.cloudinary.com/dp0apr6y4/image/upload/v1726123948/IMG_20240215_105617_sy0jah.jpg"
-  qtype = "img"
-  template.questions.create!(order: 6, qtype: qtype, content: question)
+#   question = "https://res.cloudinary.com/dp0apr6y4/image/upload/v1726123948/IMG_20240215_105617_sy0jah.jpg"
+#   qtype = "img"
+#   template.questions.create!(order: 6, qtype: qtype, content: question)
 
-  question = "https://res.cloudinary.com/dp0apr6y4/image/upload/v1726123948/IMG_20240215_105617_sy0jah.jpg"
-  qtype = "img"
-  template.questions.create!(order: 7, qtype: qtype, content: question)
-#
+#   question = "https://res.cloudinary.com/dp0apr6y4/image/upload/v1726123948/IMG_20240215_105617_sy0jah.jpg"
+#   qtype = "img"
+#   template.questions.create!(order: 7, qtype: qtype, content: question)
+
 #   template.questions.destroy_all
 
 #   question = "Spray machine down with soap, scrub any areas with grease/oil buildup"
@@ -649,6 +649,6 @@ trailers_items.each do |item, index|
 #   qtype = "bool"
 #   template.questions.create!(order: 5, qtype: qtype, content: question)
 
-  template.save
-  puts "questions created for template #{template.header}"
-end
+#   template.save
+#   puts "questions created for template #{template.header}"
+# end

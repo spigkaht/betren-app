@@ -59,6 +59,9 @@ class JobsController < ApplicationController
     item_header = Item.find_by(KEY: item.Header)
     @accessories = item_header.accessories
 
+    accessory_items = @accessories.map { |accessory| Item.find(accessory.ItemKey) }
+    @dbmm = true if accessory_items.any? { |accessory| accessory.FUEL.end_with? "MM" }
+
     @template = Template.find_by(header: item.Header)
     if @template
       @job.template = @template

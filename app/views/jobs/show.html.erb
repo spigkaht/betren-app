@@ -22,8 +22,8 @@
       <div class="flex items-center justify-between border-b pb-3 mt-3">
         <div class="flex justify-between items-center">
           <%= f.label :opid, "Enter initials:", class: "text-sm font-bold"%>
-          <%= f.text_field :opid, class: "block w-12 px-2 py-1 mx-4 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { action: "input->operator#updateName" } %>
-          <%= f.label :opnm, "User", class: "text-sm ml-10 font-bold" %>
+          <%= f.text_field :opid, class: "block w-12 px-2 py-1 mx-3 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { action: "input->operator#updateName" } %>
+          <%= f.label :opnm, "User", class: "text-sm ml-8 font-bold" %>
         </div>
         <div>
           <%= f.text_field :opnm, class: "block w-40 px-2 py-1 mx-4 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { operator_target: "name" }, required: true, onfocus: "this.blur();" %>
@@ -31,7 +31,7 @@
       </div>
     </div>
     <div data-controller="fuel">
-      <% if (@job.item.FUEL == "cFUEL" || @job.item.FUEL == "cUNFUEL") || @job.item.TYPE == "H" %>
+      <% if (@job.item.FUEL == "cFUEL" || @job.item.FUEL == "cUNFUEL") || @job.item.TYPE == "H" || @dbmm %>
         <div class="flex justify-between pb-4 mt-4 border-b">
           <% if @job.item.FUEL == "cFUEL" || @job.item.FUEL == "cUNFUEL" %>
             <div class="flex justify-end items-center text-sm">
@@ -43,6 +43,11 @@
                 <%= f.label :fuel, "Fuel taken:", class: "font-bold" %>
                 <%= f.number_field :fuel, step: "any", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 ml-2 py-1 px-2" %>
               </div>
+            </div>
+          <% elsif @dbmm %>
+            <div class="flex ml-auto mr-4 items-center text-sm">
+              <%= f.label :dbmm, "Diamond blade mm:", class: "font-bold" %>
+              <%= f.number_field :dbmm, required: true, step: "any", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 ml-2 py-1 px-2" %>
             </div>
           <% end %>
           <% if @job.item.TYPE == "H" %>

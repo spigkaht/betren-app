@@ -8,3 +8,4 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 pin "@rails/request.js", to: "@rails--request.js.js" # @0.0.9
 pin "sortablejs" # @1.15.2
 pin "flatpickr" # @4.6.13
+pin "jsqr", to: "https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"

@@ -70,6 +70,24 @@ class JobsController < ApplicationController
     end
   end
 
+  def create
+    item = Item.find_by(PartNumber: params[:part_number])
+    template = Template.find_by(header: item.Header)
+    last_return = item.LDATE
+    last_contract = item.CNTR
+
+    if item
+      @job = Job.new(item: item, template: template, store: current_user.store, last_return: last_return, last_contract: last_contract)
+      if @job.save
+        redirect_to @job, notice: 'Job was successfully created.'
+      else
+        redirect_to jobs_path, alert: 'Job creation failed'
+      end
+    else
+      redirect_to jobs_path, alert: 'Item not found.'
+    end
+  end
+
   def update
     if @job.update(job_params)
       if params[:job][:answer_attributes]

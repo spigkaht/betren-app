@@ -20,10 +20,40 @@
       </svg>
       <span>Loading...</span>
   </div>
-  <div id="cards" data-loading-target="content">
+  <div id="cards" data-loading-target="content" class="pb-4 mt-4 border-b">
     <% if @jobs.empty? %>
       <h3 class="font-bold text-center mt-10">No items to load</h3>
     <% end %>
     <%= render @jobs %>
+  </div>
+  <div data-controller="toggle-job-form">
+    <div class="flex justify-center items-center pb-4 mt-4 border-b" data-toggle-job-form-target="buttonDiv">
+      <%= button_tag data: { action: "toggle-job-form#toggle" } do %>
+        <span class="material-symbols-outlined text-green-600" style="font-size: 48px;">add_box</span>
+        <h2 class="mr-2">New PHC</h2>
+      <% end %>
+    </div>
+    <div data-toggle-job-form-target="formDiv" class="hidden flex-col justify-center items-center">
+      <div data-controller="qr-code-scanner">
+        <!-- Form Div (Visible initially) -->
+        <div data-qr-code-scanner-target="formDiv" class="flex-col justify-center items-center">
+          <%= form_with url: jobs_path, method: :post do |form| %>
+            <div class="mb-4">
+              <%= form.text_field :part_number, placeholder: "Enter Part Number", data: { qr_code_scanner_target: "input" }, class: "border p-2 rounded w-full" %>
+            </div>
+            <div class="flex space-x-4 mb-4">
+              <%= form.submit "Create Job", class: "bg-green-600 text-white px-4 py-2 rounded" %>
+              <%= button_tag "Scan QR Code", type: "button", data: { action: "qr-code-scanner#openScanner" }, class: "bg-blue-600 text-white px-4 py-2 rounded" %>
+            </div>
+          <% end %>
+        </div>
+        <!-- Scanner Div (Hidden initially) -->
+        <div data-qr-code-scanner-target="scannerDiv" class="hidden flex-col justify-center items-center">
+          <video data-qr-code-scanner-target="video" class="w-full h-auto bg-gray-200 mb-4"></video>
+          <canvas data-qr-code-scanner-target="canvas" class="hidden"></canvas>
+          <%= button_tag "Cancel", type: "button", data: { action: "qr-code-scanner#stopCamera" }, class: "bg-red-600 text-white px-4 py-2 rounded" %>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

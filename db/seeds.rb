@@ -259,15 +259,12 @@ Job.establish_connection(:secondary)
 #     "TRAIL6X4RAMP",
 #     "TRAILMINILD",
 #     "TRAILEXC",
-#     "TRAIL6X4RAMP",
 #     "TRAIL8X5BOX",
 #     "TRAIL8X5CAGE",
 #     "TRAIL8X5TAND",
-#     "TRAILEXC",
 #     "TRAILEXC1",
 #     "COMPLARGE",
 #     "TANKTRAILER",
-#     "TRAILMINILD",
 #     "TRAILPLANT",
 #     "TRAILPLANTHI",
 #     "TRAILPLANTLG",
@@ -276,8 +273,6 @@ Job.establish_connection(:secondary)
 #     "TRAILSCAFF",
 #     "TRAILSCISSOR",
 #     "TRAILSTUMP",
-#     "TRAILPMP",
-#     "TRAILPUMP",
 #     "LIGHTTOWER"
 #   ]
 

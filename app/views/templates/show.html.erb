@@ -20,6 +20,7 @@
               <div class="flex items-center">
                 <span class="material-symbols-outlined text-green-600" style="font-size: 36px;">keyboard_double_arrow_down</span>
                 <span class="text-sm">Show Image</span>
+                <span class="text-sm font-bold ml-2"><%= question.caption %></span>
               </div>
             <% end %>
             <%= image_tag "#{question.content}", class: "hidden w-full", data: { toggle_image_target: "image" } %>
@@ -28,7 +29,7 @@
             <%= simple_format question.content, class: "text-red-600 font-semibold" %>
           <% elsif question.qtype == "photo" %>
             <div>
-              <%= label_tag :photo, question.content, class: "text-sm font-bold" %>
+              <%= label_tag :photo, question.caption, class: "text-sm font-bold" %>
               <button type="button" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 ml-4 focus:outline-none">Capture</button>
             </div>
             <%= check_box_tag :photo, checked: false, disabled: true, class: "cursor-pointer w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2" %>

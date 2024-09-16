@@ -81,7 +81,7 @@
                 <div class="flex items-center">
                   <span class="material-symbols-outlined text-green-600" style="font-size: 36px;">keyboard_double_arrow_down</span>
                   <span class="text-sm">Show Image</span>
-                  <span class="text-sm">Show Image</span>
+                  <span class="text-sm font-bold ml-2"><%= question.caption %></span>
                 </div>
               <% end %>
               <%= image_tag "#{question.content}", class: "hidden w-full", data: { toggle_image_target: "image" } %>

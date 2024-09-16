@@ -57,7 +57,7 @@ gem "bundler"
 gem "heroicon"
 gem "carrierwave"
 gem "cloudinary"
-gem "fog-aws"
+gem 'mini_magick'
 gem "font-awesome-rails"
 
 group :development, :test do

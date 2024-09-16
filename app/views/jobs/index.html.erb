@@ -5,10 +5,10 @@
   <div id="filters">
     <% if current_user.admin? %>
       <%= form_with(url: jobs_path, method: :get, local: true, class: "my-4") do %>
-        <div class="mb-4 mx-4 flex justify-between items-center">
-          <label for="store" class="block -mr-4 text-sm font-medium text-gray-700">Select Store</label>
-          <%= select_tag :store, options_for_select(@stores, selected: params[:store]), prompt: "Choose a store", class: "block w-[11rem] pl-3 pr-3 py-1 text-sm border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md" %>
-          <%= submit_tag "Filter", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-1.5 mr-4 focus:outline-none" %>
+        <div class="mb-4 mx-2 flex justify-between items-center">
+          <label for="store" class="block text-sm font-medium text-gray-700">Select Store</label>
+          <%= select_tag :store, options_for_select(@stores, selected: params[:store]), prompt: "Choose a store", class: "block w-[10rem] pl-1 py-1 ml-2 text-sm border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md" %>
+          <%= submit_tag "Filter", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-1.5 ml-2 focus:outline-none" %>
         </div>
       <% end %>
     <% end %>

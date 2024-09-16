@@ -1,7 +1,7 @@
 <div class="flex flex-col mb-auto px-2 pt-5" id="main">
   <div class="flex justify-between pb-2">
-    <h1>Pre-hire Check <%= @job.id %></h1>
-    <%= link_to "View Template", template_path(@job.template, job_id: @job.id), class: "text-green-600 hover:underline" if current_user.admin? %>
+    <h2>Pre-hire Check <%= @job.id %></h2>
+    <%= link_to "View Template", template_path(@job.template, job_id: @job.id), class: "text-green-600 hover:underline text-base" if current_user.admin? %>
   </div>
   <div class="flex justify-between border-b pb-4">
     <p><%= @job.item.Name %></p>
@@ -19,31 +19,25 @@
     <%= f.hidden_field :part_num, value: @job.item.PartNumber %>
     <%= f.hidden_field :store, value: @job.store %>
     <div data-controller="operator" data-operator-operators='<%= @operators.to_json(only: [:OPID, :OPNM]) %>'>
-      <div class="flex items-center justify-between border-b pb-3 mt-3">
-        <div class="flex justify-between items-center">
-          <%= f.label :opid, "Enter initials:", class: "text-sm font-bold"%>
-          <%= f.text_field :opid, class: "block w-12 px-2 py-1 mx-3 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { action: "input->operator#updateName" } %>
-          <%= f.label :opnm, "User", class: "text-sm ml-8 font-bold" %>
-        </div>
-        <div>
-          <%= f.text_field :opnm, class: "block w-40 px-2 py-1 mx-4 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { operator_target: "name" }, required: true, onfocus: "this.blur();" %>
-        </div>
+      <div class="flex justify-between items-center w-full border-b pb-3 mt-3">
+        <%= f.label :opid, "Enter initials:", class: "text-sm font-bold"%>
+        <%= f.text_field :opid, class: "block w-12 px-2 py-1 mx-3 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { action: "input->operator#updateName" } %>
+        <%= f.label :opnm, "User", class: "text-sm ml-2 font-bold" %>
+        <%= f.text_field :opnm, class: "block w-44 px-2 py-1 ml-2 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { operator_target: "name" }, required: true, onfocus: "this.blur();" %>
       </div>
     </div>
     <div data-controller="fuel">
       <% if (@job.item.FUEL == "cFUEL" || @job.item.FUEL == "cUNFUEL") || @job.item.TYPE == "H" || @dbmm %>
-        <div class="flex justify-between pb-4 mt-4 border-b">
+        <div class="flex justify-between items-center text-sm pb-4 mt-4 border-b">
           <% if @job.item.FUEL == "cFUEL" || @job.item.FUEL == "cUNFUEL" %>
-            <div class="flex justify-end items-center text-sm">
-              <div data-fuel-target="fuelAdd" class="flex justify-between items-center">
-                <%= f.label :fuel_req, "Does the item require fuel?", class: "font-bold" %>
-                <%= f.check_box :fuel_req, { class: "cursor-pointer w-6 h-6 ml-2 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2", data: { action: "input->fuel#fuelRequired" } }, "true", "false" %>
+              <div data-fuel-target="fuelAdd" class="flex items-center mr-4">
+                <%= f.label :fuel_req, "Does the item require fuel?", class: "font-bold w-2/3" %>
+                <%= f.check_box :fuel_req, { class: "cursor-pointer w-6 h-6 mx-2 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2", data: { action: "input->fuel#fuelRequired" } }, "true", "false" %>
               </div>
               <div data-fuel-target="fuelEntry" class="justify-between items-center hidden">
                 <%= f.label :fuel, "Fuel taken:", class: "font-bold" %>
                 <%= f.number_field :fuel, step: "any", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 ml-2 py-1 px-2" %>
               </div>
-            </div>
           <% elsif @dbmm %>
             <div class="flex ml-auto mr-4 items-center text-sm">
               <%= f.label :dbmm, "Diamond blade mm:", class: "font-bold" %>
@@ -71,9 +65,9 @@
     <% end %>
     <div class="mt-1">
       <% @job.template.questions.each_with_index do |question, index| %>
-        <div class="flex justify-between border-b pb-4 mt-4">
+        <div class="flex justify-between border-b pb-4 mt-4" data-controller="file-upload">
           <% label_text = question.content.parameterize(separator: '_') %>
-          <%= simple_format question.content unless question.qtype == "alrt" || question.qtype == "img" %>
+          <%= simple_format question.content unless question.qtype == "alrt" || question.qtype == "img" || question.qtype == "photo" %>
           <% if question.qtype == "bool" %>
             <%= hidden_field_tag "job[answer_attributes][answers][checkbox_#{label_text}]", false %>
             <%= check_box_tag "job[answer_attributes][answers][checkbox_#{label_text}]", "true", @job.answer&.answers&.dig("checkbox_#{label_text}") == "true", class: "cursor-pointer w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2" %>
@@ -85,6 +79,13 @@
             <%= image_tag "#{question.content}", class: "w-full" %>
           <% elsif question.qtype == "alrt" %>
             <%= simple_format question.content, class: "text-red-600 font-semibold" %>
+          <% elsif question.qtype == "photo" %>
+          <div class="flex items-center">
+            <%= f.label :photo, question.content, class: "text-sm font-bold" %>
+            <%= f.file_field :photo, id: "hidden_file_input", accept: 'image/*', capture: 'camera', required: true, class: "hidden", data: { "file-upload-target": "fileInput", "action": "change->file-upload#updateCheckBox", index: "0" } %>
+            <button type="button" id="custom_button" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 ml-4 focus:outline-none" data-action="click->file-upload#chooseFile" data-index="<%= 0 %>">Capture</button>
+          </div>
+            <%= f.check_box "photo_uploaded", checked: false, disabled: true, data: { "file-upload-target": "checkBox", index: "0" }, class: "w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2" %>
           <% end %>
         </div>
       <% end %>
@@ -104,8 +105,8 @@
       </div>
     <% end %>
     <div class="flex justify-between items-center my-8">
-      <%= f.submit "Complete", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
       <%= link_to "Back to PHCs", jobs_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+      <%= f.submit "Complete", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
     </div>
   <% end %>
 </div>

@@ -7,7 +7,7 @@
     <% if @template.questions.any? %>
       <% @template.questions.each do |question| %>
         <div class="flex justify-between border-b mt-4 pb-4">
-          <%= simple_format question.content unless question.qtype == "alrt" || question.qtype == "img" %>
+          <%= simple_format question.content unless question.qtype == "alrt" || question.qtype == "img" || question.qtype == "photo" %>
           <% if question.qtype == "bool" %>
             <input type="checkbox" name="" class="cursor-pointer w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2" />
           <% elsif question.qtype == "text" %>
@@ -18,6 +18,12 @@
             <%= image_tag "#{question.content}", class: "w-full" %>
           <% elsif question.qtype == "alrt" %>
             <%= simple_format question.content, class: "text-red-600 font-semibold" %>
+          <% elsif question.qtype == "photo" %>
+            <div>
+              <%= label_tag :photo, question.content, class: "text-sm font-bold" %>
+              <button type="button" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 ml-4 focus:outline-none">Capture</button>
+            </div>
+            <%= check_box_tag :photo, checked: false, disabled: true, class: "cursor-pointer w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2" %>
           <% end %>
         </div>
       <% end %>

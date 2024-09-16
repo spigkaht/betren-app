@@ -9,9 +9,9 @@ class Question < ApplicationRecord
     text: 'text',
     num: 'num',
     img: 'img',
-    alrt: 'alrt'
+    alrt: 'alrt',
+    photo: 'photo'
   }
 
   validates :qtype, presence: true
-  validates :content, presence: true
 end

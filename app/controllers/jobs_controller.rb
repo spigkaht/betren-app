@@ -102,6 +102,7 @@ class JobsController < ApplicationController
       :item_num,
       :completed_at,
       :store,
+      :photo,
       :photo0,
       :photo1,
       :photo2,

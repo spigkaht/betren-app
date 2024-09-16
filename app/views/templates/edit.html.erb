@@ -23,6 +23,7 @@
                 <div class="flex items-center">
                   <span class="material-symbols-outlined text-green-600" style="font-size: 36px;">keyboard_double_arrow_down</span>
                   <span class="text-sm">Show Image</span>
+                  <span class="text-sm font-bold ml-2"><%= question.caption %></span>
                 </div>
               <% end %>
               <%= image_tag "#{question.content}", class: "hidden w-full", data: { toggle_image_target: "image" } %>
@@ -31,7 +32,7 @@
               <%= simple_format question.content, class: "cursor-move text-red-600 font-semibold" %>
             <% elsif question.qtype == "photo" %>
               <div class="flex items-center">
-                <%= label_tag :photo, question.content, class: "text-sm font-bold" %>
+                <%= label_tag :photo, question.caption, class: "text-sm font-bold" %>
                 <button type="button" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 ml-4 focus:outline-none">Capture</button>
               </div>
               <%= check_box_tag :photo, checked: false, disabled: true, class: "cursor-pointer w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2" %>
@@ -45,19 +46,22 @@
       <% end %>
     <% end %>
   </div>
-  <div class="flex flex-col py-3 border-b">
+  <div class="flex flex-col py-3 border-b" data-controller="dropdown">
     <h3>Add New Question</h3>
     <%= simple_form_for [@template, @question], html: { class: "space-y-4" } do |f| %>
       <div class="flex justify-between items-center">
         <%= f.label :qtype, "Question type", required: false, class: "text-gray-700 font-medium" %>
-        <%= f.input :qtype, collection: [["Checkbox", "bool"], ["Text input", "text"], ["Number input", "num"], ["Image display (url)", "img"], ["Alert display", "alrt"], ["Photo capture", "photo"]], input_html: { class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-40 p-1.5" }, include_blank: false, label: false %>
+        <%= f.input :qtype, collection: [["Checkbox", "bool"], ["Text input", "text"], ["Number input", "num"], ["Alert display", "alrt"], ["Image display (url)", "img"], ["Photo capture", "photo"]], input_html: { class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-40 p-1.5", data: { action: "change->dropdown#toggleFields" } }, include_blank: false, label: false %>
       </div>
-      <div class="flex justify-between items-center">
-        <div class="flex flex-col pr-4">
+      <div>
+        <div class="flex justify-between items-center" data-dropdown-target="contentDiv">
           <%= f.label :content, "Content", required: false, class: "text-gray-700 font-medium" %>
-          <%= f.label :content, "(For photo capture, content is used as caption)", required: false, class: "text-gray-700 font-medium" %>
+          <%= f.input :content, as: :text, input_html: { rows: "10", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-60 p-1.5" }, label: false %>
         </div>
-        <%= f.input :content, as: :text, input_html: { rows: "10", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-60 p-1.5" }, label: false %>
+        <div class="hidden justify-between items-center mt-2" data-dropdown-target="captionDiv">
+          <%= f.label :caption, "Caption", required: false, class: "text-gray-700 font-medium" %>
+          <%= f.input :caption, as: :text, input_html: { rows: "2", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-60 p-1.5" }, label: false %>
+        </div>
       </div>
       <div class="flex justify-between items-center mt-10 pb-2">
         <%= f.submit "Save Question", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 ml-auto focus:outline-none" %>

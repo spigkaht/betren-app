@@ -1,17 +1,20 @@
-<div class="flex flex-col py-2 px-2">
+<div class="flex flex-col py-2 px-2" data-controller="dropdown">
     <h3>Edit Question</h3>
     <%= simple_form_for [@template, @question], url: template_question_path(@template.header, @question), method: :patch, html: { class: "space-y-4" } do |f| %>
       <div class="flex flex-col mt-4 pb-4 border-b">
         <div class="flex justify-between items-center my-2">
           <%= f.label :qtype, required: false, class: "text-gray-700 font-medium" %>
-          <%= f.input :qtype, collection: [["Checkbox", "bool"], ["Text input", "text"], ["Number input", "num"], ["Image display (url)", "img"], ["Alert display", "alrt"], ["Photo capture", "photo"]], input_html: { class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-40 p-1.5" }, include_blank: false, label: false %>
+          <%= f.input :qtype, collection: [["Checkbox", "bool"], ["Text input", "text"], ["Number input", "num"], ["Alert display", "alrt"], ["Image display (url)", "img"], ["Photo capture", "photo"]], input_html: { class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-40 p-1.5", data: { action: "change->dropdown#toggleFields" } }, include_blank: false, label: false %>
         </div>
-        <div class="flex justify-between items-center my-2">
-          <div class="flex flex-col pr-4">
-            <%= f.label :content, required: false, class: "text-gray-700 font-medium" %>
-            <%= f.label :content, "(For photo capture, content is used as caption)", required: false, class: "text-gray-700 font-medium" %>
+        <div>
+          <div class="<%= @question.qtype == "bool" || @question.qtype == "text" || @question.qtype == "num" || @question.qtype == "alrt" || @question.qtype == "img" ? "flex " : "hidden " %>justify-between items-center" data-dropdown-target="contentDiv">
+            <%= f.label :content, "Content", required: false, class: "text-gray-700 font-medium" %>
+            <%= f.input :content, as: :text, input_html: { rows: "10", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-60 p-1.5" }, label: false %>
           </div>
-          <%= f.input :content, as: :text, input_html: { rows: "10", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-60 p-1.5" }, label: false %>
+          <div class="<%= @question.qtype == "img" || @question.qtype == "photo" ? "flex " : "hidden " %>justify-between items-center mt-2" data-dropdown-target="captionDiv">
+            <%= f.label :caption, "Caption", required: false, class: "text-gray-700 font-medium" %>
+            <%= f.input :caption, as: :text, input_html: { rows: "2", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-60 p-1.5" }, label: false %>
+          </div>
         </div>
       </div>
       <div class="flex justify-between items-center mt-8 mb-8">

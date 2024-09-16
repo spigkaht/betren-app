@@ -49,7 +49,7 @@
         </div>
         <!-- Scanner Div (Hidden initially) -->
         <div data-qr-code-scanner-target="scannerDiv" class="hidden flex-col justify-center items-center">
-          <video data-qr-code-scanner-target="video" class="w-full h-auto bg-gray-200 mb-4"></video>
+          <video data-qr-code-scanner-target="video" class="w-3/4 h-auto bg-gray-200 mb-4"></video>
           <canvas data-qr-code-scanner-target="canvas" class="hidden"></canvas>
           <%= button_tag "Cancel", type: "button", data: { action: "qr-code-scanner#stopCamera" }, class: "bg-red-600 text-white px-4 py-2 rounded" %>
         </div>

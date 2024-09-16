@@ -1,6 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
 
-// Connects to data-controller="qr-code-scanner"
 export default class extends Controller {
   static targets = ["video", "canvas", "input", "scannerDiv", "formDiv"]
 
@@ -30,25 +29,27 @@ export default class extends Controller {
   }
 
   scanQRCode() {
-    if (!this.hasScanner) return;
-
-    const canvas = this.canvasTarget;
     const video = this.videoTarget;
-    const context = canvas.getContext("2d");
+    const canvas = this.canvasTarget;
 
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    // Ensure the video is fully loaded and has enough data before scanning
+    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext("2d");
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    const code = jsQR(imageData.data, imageData.width, imageData.height);
+      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height); // jsQR scan
 
-    if (code && /^\d{7}$/.test(code.data)) {
-      this.inputTarget.value = code.data; // Populate input field with QR code data
-      this.stopCamera();
-    } else {
-      requestAnimationFrame(this.scanQRCode.bind(this)); // Continue scanning
+      if (code && /^\d{7}$/.test(code.data)) {
+        this.inputTarget.value = code.data; // Populate input field with QR code data
+        this.stopCamera();
+      }
     }
+
+    // Continue scanning if no valid code has been found
+    requestAnimationFrame(this.scanQRCode.bind(this));
   }
 
   stopCamera() {

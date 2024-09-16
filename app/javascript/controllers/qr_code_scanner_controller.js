@@ -1,5 +1,4 @@
 import { Controller } from "@hotwired/stimulus";
-import jsQR from "jsqr";
 
 // Connects to data-controller="qr-code-scanner"
 export default class extends Controller {

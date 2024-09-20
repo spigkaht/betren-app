@@ -1,5 +1,5 @@
 class JobsController < ApplicationController
-  before_action :set_job, only: [:show, :update]
+  before_action :set_job, only: [:show, :update, :related]
 
   def index
     # generate stores from all jobs
@@ -102,10 +102,31 @@ class JobsController < ApplicationController
         puts "No photo1 uploaded"
       end
 
-      redirect_to jobs_path, notice: 'Job was successfully updated'
+      contract_num = @job.item.CNTR
+      contract_items = ContractItem.joins(:item)
+                                   .where(item: { Inactive: false, BulkItem: false })
+                                   .where.not('item.PartNumber LIKE ?', '%000')
+                                   .where.not('item.PartNumber LIKE ?', '%[^0-9]%')
+                                   .where.not('item.PartNumber LIKE ?', '')
+                                   .where(CNTR: contract_num)
+                                   .where('TransactionItems.HRSC > ?', 0)
+                                   .where('TransactionItems.QTY > ?', 0)
+
+      puts "CONTRACT ITEM COUNT: #{contract_items.count}"
+
+      if contract_items.count > 1
+        redirect_to related_job_path(@job)
+      else
+        redirect_to jobs_path, notice: 'Job was successfully updated'
+      end
     else
       render :show, alert: "Error updating job."
     end
+  end
+
+  def related
+    @related_jobs = Job.where(last_contract: @job.last_contract)
+                       .where(completed_at: nil)
   end
 
   private
@@ -136,6 +157,7 @@ class JobsController < ApplicationController
       :fuel_req,
       :fuel,
       :hours,
+      :dbmm,
       answer_attributes: [:id, answers: {}]
     )
   end

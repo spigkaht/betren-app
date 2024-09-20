@@ -1,0 +1,78 @@
+<div class="flex flex-col mb-auto px-2 h-dvh" id="main" data-controller="returns-entry">
+  <div class="flex flex-col h-2/5">
+    <div>
+      <h2>Contract Returns</h2>
+    </div>
+    <div class="flex justify-center mt-4">
+      <h3 class="mb-2">Search by:</h3>
+    </div>
+    <div class="flex justify-center items-center">
+      <div data-returns-entry-target="plantNumberBtn" class="mx-4">
+        <%= button_tag "Plant Number", type: "button", data: { action: "returns-entry#showPlantNumberInput" }, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
+      </div>
+      <div data-returns-entry-target="qrCodeBtn" class="mx-4">
+        <%= button_tag "QR Code", type: "button", data: { action: "returns-entry#showScanInput" }, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
+      </div>
+      <div data-returns-entry-target="customerBtn" class="mx-4">
+        <%= button_tag "Customer", type: "button", data: { action: "returns-entry#showCustomerInput" }, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
+      </div>
+    </div>
+    <%= form_with url: returns_path, method: :get, class: "hidden", data: { returns_entry_target: "formDiv" } do |form| %>
+      <div class="flex flex-col items-center mt-4 pb-4">
+        <div data-returns-entry-target="plantNumberInput" class="hidden">
+          <%= form.text_field :part_number, placeholder: "Enter plant number", class: "block w-36 px-2 py-1 text-sm text-center bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md" %>
+        </div>
+        <div data-returns-entry-target="qrCodeInput" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center">
+          <div class="bg-white rounded-lg p-4 shadow-xl">
+            <div data-returns-entry-target="qrCodeCanvas" class="flex-col items-center">
+              <video data-returns-entry-target="video" class="w-3/4 h-auto bg-gray-200 border-green-600 border-3 mb-2" style="border: 4px solid rgb(22 163 74); width: 75%; height: auto;"></video>
+              <canvas data-returns-entry-target="canvas" class="hidden"></canvas>
+              <%= link_to "Cancel", returns_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
+            </div>
+          </div>
+        </div>
+        <div data-returns-entry-target="inputDiv" class="flex flex-col justify-center items-center">
+          <%= form.text_field :qr_number, placeholder: "Enter plant number", class: "block w-36 px-2 py-1 text-sm text-center bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { returns_entry_target: "input" } %>
+        </div>
+        <div data-returns-entry-target="customerInput" class="hidden">
+          <%= form.text_field :customer, placeholder: "Enter customer name", class: "block w-72 px-2 py-1 ml-2 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md" %>
+        </div>
+        <%= form.submit "Search", class: "hidden text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 mt-2 focus:outline-none", data: { returns_entry_target: "formSubmitBtn" } %>
+      </div>
+    <% end %>
+  </div>
+  <div class="flex flex-col mt-12">
+    <% if params[:part_number] %>
+      <div class="flex flex-col items-center">
+        <p>Customer: <%= @return.customer.NAME %></p>
+        <div class="flex flex-col items-center">
+          <h3>Items on hire</h3>
+          <table class="text-xs border-separate border-spacing-2">
+            <thead>
+              <tr>
+                <th class="bg-white">Qty</th>
+                <th class="bg-white">Plant Num</th>
+                <th class="bg-white">Item</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @return.contract_items.each do |item| %>
+                <tr class="">
+                  <td><%= item.QTY.round(0) %></td>
+                  <td><%= item.item.PartNumber %></td>
+                  <td><%= item.item.Name %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <div class="flex justify-between w-full px-8">
+          <%= link_to "Reset page", returns_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
+          <%= link_to return_path(@return.id) do %>
+            <%= button_tag "Return Contract ##{@return.CNTR}", type: "button", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

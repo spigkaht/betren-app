@@ -18,7 +18,7 @@ Rails.application.routes.draw do
         get 'related'
       end
     end
-    resources :returns, only: [:index, :show]
+    resources :returns, only: [:index, :show, :update]
     resources :reports, only: [:index, :show]
     resources :templates, param: :header, only: [:show, :edit, :update], constraints: { header: /[^\/]+/ } do
       resources :questions, only: [:new, :create, :edit, :update, :destroy] do

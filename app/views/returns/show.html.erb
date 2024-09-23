@@ -1,2 +1,38 @@
-<div class="flex flex-col mb-auto px-2" id="main">
+<div class="flex flex-col mb-auto px-2 pt-5" id="main">
+  <div class="flex pb-2">
+    <h2>Return for <%= @return.CNTR %></h2>
+  </div>
+  <div class="flex justify-between border-b pb-4">
+    <p>Into branch: <%= current_user.store %></p>
+    <p><%= Time.now.strftime("%a %d/%m/%Y %H:%M") %></p>
+  </div>
+  <div class="flex justify-between border-b pb-2 mt-2">
+    <p>Customer name: <%= @return.customer.NAME %></p>
+  </div>
+  <%= form_with model: @return, url: return_path(@return), method: :patch, local: true, multipart: true do |f| %>
+    <div data-controller="operator" data-operator-operators='<%= @operators.to_json(only: [:OPID, :OPNM]) %>'>
+      <div class="flex justify-between items-center w-full border-b pb-3 mt-3">
+        <%= f.label :opid, "Enter initials:", class: "text-sm font-bold"%>
+        <%= f.text_field :opid, class: "block w-12 px-2 py-1 mx-3 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { action: "input->operator#updateName" } %>
+        <%= f.label :opnm, "User", class: "text-sm ml-2 font-bold" %>
+        <%= f.text_field :opnm, class: "block w-44 px-2 py-1 ml-2 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { operator_target: "name" }, required: true, onfocus: "this.blur();" %>
+      </div>
+    </div>
+    <div class="flex justify-between items-center my-8 mx-4">
+      <%= link_to "Back to Returns", returns_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+      <%= f.submit "Complete", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+    </div>
+  <% end %>
+
+  <p>...accessories...</p>
+  <p>...any damage?...</p>
+  <p>...damage details & photos...</p>
+  <p>...yellow (or red if damaged) tape on ALL items...</p>
+  <p>...any further notes for PoR return?...</p>
+
+  <% @return.contract_items.each do |contract_item| %>
+    <p><%= contract_item.item.PartNumber %></p>
+    <p><%= contract_item.item.Name %></p>
+    <p><%= contract_item.QTY %></p>
+  <% end %>
 </div>

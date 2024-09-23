@@ -24,9 +24,10 @@ class ReturnsController < ApplicationController
 
   def show
     @operators = Operator.where(Inactive: false)
-
     contract = Contract.find(params[:id])
-    @return = Return.new(contract: contract)
+    return_step = contract.returns.count + 1
+
+    @return = Return.new(contract: contract, return_step: return_step)
   end
 
   def update

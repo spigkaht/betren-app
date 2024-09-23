@@ -25,7 +25,7 @@
         </div>
         <%# qr code scanner %>
         <div data-returns-entry-target="qrCodeInput" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center">
-          <div class="bg-white rounded-lg p-4 shadow-xl">
+          <div class="bg-white w-96 rounded-lg p-4 shadow-xl">
             <div data-returns-entry-target="qrCodeCanvas" class="flex-col items-center">
               <video data-returns-entry-target="video" class="w-3/4 h-auto bg-gray-200 border-green-600 border-3 mb-2" style="border: 4px solid rgb(22 163 74); width: 75%; height: auto;"></video>
               <canvas data-returns-entry-target="canvas" class="hidden"></canvas>
@@ -33,7 +33,6 @@
             </div>
           </div>
         </div>
-        <%# qr code input %>
         <div data-returns-entry-target="inputDiv" class="hidden flex-col justify-center items-center">
           <%= form.text_field :qr_number, placeholder: "Enter plant number", class: "block w-36 px-2 py-1 text-sm text-center bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { returns_entry_target: "input" } %>
         </div>

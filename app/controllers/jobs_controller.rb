@@ -120,7 +120,7 @@ class JobsController < ApplicationController
         redirect_to jobs_path, notice: 'Job was successfully updated'
       end
     else
-      render :show, alert: "Error updating job."
+      render :show, alert: "Error updating job"
     end
   end
 

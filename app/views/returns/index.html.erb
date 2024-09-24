@@ -70,13 +70,13 @@
     <% end %>
   </div>
   <div class="flex flex-col mt-12">
-    <% if @return %>
+    <% if @contract %>
       <div class="flex flex-col items-center">
-        <h2>Customer: <%= @return.customer.NAME %></h2>
+        <h2>Customer: <%= @contract.customer.NAME %></h2>
         <div class="flex flex-col items-center">
           <div class="flex justify-between">
             <h4 class="px-2">Items on hire</h4>
-            <h4 class="px-2">Contract #<%= @return.CNTR %></h4>
+            <h4 class="px-2">Contract #<%= @contract.CNTR %></h4>
           </div>
           <table class="text-xs w-full text-left my-4">
             <thead class="text-xs uppercase">
@@ -87,7 +87,7 @@
               </tr>
             </thead>
             <tbody>
-              <% @return.contract_items.each do |item| %>
+              <% @contract.contract_items.each do |item| %>
                 <% next if item.QTY.zero? %>
                 <tr class="bg-white border-b">
                   <td class="px-3 py-1.5"><%= item.item.KEY %></td>
@@ -100,8 +100,8 @@
         </div>
         <div class="flex justify-between w-full px-8 mt-4">
           <%= link_to "Reset page", returns_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
-          <%= link_to return_path(@return.id) do %>
-            <%= button_tag "Return Contract ##{@return.CNTR}", type: "button", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
+          <%= link_to return_path(@contract) do %>
+            <%= button_tag "Return Contract ##{@contract.CNTR}", type: "button", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
           <% end %>
         </div>
       </div>

@@ -1,13 +1,13 @@
 <div class="flex flex-col mb-auto px-2 pt-5" id="main">
   <div class="flex pb-2">
-    <h2>Return for <%= @return.CNTR %></h2>
+    <h2>Return for <%= @return.contract.CNTR %></h2>
   </div>
   <div class="flex justify-between border-b pb-4">
     <p>Into branch: <%= current_user.store %></p>
     <p><%= Time.now.strftime("%a %d/%m/%Y %H:%M") %></p>
   </div>
   <div class="flex justify-between border-b pb-2 mt-2">
-    <p>Customer name: <%= @return.customer.NAME %></p>
+    <p>Customer name: <%= @return.contract.customer.NAME %></p>
   </div>
   <%= form_with model: @return, url: return_path(@return), method: :patch, local: true, multipart: true do |f| %>
     <div data-controller="operator" data-operator-operators='<%= @operators.to_json(only: [:OPID, :OPNM]) %>'>
@@ -17,6 +17,65 @@
         <%= f.label :opnm, "User", class: "text-sm ml-2 font-bold" %>
         <%= f.text_field :opnm, class: "block w-44 px-2 py-1 ml-2 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { operator_target: "name" }, required: true, onfocus: "this.blur();" %>
       </div>
+    </div>
+    <div class="flex flex-col items-center py-4 border-b" data-controller="item-return">
+      <div class="flex justify-between">
+        <h4 class="px-2">Items on hire</h4>
+        <h4 class="px-2">Contract #<%= @return.contract.CNTR %></h4>
+      </div>
+      <table class="text-xs w-full text-left my-4">
+        <thead class="text-xs uppercase">
+          <tr>
+            <th class="px-3 py-1.5 bg-green-50">Item</th>
+            <th class="px-3 py-1.5 bg-green-50">Name</th>
+            <th class="px-3 py-1.5 bg-green-50">Qty</th>
+            <th class="px-3 py-1.5 bg-green-50">Ret</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= fields_for :dynamic_params do |ff| %>
+            <% index = 0 %>
+            <% @contract_items_with_accessories.each do |item_data| %>
+              <tr class="bg-white" data-item-return-target="altDiv">
+                <td class="px-3 py-1.5"><%= item_data[:contract_item].item.PartNumber %></td>
+                <td class="px-3 py-1.5"><%= item_data[:contract_item].item.Name %></td>
+                <td class="px-3 py-1.5 text-center"><%= item_data[:contract_item].QTY.round(0) %></td>
+                <td class="px-3 py-1.5 text-center">
+                  <%= ff.check_box "return#{index+1}", checked: false, class: "cursor-pointer w-6 h-6 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2",
+                    data: { action: "change->item-return#toggleDetails", returndetailsdivtarget: index } %>
+                </td>
+              </tr>
+              <tr class="hidden" data-item-return-target="returnDetailsDiv">
+                <td class="px-1.5 pb-1.5 pt-0.5" colspan="4">
+                  <div class="flex justify-end items-center">
+                    <% if item_data[:contract_item].item.FUEL == "cFUEL" || item_data[:contract_item].item.FUEL == "cUNFUEL" %>
+                      <%= ff.label "return#{index+1}-fuel", "Fuel req", class: "font-bold" %>
+                      <%= ff.number_field "return#{index+1}-fuel", step: "any", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 mx-2 py-1 px-2" %>
+                    <% end %>
+                    <% if item_data[:contract_item].item.TYPE == "H" %>
+                      <%= ff.label "return#{index+1}-hours", "Hours", class: "font-bold" %>
+                      <%= ff.number_field "return#{index+1}-hours", step: "any", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-24 mx-2 py-1 px-2" %>
+                    <% end %>
+                    <% if item_data[:dbmm] %>
+                      <%= ff.label "return#{index+1}-dbmm", "Blade mm", class: "font-bold" %>
+                      <%= ff.number_field "return#{index+1}-dbmm", step: "any", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-16 mx-2 py-1 px-2" %>
+                    <% end %>
+                    <% if item_data[:contract_item].QTY > 1 %>
+                      <%= ff.label "return#{index+1}-qty", "Returned Qty", class: "font-bold" %>
+                      <%= ff.number_field "return#{index+1}-qty", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-16 mx-2 py-1 px-2" %>
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+              <tr class="border-b">
+              </tr>
+              <%= ff.hidden_field "return#{index+1}-key", value: item_data[:contract_item].item.KEY %>
+              <%= ff.hidden_field "return#{index+1}-name", value: item_data[:contract_item].item.Name %>
+              <% index += 1 %>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
     </div>
     <div class="flex justify-between items-center my-8 mx-4">
       <%= link_to "Back to Returns", returns_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
@@ -30,9 +89,4 @@
   <p>...yellow (or red if damaged) tape on ALL items...</p>
   <p>...any further notes for PoR return?...</p>
 
-  <% @return.contract_items.each do |contract_item| %>
-    <p><%= contract_item.item.PartNumber %></p>
-    <p><%= contract_item.item.Name %></p>
-    <p><%= contract_item.QTY %></p>
-  <% end %>
 </div>

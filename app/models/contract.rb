@@ -9,6 +9,7 @@ class Contract < ApplicationRecord
   belongs_to :operation, foreign_key: "Operation", primary_key: "OperationNumber"
   belongs_to :payment_type, foreign_key: "PYMT", primary_key: "PayMeth"
   belongs_to :branch, foreign_key: "STR", primary_key: "Id"
+  has_many :returns
 
   def status
     case self.STAT

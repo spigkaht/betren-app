@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_23_235747) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_25_024227) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -65,6 +65,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_23_235747) do
     t.string "photo7"
     t.string "photo8"
     t.string "photo"
+    t.datetime "reserved"
+    t.string "reserved_store"
     t.index ["item_num"], name: "index_jobs_on_item_num"
     t.index ["template_id"], name: "index_jobs_on_template_id"
   end

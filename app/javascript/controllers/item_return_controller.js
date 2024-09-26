@@ -1,8 +1,9 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["returnDetailsDiv", "altDiv"]
+  static targets = ["returnDetailsDiv", "altDiv", "notes", "damageDiv"]
   connect() {
+    console.log("connected!")
   }
 
   toggleDetails(event) {
@@ -13,5 +14,18 @@ export default class extends Controller {
     if (detailsDiv) {
       detailsDiv.classList.toggle("hidden");
     }
+  }
+
+  toggleNotes() {
+    console.log("connected!")
+    this.notesTarget.classList.toggle("hidden");
+    console.log(this.notesTarget);
+  }
+
+  toggleDamage() {
+    console.log("connected!");
+    this.damageDivTarget.classList.toggle("hidden");
+    this.damageDivTarget.classList.toggle("flex");
+    console.log(this.damageDivTarget);
   }
 }

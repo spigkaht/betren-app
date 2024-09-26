@@ -105,6 +105,9 @@
           <% end %>
         </div>
       </div>
+    <% elsif !@contract && (params[:part_number].present? || params[:qr_number].present?) %>
+      <p class="font-bold text-center"><%= params[:part_number] %><%= params[:qr_number] %> is not on an open contract</p>
+      <p class="text-center">Please search again</p>
     <% end %>
   </div>
 </div>

@@ -33,22 +33,44 @@ class JobsController < ApplicationController
     ProcessJobs.new(contract_items, item_nums, templates).process_jobs
 
     # collect all jobs that have not been completed
-    @jobs = Job.includes(item: :contract_items).where(completed_at: nil)
+    jobs = Job.includes(item: :contract_items).where(completed_at: nil)
     # refine jobs to current store
-    @jobs = @jobs.where(store: params[:store] || current_store)
+    jobs = jobs.where(store: params[:store] || current_store)
 
     # collect list of headers for all contract items
-    item_headers = @jobs.map { |job| job.item.Header }.uniq
+    item_headers = jobs.map { |job| job.item.Header }.uniq
     # group all items by header, calculate available quantity, collate in hash for each item
     @min_sum_hash = GroupItems.new(item_headers, current_store).group_and_calculate_min_sum
+
+    reservation_items = ContractItem.where("CONVERT(date, OutDate) = ?", 1.day.from_now.to_date)
+    @reservation_headers = reservation_items.select { |item| item.contract.STR == current_store }.map { |item| item.item.Header }
+    @reserved_headers = item_headers.map { |header| header if @reservation_headers.include?(header) }.compact
+
+    jobs.each do |job|
+      if @reservation_headers.include?(job.item.Header)
+        job.reserved = 1.day.from_now
+        job.reserved_store = current_store
+      else
+        job.reserved = nil
+        job.reserved_store = nil
+      end
+    end
+
     # sort jobs
-    @jobs = @jobs.sort_by do |job|
+    @jobs = jobs.sort_by do |job|
+      is_numeric_location = job.item.Location.to_s.match?(/^\d+$/)
+      is_reserved = job.reserved.present? if @min_sum_hash[job.item.Header] < @reserved_headers.count(job.item.Header)
+
       [
-        @min_sum_hash[job.item.Header] || 0,
-        job.item.Location.blank? ? 'a' : job.item.Location.to_s,
-        job.last_return
+        is_reserved ? 0 : 1,
+        is_reserved ? nil : (is_numeric_location ? 0 : 1),
+        is_reserved ? nil : (is_numeric_location ? job.item.Location.to_i : @min_sum_hash[job.item.Header] || 0),
+        is_reserved ? nil : (is_numeric_location ? nil : (job.item.Location.blank? ? 'a' : job.item.Location.to_s)),
+        is_reserved ? nil : job.last_return
       ]
     end
+
+    # @jobs = jobs.take(5)
   end
 
   def show
@@ -93,13 +115,6 @@ class JobsController < ApplicationController
       if params[:job][:answer_attributes]
         answers_hash = params[:job][:answer_attributes][:answers].to_unsafe_h
         @job.answer.update(answers: answers_hash)
-      end
-
-      puts "Job was successfully updated, checking photos..."
-      if @job.photo1.present?
-        puts "Photo1 is present: #{@job.photo1.url}"
-      else
-        puts "No photo1 uploaded"
       end
 
       contract_num = @job.item.CNTR

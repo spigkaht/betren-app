@@ -8,7 +8,7 @@ class ReturnsController < ApplicationController
 
     if params[:part_number].present? || params[:qr_number].present?
       part_number = params[:part_number].present? ? params[:part_number] : params[:qr_number]
-      @contract = Contract.find_by(CNTR: Item.find_by(PartNumber: part_number)&.CNTR)
+      @contract = contracts.find_by(CNTR: Item.find_by(PartNumber: part_number)&.CNTR)
     elsif params[:customer].present?
       @customer = Customer.find_by(NAME: params[:customer])
       customer_contracts = contracts.where(CUSN: @customer.CNUM)
@@ -28,26 +28,29 @@ class ReturnsController < ApplicationController
     contract = Contract.find(params[:id])
     return_step = contract.returns.count + 1
 
-    @return = contract.returns.find_or_create_by!(return_step: return_step) do |new_return|
+    @return = contract.returns.create!(return_step: return_step) do |new_return|
       new_return.created_at = Time.now
       new_return.updated_at = Time.now
     end
 
-    contract_items_with_accessories = @return.contract.contract_items.map do |contract_item|
-      next if contract_item.QTY.zero?
+    contract_items_with_accessories = @return.contract.contract_items
+      .where.not(QTY: 0)
+      .where.not(HRSC: 0)
+      .where(TXTY: "R")
+      .order(:ITEM)
+      .map do |contract_item|
+    item_header = Item.find_by(KEY: contract_item.item.Header)
+    accessories = item_header.accessories
 
-      item_header = Item.find_by(KEY: contract_item.item.Header)
-      accessories = item_header.accessories
+    accessory_items = accessories.map { |accessory| Item.find(accessory.ItemKey) }
+    dbmm = accessory_items.any? { |accessory| accessory.FUEL&.end_with?("MM") }
 
-      accessory_items = accessories.map { |accessory| Item.find(accessory.ItemKey) }
-      dbmm = accessory_items.any? { |accessory| accessory.FUEL&.end_with?("MM") }
-
-      {
-        contract_item: contract_item,
-        accessory_items: accessory_items,
-        dbmm: dbmm
-      }
-    end.compact
+    {
+      contract_item: contract_item,
+      accessory_items: accessory_items,
+      dbmm: dbmm
+    }
+  end.compact
 
     @contract_items_with_accessories = contract_items_with_accessories
   end
@@ -55,17 +58,23 @@ class ReturnsController < ApplicationController
   def update
     dynamic_params = params[:dynamic_params] || {}
 
-    @return.contract.contract_items.each_with_index do |contract_item, index|
-      return_param = dynamic_params["return#{index+1}"]
+    sorted_contract_items = @return.contract.contract_items
+      .where.not(QTY: 0)
+      .where.not(HRSC: 0)
+      .where(TXTY: "R")
+      .order(:ITEM)
+
+    sorted_contract_items.each_with_index do |contract_item, index|
+      return_param = dynamic_params["return#{index}"]
 
       if return_param == "1"
         @return.return_items.create(
           key: contract_item.item.KEY,
           name: contract_item.item.Name,
-          fuel: dynamic_params["return#{index+1}-fuel"],
-          hours: dynamic_params["return#{index+1}-hours"],
-          dbmm: dynamic_params["return#{index+1}-dbmm"],
-          return_qty: dynamic_params["return#{index+1}-qty"]
+          fuel: dynamic_params["return#{index}-fuel"],
+          hours: dynamic_params["return#{index}-hours"],
+          dbmm: dynamic_params["return#{index}-dbmm"],
+          return_qty: dynamic_params["return#{index}-qty"]
         )
       end
     end
@@ -76,26 +85,6 @@ class ReturnsController < ApplicationController
       render :show, alert: "Error updating return"
     end
   end
-
-  # def update
-  #   dynamic_params = params[:dynamic_params] || {}
-
-  #   count = @return.contract.contract_items.count
-  #   count.times do |return_item, index|
-  #     return_param = dynamic_params["return#{index+1}"]
-
-  #     if return_param == "1"
-  #       @return.return_items.create(
-  #         key: dynamic_params["return#{index+1}-key"],
-  #         name: dynamic_params["return#{index+1}-name"],
-  #         fuel: dynamic_params["return#{index+1}-fuel"],
-  #         hours: dynamic_params["return#{index+1}-hours"],
-  #         dbmm: dynamic_params["return#{index+1}-dbmm"],
-  #         return_qty: dynamic_params["return#{index+1}-qty"]
-  #       )
-  #     end
-  #   end
-  # end
 
   private
 

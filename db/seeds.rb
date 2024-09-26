@@ -12,8 +12,20 @@ Job.establish_connection(:secondary)
 
 # puts "Clearing out your junk.."
 # Job.destroy_all
-# Template.destroy_all
+# # Template.destroy_all
 # puts "All clean!"
+
+jobs = Job.where(completed_at: nil)
+
+jobs.each do |job|
+  time = Time.now
+  puts "time #{time}"
+  job.completed_at = time
+  job.save
+  puts "job ##{job.id} item #{job.item_num}"
+  puts "completed date: #{job.completed_at}"
+end
+
 
 # templates = Template.all
 
@@ -71,18 +83,6 @@ Job.establish_connection(:secondary)
 #   Does a demo saw blade spin freely / water function correctly?"
 #   Question.create!(template: template, qtype: "bool", content: content)
 #   puts "question #2 completed"
-# end
-
-
-# jobs = Job.where(completed_at: nil)
-
-# jobs.each do |job|
-#   time = Time.now
-#   puts "time #{time}"
-#   job.completed_at = time
-#   job.save
-#   puts "job ##{job.id} item #{job.item_num}"
-#   puts "completed date: #{job.completed_at}"
 # end
 
 # one_day_ago = 1.day.ago

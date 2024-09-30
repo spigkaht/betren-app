@@ -18,7 +18,7 @@
       </div>
     </div>
     <%= form_with url: returns_path, method: :get, class: "hidden", data: { returns_entry_target: "formDiv" } do |form| %>
-      <div class="flex flex-col items-center mt-4 pb-4">
+      <div class="flex flex-col items-center border-y pt-4 mt-2 pb-2">
         <%# plant number input %>
         <div data-returns-entry-target="plantNumberInput" class="hidden">
           <%= form.text_field :part_number, placeholder: "Enter plant number", class: "block w-36 px-2 py-1 text-sm text-center bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md" %>
@@ -38,10 +38,11 @@
         </div>
         <%# customer input %>
         <div data-returns-entry-target="customerInput" class="hidden">
-          <%= form.text_field :customer, placeholder: "Enter customer name", list: "customer_names", class: "block w-72 px-2 py-1 ml-2 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md" %>
+          <%= form.text_field :cust_name, placeholder: "Enter customer name", list: "customer_names", class: "block w-72 px-2 py-1 ml-2 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { action: "input->returns-entry#updateCustomerNum" } %>
+          <%= form.hidden_field :customer, class: "customer-num" %>
           <datalist id="customer_names">
-            <% @customer_names.uniq.each do |name| %>
-              <option value="<%= name %>"></option>
+            <% @customer_names.uniq.each do |customer| %>
+              <option value="<%= customer[:name] %>" data-num="<%= customer[:num] %>"></option>
             <% end %>
           </datalist>
         </div>
@@ -51,13 +52,13 @@
         </div>
       </div>
     <% end %>
-    <% if params[:customer].present? %>
+    <% if params[:cust_name].present? %>
       <%= form_with url: returns_path, autocomplete: "off", method: :get, class: "" do |form| %>
-        <div class="flex flex-col items-center mt-4">
+        <div class="flex flex-col items-center mt-2 pt-3 border-t">
           <h3>Customer selected:</h3>
           <h3><%= @customer.NAME %></h3>
         </div>
-        <div class="flex justify-center mt-2">
+        <div class="flex justify-center border-b mt-2 pb-4">
           <%= form.text_field :contract, name: "contract_#{SecureRandom.hex(8)}", placeholder: "Select contract", list: "contract_nums", class: "block w-44 px-2 py-1 ml-2 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", onchange: "this.form.submit();" %>
           <datalist id="contract_nums">
             <% @contract_nums.each do |contract_num| %>
@@ -98,7 +99,7 @@
             </tbody>
           </table>
         </div>
-        <div class="flex justify-between w-full px-8 mt-4">
+        <div class="flex justify-between w-full px-8 my-4">
           <%= link_to "Reset page", returns_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
           <%= link_to return_path(@contract) do %>
             <%= button_tag "Return Contract ##{@contract.CNTR}", type: "button", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
@@ -106,8 +107,10 @@
         </div>
       </div>
     <% elsif !@contract && (params[:part_number].present? || params[:qr_number].present?) %>
-      <p class="font-bold text-center"><%= params[:part_number] %><%= params[:qr_number] %> is not on an open contract</p>
-      <p class="text-center">Please search again</p>
+      <div class="flex flex-col items-center border-y py-2">
+        <p class="font-bold"><%= params[:part_number] %><%= params[:qr_number] %> is not on an open contract</p>
+        <p>Please search again</p>
+      </div>
     <% end %>
   </div>
 </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_25_024227) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_30_045814) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -131,6 +131,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_25_024227) do
     t.string "hours"
     t.string "return_qty"
     t.bigint "return_id", null: false
+    t.boolean "jerry"
     t.index ["return_id"], name: "index_return_items_on_return_id"
   end
 
@@ -141,6 +142,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_25_024227) do
     t.string "opnm"
     t.string "return_step"
     t.bigint "contract_id", null: false
+    t.boolean "damage"
+    t.text "damage_notes"
+    t.string "damage_photo"
+    t.boolean "taped"
+    t.boolean "notes_attached"
+    t.text "notes"
     t.index ["contract_id"], name: "index_returns_on_contract_id"
   end
 

@@ -35,6 +35,7 @@
         <tbody>
           <%= fields_for :dynamic_params do |ff| %>
             <% @contract_items_with_accessories.each_with_index do |item_data, index| %>
+              <%# each contract_item has accessory_items %>
               <tr class="bg-white" data-item-return-target="altDiv">
                 <td class="px-3 py-1.5"><%= item_data[:contract_item].item.PartNumber %></td>
                 <td class="px-3 py-1.5"><%= item_data[:contract_item].item.Name %></td>
@@ -49,19 +50,62 @@
                   <div class="flex justify-end items-center">
                     <% if item_data[:contract_item].item.FUEL == "cFUEL" || item_data[:contract_item].item.FUEL == "cUNFUEL" %>
                       <%= ff.label "return#{index}-fuel", "Fuel req", class: "font-bold" %>
-                      <%= ff.number_field "return#{index}-fuel", step: "any", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 mx-2 py-1 px-2" %>
+                      <%= ff.number_field "return#{index}-fuel", step: "any", min: 0, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 mx-2 py-1 px-2" %>
                     <% end %>
                     <% if item_data[:contract_item].item.TYPE == "H" %>
                       <%= ff.label "return#{index}-hours", "Hours", class: "font-bold" %>
-                      <%= ff.number_field "return#{index}-hours", step: "any", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-24 mx-2 py-1 px-2" %>
+                      <%= ff.number_field "return#{index}-hours", step: "any", min: 0, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-24 mx-2 py-1 px-2" %>
                     <% end %>
                     <% if item_data[:dbmm] %>
                       <%= ff.label "return#{index}-dbmm", "Blade mm", class: "font-bold" %>
-                      <%= ff.number_field "return#{index}-dbmm", step: "any", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-16 mx-2 py-1 px-2" %>
+                      <%= ff.number_field "return#{index}-dbmm", step: "any", min: 0, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-16 mx-2 py-1 px-2" %>
                     <% end %>
                     <% if item_data[:contract_item].QTY > 1 %>
                       <%= ff.label "return#{index}-qty", "Returned Qty", class: "font-bold" %>
-                      <%= ff.number_field "return#{index}-qty", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-16 mx-2 py-1 px-2" %>
+                      <%= ff.number_field "return#{index}-qty", min: 0, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-16 mx-2 py-1 px-2" %>
+                    <% end %>
+                    <% if item_data[:contract_item].item.FUEL == "cJERRY5L" %>
+                      <%= ff.label "return#{index}-jerry", "Jerry can returned?", class: "font-bold" %>
+                      <%= ff.check_box "return#{index}-jerry", checked: false, class: "cursor-pointer w-6 h-6 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2 mx-2" %>
+                    <% end %>
+                    <% if item_data[:contract_item].item.Header == "SCISSOR5.7" || item_data[:contract_item].item.Header == "SCIS8E" %>
+                      <p class="font-bold text-red-600">Ensure scissor is on charge after return</p>
+                    <% end %>
+                    <% if item_data[:contract_item].item.Header == "GENIELIFT" %>
+                      <div class="flex flex-col text-right">
+                        <p class="font-bold text-red-600">Is the travel lock in place? If not, check cable</p>
+                        <p class="font-bold text-red-600">ENSURE DAMAGE IS ADDED BELOW</p>
+                      </div>
+                    <% end %>
+                    <% if item_data[:contract_item].item.Header == "STUMPGRINDER" %>
+                      <div class="flex flex-col text-right">
+                        <p class="font-bold text-red-600">Are any teetch or pockets damaged or missing?</p>
+                        <p class="font-bold text-red-600">ENSURE DAMAGE IS ADDED BELOW</p>
+                      </div>
+                    <% end %>
+                    <% if item_data[:contract_item].item.Header == "ROTARYHOE" %>
+                      <div class="flex flex-col text-right">
+                        <p class="font-bold text-red-600">Check digging tynes. Is there any wire or other material wrapped up that would be difficult to remove?</p>
+                        <p class="font-bold text-red-600">ENSURE DAMAGE IS ADDED BELOW</p>
+                      </div>
+                    <% end %>
+                    <% if item_data[:contract_item].item.Header == "LASER" %>
+                      <div class="flex flex-col text-right">
+                        <p class="font-bold text-red-600">Is the shock detector red/broken?</p>
+                        <p class="font-bold text-red-600">ENSURE DAMAGE IS ADDED BELOW</p>
+                      </div>
+                    <% end %>
+                    <% if item_data[:contract_item].item.Header == "CHERRYPICKER" %>
+                      <div class="flex flex-col text-right">
+                        <p class="font-bold text-red-600">Are the stabiliser legs bent or damaged? Is the machine covered in paint?</p>
+                        <p class="font-bold text-red-600">ENSURE DAMAGE IS ADDED BELOW</p>
+                      </div>
+                    <% end %>
+                    <% if item_data[:contract_item].item.Header == "ROCKGRAB" %>
+                      <div class="flex flex-col text-right">
+                        <p class="font-bold text-red-600">Hook rock grab up to excavator and check for leaks. Leaking?</p>
+                        <p class="font-bold text-red-600">ENSURE DAMAGE IS ADDED BELOW</p>
+                      </div>
                     <% end %>
                   </div>
                 </td>
@@ -76,38 +120,33 @@
       </table>
     </div>
     <div class="flex flex-col items-center py-4 border-b">
-      Accessories
+      <div class="flex justify-center items-center">
+        <h4 class="font-bold">Yellow (or red if damaged) tape on ALL items</h4>
+        <%= f.check_box :taped, checked: false, required: true, class: "cursor-pointer w-6 h-6 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2 ml-4" %>
+      </div>
     </div>
     <div class="flex flex-col py-4 mx-3 border-b">
       <div class="flex justify-between items-center">
         <h4>Damage to any items?</h4>
-        <%= f.check_box "Yes", checked: false, class: "cursor-pointer w-6 h-6 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2 ml-4", data: { action: "change->item-return#toggleDamage"} %>
+        <%= f.check_box :damage, checked: false, class: "cursor-pointer w-6 h-6 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2 ml-4", data: { action: "change->item-return#toggleDamage"} %>
       </div>
     </div>
-    <div class="hidden flex-col py-4 border-b" data-item-return-target="damageDiv">
-      <div class="flex flex-col items-center">
-        <p>Details of damage</p>
-        <%= f.text_area :notes, rows: "6", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 w-4/5 mt-4" %>
-      </div>
-      <div class="flex justify-between items-center pb-4 mt-4 mx-3" data-controller="file-upload">
-          <div class="flex items-center">
-            <%= f.label :damage_photo, "Add photo:", class: "text-sm font-bold" %>
-            <%= f.file_field :damage_photo, accept: 'image/*', capture: 'camera', required: true, class: "hidden", data: { "file-upload-target": "fileInput", "action": "change->file-upload#updateCheckBox" } %>
-            <button type="button" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 ml-4 focus:outline-none" data-action="click->file-upload#chooseFile">Capture</button>
-          </div>
-          <%= f.check_box "photo_uploaded", checked: false, disabled: true, data: { "file-upload-target": "checkBox" }, class: "w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2" %>
-      </div>
-    </div>
-    <div class="flex flex-col py-4 mx-3 border-b">
-      <div class="flex justify-between items-center">
-        <h4 class="font-bold">Yellow (or red if damaged) tape on ALL items</h4>
-        <%= f.check_box "Yes", checked: false, required: true, class: "cursor-pointer w-6 h-6 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2 ml-4" %>
+    <div class="hidden flex-col items-center py-4 border-b" data-item-return-target="damageDiv">
+      <p>Details of damage</p>
+      <%= f.text_area :damage_notes, rows: "6", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 w-4/5 mt-4" %>
+      <div class="flex justify-between items-center pb-4 mt-4" data-controller="file-upload">
+        <div class="flex items-center">
+          <%= f.label :damage_photo, "Add photo:", class: "text-sm font-bold" %>
+          <%= f.file_field :damage_photo, accept: 'image/*', capture: 'camera', class: "hidden", data: { "file-upload-target": "fileInput", "action": "change->file-upload#updateCheckBox", index: "0" } %>
+          <button type="button" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 ml-4 focus:outline-none" data-action="click->file-upload#chooseFile" data-index="<%= 0 %>">Capture</button>
+        </div>
+        <%= f.check_box "photo_uploaded", checked: false, disabled: true, data: { "file-upload-target": "checkBox", index: "0" }, class: "w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2" %>
       </div>
     </div>
     <div class="flex flex-col py-4 mx-3 border-b">
       <div class="flex justify-between items-center">
         <h4>Any further notes for PoR return?</h4>
-        <%= f.check_box "Yes", checked: false, class: "cursor-pointer w-6 h-6 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2 ml-4", data: { action: "change->item-return#toggleNotes"} %>
+        <%= f.check_box :notes_attached, checked: false, class: "cursor-pointer w-6 h-6 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2 ml-4", data: { action: "change->item-return#toggleNotes"} %>
       </div>
       <div class="flex justify-center">
         <%= f.text_area :notes, rows: "6", class: "hidden block bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 w-4/5 mt-4", data: { item_return_target: "notes" } %>

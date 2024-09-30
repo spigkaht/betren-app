@@ -3,14 +3,14 @@ class ReturnsController < ApplicationController
 
   def index
     contracts = Contract.where(Status: "O").where.not(SecondaryStatus: "R").includes(:customer)
-    @customer_names = contracts.map { |contract| contract.customer.NAME }
+    @customer_names = contracts.map { |contract| { num: contract.customer.CNUM, name: contract.customer.NAME } }
     contract_param = params.keys.find { |key| key.start_with?('contract_') }
 
     if params[:part_number].present? || params[:qr_number].present?
       part_number = params[:part_number].present? ? params[:part_number] : params[:qr_number]
       @contract = contracts.find_by(CNTR: Item.find_by(PartNumber: part_number)&.CNTR)
-    elsif params[:customer].present?
-      @customer = Customer.find_by(NAME: params[:customer])
+    elsif params[:cust_name].present?
+      @customer = Customer.find_by(CNUM: params[:customer])
       customer_contracts = contracts.where(CUSN: @customer.CNUM)
       @contract_nums = customer_contracts.pluck(:CNTR)
     end
@@ -19,7 +19,6 @@ class ReturnsController < ApplicationController
       contract_number = params[contract_param]
       @contract = Contract.find_by(CNTR: contract_number)
     end
-
   end
 
   def show
@@ -50,7 +49,7 @@ class ReturnsController < ApplicationController
       accessory_items: accessory_items,
       dbmm: dbmm
     }
-  end.compact
+    end.compact
 
     @contract_items_with_accessories = contract_items_with_accessories
   end
@@ -74,6 +73,7 @@ class ReturnsController < ApplicationController
           fuel: dynamic_params["return#{index}-fuel"],
           hours: dynamic_params["return#{index}-hours"],
           dbmm: dynamic_params["return#{index}-dbmm"],
+          jerry: dynamic_params["return#{index}-jerry"],
           return_qty: dynamic_params["return#{index}-qty"]
         )
       end
@@ -93,6 +93,6 @@ class ReturnsController < ApplicationController
   end
 
   def return_params
-    params.require(:return).permit(:opid, :opnm, :return_step)
+    params.require(:return).permit(:opid, :opnm, :return_step, :damage, :damage_notes, :damage_photo, :taped, :notes_attached, :notes)
   end
 end

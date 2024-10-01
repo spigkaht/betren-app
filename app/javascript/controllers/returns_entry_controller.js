@@ -135,7 +135,6 @@ export default class extends Controller {
 
   updateCustomerNum(event) {
     const customerName = event.target.value;
-    console.log(customerName);
     const dataList = document.getElementById("customer_names");
     const options = dataList.getElementsByTagName("option");
     let selectedNum = "";
@@ -143,13 +142,11 @@ export default class extends Controller {
     for (let option of options) {
       if (option.value === customerName) {
         selectedNum = option.getAttribute("data-num");
-        console.log("SELECTED: ", selectedNum);
         break;
       }
     }
 
     const hiddenField = this.element.querySelector(".customer-num");
     hiddenField.value = selectedNum;
-    console.log(hiddenField.value)
   }
 }

@@ -34,7 +34,8 @@ class JobsController < ApplicationController
 
     # collect all jobs that have not been completed
     jobs = Job.includes(item: :contract_items).where(completed_at: nil)
-    # refine jobs to current store
+    # refine jobs to current store & destroy jobs at other stores / back onhire
+    jobs.each { |job| job.destroy if job.item.CurrentStore != current_store || job.item.QYOT.positive? }
     jobs = jobs.where(store: params[:store] || current_store)
 
     # collect list of headers for all contract items
@@ -70,7 +71,7 @@ class JobsController < ApplicationController
       ]
     end
 
-    # @jobs = jobs.take(5)
+    @jobs = @jobs.take(5)
   end
 
   def show
@@ -126,8 +127,6 @@ class JobsController < ApplicationController
                                    .where(CNTR: contract_num)
                                    .where('TransactionItems.HRSC > ?', 0)
                                    .where('TransactionItems.QTY > ?', 0)
-
-      puts "CONTRACT ITEM COUNT: #{contract_items.count}"
 
       if contract_items.count > 1
         redirect_to related_job_path(@job)

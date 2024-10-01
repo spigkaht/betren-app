@@ -7,7 +7,7 @@ class InvoiceMailer < ApplicationMailer
     attachments["Invoice ##{invoice.CNTR}.pdf"] = pdf
     mail(
       to: "#{@invoice.customer.Email}",
-      bcc: "copies@betterrentals.com.au, benj@betterrentals.com.au",
+      bcc: "copies@betterrentals.com.au",
       subject: "Thanks for hiring from Better Rentals"
       )
   end

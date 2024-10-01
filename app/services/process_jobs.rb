@@ -20,7 +20,7 @@ class ProcessJobs
       if last_job.nil?
         Job.create(item_num: item_num, store: contract_item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil, template: template)
       elsif last_job.completed_at.nil?
-        puts "--------------- last job not completed ------------------"
+        puts "----- last job not completed, skipping -----"
       elsif contract_item.DDT > last_job.completed_at
         Job.create(item_num: item_num, store: contract_item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil, template: template)
       end

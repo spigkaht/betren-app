@@ -3,7 +3,7 @@ class JobsController < ApplicationController
 
   def index
     # generate stores from all jobs
-    @stores = Job.where(store: ["001", "002", "003", "004"]).distinct.pluck(:store).sort
+    @stores = ["001", "002", "003", "004"]
     # set current store based on params
     current_store = params[:store].presence || current_user.store
     # set cutoff for searching for new items to create jobs from

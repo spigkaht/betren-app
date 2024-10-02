@@ -24,10 +24,11 @@ class ReturnsController < ApplicationController
   def show
     @operators = Operator.where(Inactive: false)
 
-    contract = Contract.find(params[:id])
+    contract = Contract.find_by(CNTR: params[:id])
     return_step = contract.returns.count + 1
 
     @return = contract.returns.create!(return_step: return_step) do |new_return|
+      new_return.contract_cntr = contract.CNTR
       new_return.created_at = Time.now
       new_return.updated_at = Time.now
     end
@@ -80,6 +81,7 @@ class ReturnsController < ApplicationController
     end
 
     if @return.update(return_params)
+      ReturnMailer.send_return_email(@return).deliver_now
       redirect_to returns_path, notice: "Return was successfully updated"
     else
       render :show, alert: "Error updating return"

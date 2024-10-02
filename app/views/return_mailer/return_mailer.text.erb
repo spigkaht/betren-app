@@ -1,0 +1,7 @@
+Completed Return <%= @return.contract.CNTR %>
+====================================================
+
+Returned items:
+<% @return.return_items.each do |item| %>
+  <%= item.name %>
+<% end %>

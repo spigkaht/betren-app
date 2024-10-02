@@ -134,13 +134,34 @@ export default class extends Controller {
   }
 
   updateCustomerNum(event) {
-    const customerName = event.target.value;
+    const inputField = event.target;
+    const customerName = inputField.value.toLowerCase();
     const dataList = document.getElementById("customer_names");
     const options = dataList.getElementsByTagName("option");
-    let selectedNum = "";
 
+    let selectedNum = "";
+    let suggestions = [];
+
+    // Iterate through the options to find all possible matches
     for (let option of options) {
-      if (option.value === customerName) {
+      const optionValue = option.value.toLowerCase();
+
+      // If the option starts with the current input, consider it as a suggestion
+      if (optionValue.startsWith(customerName)) {
+        suggestions.push(option);
+      }
+    }
+
+    // If we have matching suggestions, show them in a custom dropdown
+    if (suggestions.length > 0) {
+      this.showSuggestions(inputField, suggestions);
+    } else {
+      this.clearSuggestions();
+    }
+
+    // If an exact match is selected, update the hidden field
+    for (let option of suggestions) {
+      if (option.value.toLowerCase() === customerName) {
         selectedNum = option.getAttribute("data-num");
         break;
       }
@@ -148,5 +169,47 @@ export default class extends Controller {
 
     const hiddenField = this.element.querySelector(".customer-num");
     hiddenField.value = selectedNum;
+  }
+
+  showSuggestions(inputField, suggestions) {
+    // Clear any existing suggestions first
+    this.clearSuggestions();
+
+    // Create a container for suggestions
+    const suggestionBox = document.createElement('div');
+    suggestionBox.classList.add('suggestion-box');
+    suggestionBox.style.position = 'absolute';
+    suggestionBox.style.left = `${inputField.offsetLeft}px`;
+    suggestionBox.style.top = `${inputField.offsetTop + inputField.offsetHeight}px`;
+    suggestionBox.style.zIndex = '1000';
+
+    suggestions.forEach(option => {
+      const suggestionItem = document.createElement('div');
+      suggestionItem.textContent = option.value;
+      suggestionItem.classList.add('suggestion-item');
+      suggestionItem.style.padding = '5px';
+      suggestionItem.style.cursor = 'pointer';
+
+      // When a suggestion is clicked, auto-fill the text input and set the hidden field
+      suggestionItem.addEventListener('click', () => {
+        inputField.value = option.value;
+        const hiddenField = this.element.querySelector(".customer-num");
+        hiddenField.value = option.getAttribute("data-num");
+
+        // Clear the suggestions after a selection is made
+        this.clearSuggestions();
+      });
+
+      suggestionBox.appendChild(suggestionItem);
+    });
+
+    document.body.appendChild(suggestionBox);
+  }
+
+  clearSuggestions() {
+    const existingBox = document.querySelector('.suggestion-box');
+    if (existingBox) {
+      existingBox.remove();
+    }
   }
 }

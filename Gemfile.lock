@@ -201,6 +201,7 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     netrc (0.11.0)
+    newrelic_rpm (9.14.0)
     nio4r (2.7.3)
     nokogiri (1.16.7-aarch64-linux)
       racc (~> 1.4)
@@ -338,7 +339,7 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
-    webrick (1.8.1)
+    webrick (1.8.2)
     websocket (1.2.11)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
@@ -372,6 +373,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   mini_magick
+  newrelic_rpm
   pg (~> 1.1)
   prawn
   prawn-table (~> 0.1.0)

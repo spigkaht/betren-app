@@ -57,8 +57,9 @@ gem "bundler"
 gem "heroicon"
 gem "carrierwave"
 gem "cloudinary"
-gem 'mini_magick'
+gem "mini_magick"
 gem "font-awesome-rails"
+gem "newrelic_rpm"
 
 group :development, :test do
   gem "dotenv-rails"

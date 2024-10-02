@@ -1,0 +1,2 @@
+class PhcEntry < ApplicationRecord
+end

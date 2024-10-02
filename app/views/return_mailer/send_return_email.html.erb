@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h2>Completed Return <%= @return.contract.CNTR %></h2>
+
+    <p>Completed by: <%= @return.opnm %></p>
+    <p>Completed at: <%= @return.updated_at.strftime("%a %d/%m/%Y %H:%M") %></p>
+
+    <h3>Returned items:</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Name</th>
+          <th>Ret QTY</th>
+          <th>Fuel</th>
+          <th>Hours</th>
+          <th>DB mm</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @return.return_items.each do |item| %>
+          <tr>
+            <td><%= item.key %></td>
+            <td><%= item.name %></td>
+            <% if item.return_qty %>
+              <td><%= item.return_qty %></td>
+            <% end %>
+            <% if item.fuel %>
+              <td><%= item.fuel %></td>
+            <% end %>
+            <% if item.hours %>
+              <td><%= item.hours %></td>
+            <% end %>
+            <% if item.dbmm %>
+              <td><%= item.dbmm %></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <br />
+    <% if @return.return_accessories.any? %>
+      <h3>Returned accessories:</h3>
+      <% @return.return_accessories.each do |accessory| %>
+        <p>Name: <%= accessory.name %></p>
+      <% end %>
+    <% end %>
+
+    <br />
+    <h3>All items yellow/red taped accordingly?</h3>
+    <p><%= @return.taped? ? "Yes" : "NO, see staff member who completed return" %></p>
+
+    <% if @return.damage %>
+    <br />
+      <h2 style="color:red;">Damage was recorded</h2>
+      <h4>Damage details</h4>
+      <p>Notes: <%= @return.damage_notes %></p>
+      <p>image 1: <%= @return.damage_photo %></p>
+      <p>image 2: <%= @return.remote_damage_photo_url %></p>
+    <% end %>
+
+    <% if @return.notes_attached %>
+      <br />
+      <h4>Return notes:</h4>
+      <%= @return.notes %>
+    <% end %>
+  </body>
+</html>

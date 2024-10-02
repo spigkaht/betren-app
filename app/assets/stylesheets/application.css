@@ -28,3 +28,16 @@ th, td {
   left: auto !important; /* Ensure it doesn't push to the side */
   right: auto !important;
 }
+
+.suggestion-box {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  width: max-content;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-item:hover {
+  background-color: #f0f0f0;
+}

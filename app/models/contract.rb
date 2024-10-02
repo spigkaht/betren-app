@@ -1,5 +1,6 @@
 class Contract < ApplicationRecord
   self.table_name = "Transactions"
+  self.primary_key = 'CNTR' # Set the primary key to CNTR
 
   has_many :contract_items, foreign_key: "CNTR", primary_key: "CNTR"
   belongs_to :customer, foreign_key: "CUSN", primary_key: "CNUM"
@@ -9,7 +10,7 @@ class Contract < ApplicationRecord
   belongs_to :operation, foreign_key: "Operation", primary_key: "OperationNumber"
   belongs_to :payment_type, foreign_key: "PYMT", primary_key: "PayMeth"
   belongs_to :branch, foreign_key: "STR", primary_key: "Id"
-  has_many :returns
+  has_many :returns, foreign_key: 'contract_cntr', primary_key: 'CNTR'
 
   def status
     case self.STAT

@@ -1,0 +1,27 @@
+List of files in zipfile
+Stored file name:Base/Config/newrelic.yml
+Original path:/home/spigkaht/code/spigkaht/betren-app/config/newrelic.yml
+
+Stored file name:Base/Config/newrelic-infra.yml
+Original path:/etc/newrelic-infra.yml
+
+Stored file name:Base/Log/syslog
+Original path:/var/log/syslog
+
+Stored file name:Ruby/Config/Gemfile
+Original path:/home/spigkaht/code/spigkaht/betren-app/.ruby-lsp/Gemfile
+
+Stored file name:Ruby/Config/Gemfile.lock
+Original path:/home/spigkaht/code/spigkaht/betren-app/.ruby-lsp/Gemfile.lock
+
+Stored file name:Ruby/Config/Gemfile(1)
+Original path:/home/spigkaht/code/spigkaht/betren-app/Gemfile
+
+Stored file name:Ruby/Config/Gemfile(1).lock
+Original path:/home/spigkaht/code/spigkaht/betren-app/Gemfile.lock
+
+Stored file name:nrdiag-output.json
+Original path:nrdiag-output.json
+
+Stored file name:nrdiag-filelist.txt
+Original path:nrdiag-filelist.txt

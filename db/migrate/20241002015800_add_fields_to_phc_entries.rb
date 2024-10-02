@@ -1,0 +1,37 @@
+class AddFieldsToPhcEntries < ActiveRecord::Migration[7.1]
+  def change
+    Id
+    ItemNo
+    RowId
+    FormVersion
+    Latitude
+    Longitude
+    StartTime
+    ReceivedTime
+    CompleteTime
+    UserFirstName
+    UserLastName
+    tagprint
+    autonum
+    barcodescan
+    plantnumberentry
+    plantnumber
+    plantnumberfull
+    plantnumbercheck
+    equipmentlist
+    header
+    itemname
+    itemnametemp
+    initials
+    userselection
+    datetime
+    plantdetails
+    hourmetercheck
+    hourmeter
+    localdate
+    identity
+    rowversion
+    lastupdated
+    deleted
+  end
+end

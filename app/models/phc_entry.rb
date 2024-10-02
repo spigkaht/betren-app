@@ -1,2 +1,0 @@
-class PhcEntry < ApplicationRecord
-end

@@ -10,6 +10,18 @@ class Job < ApplicationRecord
   mount_uploader :photo7, PhotoUploader
   mount_uploader :photo8, PhotoUploader
 
+  # include CarrierWave::Backgrounder::Delay
+
+  # process_in_background :photo
+  # process_in_background :photo1
+  # process_in_background :photo2
+  # process_in_background :photo3
+  # process_in_background :photo4
+  # process_in_background :photo5
+  # process_in_background :photo6
+  # process_in_background :photo7
+  # process_in_background :photo8
+
   belongs_to :item, primary_key: 'NUM', foreign_key: 'item_num', class_name: 'Item'
   belongs_to :template
   has_one :answer, dependent: :destroy

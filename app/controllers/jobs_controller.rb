@@ -43,7 +43,9 @@ class JobsController < ApplicationController
     # group all items by header, calculate available quantity, collate in hash for each item
     @min_sum_hash = GroupItems.new(item_headers, current_store).group_and_calculate_min_sum
 
-    reservation_items = ContractItem.where("CONVERT(date, OutDate) = ?", 1.day.from_now.to_date)
+    reservation_items = ContractItem.joins(:contract)
+                                    .where("CONVERT(date, OutDate) = ?", 1.day.from_now.to_date)
+                                    .where(contract: { STR: current_store })
     @reservation_headers = reservation_items.select { |item| item.contract.STR == current_store }.map { |item| item.item.Header }
     @reserved_headers = item_headers.map { |header| header if @reservation_headers.include?(header) }.compact
 
@@ -71,7 +73,7 @@ class JobsController < ApplicationController
       ]
     end
 
-    @jobs = @jobs.take(5)
+    @jobs = @jobs
   end
 
   def show
@@ -113,6 +115,8 @@ class JobsController < ApplicationController
 
   def update
     if @job.update(job_params)
+      # ImageUploadJob.perform_later(@job.id)
+
       if params[:job][:answer_attributes]
         answers_hash = params[:job][:answer_attributes][:answers].to_unsafe_h
         @job.answer.update(answers: answers_hash)
@@ -141,6 +145,7 @@ class JobsController < ApplicationController
   def related
     @related_jobs = Job.where(last_contract: @job.last_contract)
                        .where(completed_at: nil)
+    redirect_to jobs_path if @related_jobs.count.zero?
   end
 
   private

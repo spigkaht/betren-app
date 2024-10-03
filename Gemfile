@@ -46,6 +46,7 @@ gem "bootsnap", require: false
 
 # gem "whenever", require: false
 # gem "sidekiq-scheduler"
+gem "sidekiq"
 gem "devise"
 gem "autoprefixer-rails"
 gem "simple_form", github: "heartcombo/simple_form"
@@ -56,6 +57,7 @@ gem "prawn-table", "~> 0.1.0"
 gem "bundler"
 gem "heroicon"
 gem "carrierwave"
+gem "carrierwave_backgrounder", "~> 0.4.2"
 gem "cloudinary"
 gem "mini_magick"
 gem "font-awesome-rails"

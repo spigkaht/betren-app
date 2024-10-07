@@ -17,7 +17,7 @@
     </div>
     <% if job.reserved && @min_sum_hash[job.item.Header] < @reservation_headers.count(job.item.Header) %>
       <div class="flex justify-end">
-        <p class="font-bold">Reserved: <%= job.reserved.strftime("%a %d/%m %H:%M") %></p>
+        <p class="font-bold">Reserved: <%= job.reserved.strftime("%a %d/%m") %></p>
       </div>
     <% end %>
   </div>

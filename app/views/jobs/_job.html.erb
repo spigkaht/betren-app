@@ -15,7 +15,11 @@
       <p>Last Contract: <%= link_to "#{job.last_contract}", contract_path(job.last_contract), class: "text-blue-600 hover:underline" %></p>
       <p <%= 'class=font-bold' if @min_sum_hash[job.item.Header] == 0 %>>Avail QTY: <%= @min_sum_hash[job.item.Header] %></p>
     </div>
-    <% if job.reserved && @min_sum_hash[job.item.Header] < @reserved_headers.count(job.item.Header) %>
+    <div class="flex justify-between">
+      <p>Reserved? <%= job.reserved.strftime("%a %d/%m") if job.reserved %></p>
+      <p>Res Qty <%= @reservation_headers.count(job.item.Header) %></p>
+    </div>
+    <% if job.reserved && @min_sum_hash[job.item.Header] < @reservation_headers.count(job.item.Header) %>
       <div class="flex justify-end">
         <p class="font-bold">Reserved: <%= job.reserved.strftime("%a %d/%m") %></p>
       </div>

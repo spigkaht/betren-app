@@ -12,16 +12,16 @@ class JobsController < ApplicationController
     # gather list of contract items to create jobs for
     contract_items = ContractItem.joins(:item)
                                  .includes(:contract)
-                                 .where(item: { Inactive: false, BulkItem: false, CurrentStore: current_store })
                                  .where('TransactionItems.DDT >= ?', one_day_ago)
-                                 .where.not('item.PartNumber LIKE ?', '%000')
-                                 .where.not('item.PartNumber LIKE ?', '%[^0-9]%')
-                                 .where.not('item.PartNumber LIKE ?', '')
+                                 .where(item: { Inactive: false, BulkItem: false, CurrentStore: current_store })
                                  .where('TransactionItems.TXTY IN (?)', ["RR", "RX"])
                                  .where('TransactionItems.HRSC > ?', 0)
                                  .where('TransactionItems.QTY > ?', 0)
                                  .where.not('TransactionItems.CNTR LIKE ?', 'r%')
                                  .where.not('TransactionItems.CNTR LIKE ?', 't%')
+                                 .where.not('item.PartNumber LIKE ?', '%000')
+                                 .where.not('item.PartNumber LIKE ?', '%[^0-9]%')
+                                 .where.not('item.PartNumber LIKE ?', '')
                                  .select('TransactionItems.id, TransactionItems.ITEM, TransactionItems.CNTR, TransactionItems.DDT, item.Header, item.CurrentStore')
 
     # collect list of item nums only for all contract items
@@ -30,24 +30,23 @@ class JobsController < ApplicationController
     templates = Template.where(header: contract_items.map(&:Header)).index_by(&:header)
     # process jobs for all contract items
     # checks if any jobs exist for item, creates a job if none exist or last job has been completed
-    ProcessJobs.new(contract_items, item_nums, templates).process_jobs
+    ProcessJobs.new(contract_items, item_nums, templates, current_store).process_jobs
 
     # collect all jobs that have not been completed
     jobs = Job.includes(item: :contract_items).where(completed_at: nil)
     # refine jobs to current store & destroy jobs at other stores / back onhire
-    jobs.each { |job| job.destroy if job.item.CurrentStore != current_store || job.item.QYOT.positive? }
-    jobs = jobs.where(store: params[:store] || current_store)
+    jobs = jobs.where(store: params[:store] || current_store).where(completed_at: nil)
 
     # collect list of headers for all contract items
     item_headers = jobs.map { |job| job.item.Header }.uniq
     # group all items by header, calculate available quantity, collate in hash for each item
     @min_sum_hash = GroupItems.new(item_headers, current_store).group_and_calculate_min_sum
 
-    reservation_items = ContractItem.joins(:contract)
-                                    .where("CONVERT(date, OutDate) = ?", 1.day.from_now.to_date)
-                                    .where(contract: { STR: current_store })
-    @reservation_headers = reservation_items.select { |item| item.contract.STR == current_store }.map { |item| item.item.Header }
-    @reserved_headers = item_headers.map { |header| header if @reservation_headers.include?(header) }.compact
+    @reservation_headers = ContractItem.joins(:contract, :item)
+                                       .where("CONVERT(date, OutDate) = ?", 1.day.from_now.to_date)
+                                       .where(contract: { STR: current_store })
+                                       .pluck(:header)
+                                       .reject(&:blank?)
 
     jobs.each do |job|
       if @reservation_headers.include?(job.item.Header)
@@ -62,7 +61,7 @@ class JobsController < ApplicationController
     # sort jobs
     @jobs = jobs.sort_by do |job|
       is_numeric_location = job.item.Location.to_s.match?(/^\d+$/)
-      is_reserved = job.reserved.present? if @min_sum_hash[job.item.Header] < @reserved_headers.count(job.item.Header)
+      is_reserved = job.reserved.present? if @min_sum_hash[job.item.Header] < @reservation_headers.count(job.item.Header)
 
       [
         is_reserved ? 0 : 1,
@@ -114,8 +113,27 @@ class JobsController < ApplicationController
   end
 
   def update
-    if @job.update(job_params)
-      # ImageUploadJob.perform_later(@job.id)
+    if @job.update(job_params.except(:photo, :photo1, :photo2, :photo3, :photo4, :photo5, :photo6, :photo7, :photo8))
+
+    # Create a directory to temporarily store the files
+    temp_dir = Rails.root.join('tmp', 'uploads', "#{@job.id}")
+    FileUtils.mkdir_p(temp_dir)  # Create the directory if it doesn't exist
+
+    # Move the uploaded files to the temp directory and pass the new paths to the job
+    photos = {
+      photo: move_to_tmp(params[:job][:photo], temp_dir),
+      photo1: move_to_tmp(params[:job][:photo1], temp_dir),
+      photo2: move_to_tmp(params[:job][:photo2], temp_dir),
+      photo3: move_to_tmp(params[:job][:photo3], temp_dir),
+      photo4: move_to_tmp(params[:job][:photo4], temp_dir),
+      photo5: move_to_tmp(params[:job][:photo5], temp_dir),
+      photo6: move_to_tmp(params[:job][:photo6], temp_dir),
+      photo7: move_to_tmp(params[:job][:photo7], temp_dir),
+      photo8: move_to_tmp(params[:job][:photo8], temp_dir),
+    }.compact  # Remove any nil values
+
+    # Queue the job with the paths to the files in the temp directory
+    ImageUploadJob.perform_later(@job.id, photos)
 
       if params[:job][:answer_attributes]
         answers_hash = params[:job][:answer_attributes][:answers].to_unsafe_h
@@ -146,6 +164,16 @@ class JobsController < ApplicationController
     @related_jobs = Job.where(last_contract: @job.last_contract)
                        .where(completed_at: nil)
     redirect_to jobs_path if @related_jobs.count.zero?
+  end
+
+  def move_to_tmp(uploaded_file, temp_dir)
+    return nil unless uploaded_file.present?
+
+    temp_file_path = File.join(temp_dir, uploaded_file.original_filename)
+    File.open(temp_file_path, 'wb') do |file|
+      file.write(uploaded_file.read)  # Write the uploaded file to the temp directory
+    end
+    temp_file_path  # Return the new file path
   end
 
   private

@@ -1,8 +1,9 @@
 class ProcessJobs
-  def initialize(contract_items, item_nums, templates)
+  def initialize(contract_items, item_nums, templates, store)
     @contract_items = contract_items
     @item_nums = item_nums
     @templates = templates
+    @store = store
   end
 
   def process_jobs
@@ -14,14 +15,11 @@ class ProcessJobs
       last_job = item_jobs.first
       template = @templates[contract_item.Header] || Template.find_by(header: "NOTEMPLATE")
 
-      next unless item_num || contract_item.contract.STAT != ""
-      next if contract_item.contract.CONT != ""
+      next if contract_item.contract.CONT != "" || contract_item.item.CurrentStore != @store || contract_item.item.QYOT.positive? || last_job.nil?
+      next unless item_num && contract_item.contract.STAT != "" && last_job.completed_at
 
-      if last_job.nil?
-        Job.create(item_num: item_num, store: contract_item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil, template: template)
-      elsif last_job.completed_at.nil?
-        puts "----- last job not completed, skipping -----"
-      elsif contract_item.DDT > last_job.completed_at
+      puts "DDT: #{contract_item.DDT} COMPLETED: #{last_job.completed_at}"
+      if last_job.nil? || contract_item.DDT > last_job.completed_at
         Job.create(item_num: item_num, store: contract_item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil, template: template)
       end
     end

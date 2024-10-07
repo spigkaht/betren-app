@@ -47,7 +47,7 @@ gem "bootsnap", require: false
 # gem "whenever", require: false
 # gem "sidekiq-scheduler"
 gem "sidekiq"
-gem 'sinatra', require: nil
+gem "sinatra", require: nil
 gem "devise"
 gem "autoprefixer-rails"
 gem "simple_form", github: "heartcombo/simple_form"

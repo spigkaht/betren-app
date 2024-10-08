@@ -18,8 +18,10 @@ class ProcessJobs
       next if contract_item.contract.CONT != "" || contract_item.item.CurrentStore != @store || contract_item.item.QYOT.positive?
       next unless item_num && contract_item.contract.STAT != ""
 
-      if last_job.nil? || last_job.completed_at.nil?
+      if last_job.nil?
         Job.create(item_num: item_num, store: contract_item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil, template: template)
+      elsif last_job.completed_at.nil?
+        puts "====== skipping, last job not completed yet ======"
       elsif last_job
         if contract_item.DDT > last_job.completed_at
           Job.create(item_num: item_num, store: contract_item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil, template: template)

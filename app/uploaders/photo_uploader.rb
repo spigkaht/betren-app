@@ -8,7 +8,7 @@ class PhotoUploader < CarrierWave::Uploader::Base
   # storage :file
   # storage :fog
 
-  process resize_to_limit: [200, 200]
+  process resize_to_limit: [300, 300]
 
   version :standard do
     process eager: true

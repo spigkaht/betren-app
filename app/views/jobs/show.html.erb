@@ -104,10 +104,10 @@
       </div>
     <% end %>
     <% @job.template.photo_qty.times do |i| %>
-      <div class="flex justify-between items-center border-b pb-4 mt-4" data-controller="file-upload">
+      <div class="flex justify-between items-center border-b pb-4 mt-4" data-controller="file-upload" data-cloudinary-upload-cloud-name="<%= ENV['CLOUDINARY_CLOUD_NAME'] %>" data-cloudinary-upload-upload-preset="<%= ENV['CLOUDINARY_UPLOAD_PRESET'] %>">
         <div class="flex items-center">
           <%= f.label "photo#{i+1}", "Add photo:", class: "text-sm font-bold" %>
-          <%= f.file_field "photo#{i+1}", id: "hidden_file_input_#{i+1}", accept: 'image/*', capture: 'camera', required: true, class: "hidden", data: { "file-upload-target": "fileInput", "action": "change->file-upload#updateCheckBox", index: "#{i+1}" } %>
+          <%= f.hidden_field "photo#{i+1}", id: "hidden_file_input_#{i+1}", data: { "file-upload-target": "fileInput", index: "#{i+1}" } %>
           <button type="button" id="custom_button_#{i+1}" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 ml-4 focus:outline-none" data-action="click->file-upload#chooseFile" data-index="<%= i+1 %>">Capture</button>
         </div>
         <%= f.check_box "photo_uploaded_#{i+1}", checked: false, disabled: true, data: { "file-upload-target": "checkBox", index: "#{i+1}" }, class: "w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2" %>

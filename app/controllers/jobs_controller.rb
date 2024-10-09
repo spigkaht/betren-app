@@ -115,27 +115,6 @@ class JobsController < ApplicationController
   def update
     if @job.update(job_params)
 
-      # Create a directory to temporarily store the files
-      # temp_dir = Rails.root.join('tmp', 'uploads', "#{@job.id}")
-      # FileUtils.mkdir_p(temp_dir)  # Create the directory if it doesn't exist
-
-      # Move the uploaded files to the temp directory and pass the new paths to the job
-      photos = {
-        photo: @job.photo2.url,
-        photo1: @job.photo1.url,  # Cloudinary URL
-        photo2: @job.photo2.url,
-        photo3: @job.photo3.url,
-        photo4: @job.photo4.url,
-        photo5: @job.photo5.url,
-        photo6: @job.photo6.url,
-        photo7: @job.photo7.url,
-        photo8: @job.photo8.url,
-
-      }.compact  # Remove any nil values
-
-      # Enqueue the job with the Cloudinary URLs
-      ImageUploadJob.perform_later(@job.id, photos)
-
       if params[:job][:answer_attributes]
         answers_hash = params[:job][:answer_attributes][:answers].to_unsafe_h
         @job.answer.update(answers: answers_hash)
@@ -167,16 +146,6 @@ class JobsController < ApplicationController
     redirect_to jobs_path if @related_jobs.count.zero?
   end
 
-  # def move_to_tmp(uploaded_file, temp_dir)
-  #   return nil unless uploaded_file.present?
-
-  #   temp_file_path = File.join(temp_dir, uploaded_file.original_filename)
-  #   File.open(temp_file_path, 'wb') do |file|
-  #     file.write(uploaded_file.read)  # Write the uploaded file to the temp directory
-  #   end
-  #   temp_file_path  # Return the new file path
-  # end
-
   private
 
   def set_job
@@ -189,15 +158,6 @@ class JobsController < ApplicationController
       :item_num,
       :completed_at,
       :store,
-      :photo,
-      :photo0,
-      :photo1,
-      :photo2,
-      :photo3,
-      :photo4,
-      :photo5,
-      :photo6,
-      :photo7,
       :header,
       :part_num,
       :opid,
@@ -206,6 +166,25 @@ class JobsController < ApplicationController
       :fuel,
       :hours,
       :dbmm,
+      :photo,
+      :photo1,
+      :photo2,
+      :photo3,
+      :photo4,
+      :photo5,
+      :photo6,
+      :photo7,
+      :photo8,
+      :photo_uploaded,
+      :photo_uploaded_1,
+      :photo_uploaded_2,
+      :photo_uploaded_3,
+      :photo_uploaded_4,
+      :photo_uploaded_5,
+      :photo_uploaded_6,
+      :photo_uploaded_7,
+      :photo_uploaded_8,
+      photo_urls: [],
       answer_attributes: [:id, answers: {}]
     )
   end

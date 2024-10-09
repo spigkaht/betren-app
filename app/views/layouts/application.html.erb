@@ -13,10 +13,10 @@
     <%= render 'shared/ios_pwa_links' %>
     <link rel="manifest" href="<%= asset_path 'manifest.json' %>">
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+    <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   </head>
-
   <body class="container max-w-md border mx-auto px-2 flex flex-col min-h-dvh">
     <div>
       <%= render "shared/header" %>
@@ -28,6 +28,5 @@
     <footer class="sticky bottom-0 bg-white">
       <%= render "shared/footer" if user_signed_in? %>
     </footer>
-
   </body>
 </html>

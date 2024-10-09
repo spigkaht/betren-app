@@ -1,16 +1,7 @@
-require 'sidekiq/web'
-
 Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: "users/registrations" }
 
   get "up" => "rails/health#show", as: :rails_health_check
-
-  if Rails.env.production?
-    Sidekiq::Web.use Rack::Auth::Basic, "Protected Area" do |username, password|
-      username == ENV['SIDEKIQ_WEB_USERNAME'] && password == ENV['SIDEKIQ_WEB_PASSWORD']
-    end
-  end
-  mount Sidekiq::Web => '/sidekiq'
 
   root to: "pages#index"
 

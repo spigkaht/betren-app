@@ -1,28 +1,43 @@
-import { Controller } from "@hotwired/stimulus";
+import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["fileInput", "checkBox"];
+  static targets = ["fileInput", "checkBox"]
+
+  connect() {
+    const cloudName = this.element.dataset.cloudinaryUploadCloudName;
+    const uploadPreset = this.element.dataset.cloudinaryUploadUploadPreset;
+
+    this.cloudinaryWidget = cloudinary.createUploadWidget({
+      cloudName: cloudName,
+      uploadPreset: uploadPreset,
+      multiple: false,
+      sources: ["camera"]
+    }, (error, result) => {
+      if (!error && result && result.event === "success") {
+        const photoUrl = result.info.secure_url;
+        this.updateFileInput(photoUrl);
+        this.updateCheckBox();
+      }
+    });
+  }
 
   chooseFile(event) {
-    const index = event.target.dataset.index;
-    const fileInput = this.fileInputTargets.find(input => input.dataset.index === index);
+    this.currentIndex = event.target.dataset.index;
+    this.cloudinaryWidget.open();
+  }
 
-    if (fileInput) {
-      fileInput.click();
-    } else {
-      console.error(`File input not found for index ${index}`);
+  updateFileInput(photoUrl) {
+    const input = this.fileInputTargets.find((input) => input.dataset.index === this.currentIndex);
+    if (input) {
+      input.value = photoUrl;
     }
   }
 
-  updateCheckBox(event) {
-    const index = event.target.dataset.index;
-    const checkBox = this.checkBoxTargets.find(check => check.dataset.index === index);
-
-    // Check if a file is selected
-    if (event.target.files.length > 0) {
+  updateCheckBox() {
+    const checkBox = this.checkBoxTargets.find((checkbox) => checkbox.dataset.index === this.currentIndex);
+    if (checkBox) {
       checkBox.checked = true;
-    } else {
-      checkBox.checked = false;
+      checkBox.disabled = false;
     }
   }
 }

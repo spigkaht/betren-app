@@ -32,6 +32,6 @@ module BetrenApp
     config.time_zone = 'Australia/Melbourne'
     config.active_record.default_timezone = :local
 
-    config.active_job.queue_adapter = :sidekiq
+    config.active_job.queue_adapter = :async
   end
 end

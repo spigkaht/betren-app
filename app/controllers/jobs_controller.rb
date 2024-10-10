@@ -166,15 +166,6 @@ class JobsController < ApplicationController
       :fuel,
       :hours,
       :dbmm,
-      :photo,
-      :photo1,
-      :photo2,
-      :photo3,
-      :photo4,
-      :photo5,
-      :photo6,
-      :photo7,
-      :photo8,
       :photo_url,
       :photo_url1,
       :photo_url2,
@@ -184,7 +175,6 @@ class JobsController < ApplicationController
       :photo_url6,
       :photo_url7,
       :photo_url8,
-      photo_urls: [],
       answer_attributes: [:id, answers: {}]
     )
   end

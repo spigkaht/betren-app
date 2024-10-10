@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_09_230757) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_10_205257) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -68,15 +68,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_09_230757) do
     t.datetime "reserved"
     t.string "reserved_store"
     t.integer "dbmm"
-    t.boolean "photo_uploaded"
-    t.boolean "photo_uploaded_1"
-    t.boolean "photo_uploaded_2"
-    t.boolean "photo_uploaded_3"
-    t.boolean "photo_uploaded_4"
-    t.boolean "photo_uploaded_5"
-    t.boolean "photo_uploaded_6"
-    t.boolean "photo_uploaded_7"
-    t.boolean "photo_uploaded_8"
+    t.string "photo_url"
+    t.string "photo_url1"
+    t.string "photo_url2"
+    t.string "photo_url3"
+    t.string "photo_url4"
+    t.string "photo_url5"
+    t.string "photo_url6"
+    t.string "photo_url7"
+    t.string "photo_url8"
     t.index ["item_num"], name: "index_jobs_on_item_num"
     t.index ["template_id"], name: "index_jobs_on_template_id"
   end

@@ -1,30 +1,69 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["fileInput", "checkBox"]
+  static targets = ["fileInput", "photoUrl", "status", "checkBox"]
 
   connect() {
     console.log("Connected!");
 
+    // const cloudName = this.element.dataset.cloudinaryUploadCloudName;
+    // const uploadPreset = this.element.dataset.cloudinaryUploadUploadPreset;
+
+    // this.cloudinaryWidget = cloudinary.createUploadWidget({
+    //   cloudName: cloudName,
+    //   uploadPreset: uploadPreset,
+    //   multiple: false,
+    //   sources: ["camera"],
+    //   showAdvancedOptions: false,
+    //   defaultSource: 'camera',
+    //   cameraFacing: 'environment',
+    //   maxImageWidth: 500,
+    // }, (error, result) => {
+    //   if (!error && result && result.event === "success") {
+    //     const photoUrl = result.info.secure_url;
+    //     this.updateFileInput(photoUrl);
+    //     this.updateCheckBox();
+    //   }
+    // });
+  }
+
+  uploadToCloudinary(event) {
     const cloudName = this.element.dataset.cloudinaryUploadCloudName;
     const uploadPreset = this.element.dataset.cloudinaryUploadUploadPreset;
 
-    this.cloudinaryWidget = cloudinary.createUploadWidget({
-      cloudName: cloudName,
-      uploadPreset: uploadPreset,
-      multiple: false,
-      sources: ["camera"],
-      showAdvancedOptions: false,
-      defaultSource: 'camera',
-      cameraFacing: 'environment',
-      maxImageWidth: 500,
-    }, (error, result) => {
-      if (!error && result && result.event === "success") {
-        const photoUrl = result.info.secure_url;
-        this.updateFileInput(photoUrl);
-        this.updateCheckBox();
-      }
-    });
+    const fileInput = event.target;
+    const file = fileInput.files[0];  // Get the captured file
+
+    if (file) {
+      const statusElement = this.statusTargets[this.fileInputTargets.indexOf(fileInput)];
+      const photoUrlElement = this.photoUrlTargets[this.fileInputTargets.indexOf(fileInput)];
+
+      // Update the status to show that the upload is in progress
+      statusElement.textContent = "Uploading photo...";
+
+      // Create the FormData object for Cloudinary upload
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', uploadPreset);  // Replace with your preset
+
+      // Upload to Cloudinary using the fetch API
+      fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Set the hidden input value to the Cloudinary URL
+        photoUrlElement.value = data.secure_url;
+
+        // Update the status to show that the upload is completed
+        statusElement.textContent = "Photo uploaded successfully!";
+      })
+      .catch(error => {
+        console.error('Error uploading to Cloudinary:', error);
+        statusElement.textContent = "Upload failed!";
+      });
+    }
   }
 
   chooseFile(event) {

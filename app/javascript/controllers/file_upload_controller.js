@@ -5,28 +5,12 @@ export default class extends Controller {
 
   connect() {
     console.log("Connected!");
-
-    // const cloudName = this.element.dataset.cloudinaryUploadCloudName;
-    // const uploadPreset = this.element.dataset.cloudinaryUploadUploadPreset;
-
-    // this.cloudinaryWidget = cloudinary.createUploadWidget({
-    //   cloudName: cloudName,
-    //   uploadPreset: uploadPreset,
-    //   multiple: false,
-    //   sources: ["camera"],
-    //   showAdvancedOptions: false,
-    //   defaultSource: 'camera',
-    //   cameraFacing: 'environment',
-    //   maxImageWidth: 500,
-    // }, (error, result) => {
-    //   if (!error && result && result.event === "success") {
-    //     const photoUrl = result.info.secure_url;
-    //     this.updateFileInput(photoUrl);
-    //     this.updateCheckBox();
-    //   }
-    // });
   }
 
+  triggerFileInput() {
+    this.fileInputTarget.click();  // Simulate a click on the hidden file input
+  }
+  
   uploadToCloudinary(event) {
     const cloudName = this.element.dataset.cloudinaryUploadCloudName;
     const uploadPreset = this.element.dataset.cloudinaryUploadUploadPreset;

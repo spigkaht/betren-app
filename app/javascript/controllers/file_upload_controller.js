@@ -13,7 +13,10 @@ export default class extends Controller {
       cloudName: cloudName,
       uploadPreset: uploadPreset,
       multiple: false,
-      sources: ["camera"]
+      sources: ["camera"],
+      defaultSource: 'camera',
+      cameraFacing: 'environment',
+      maxImageWidth: 500,
     }, (error, result) => {
       if (!error && result && result.event === "success") {
         const photoUrl = result.info.secure_url;

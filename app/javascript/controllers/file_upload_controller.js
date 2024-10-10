@@ -14,6 +14,7 @@ export default class extends Controller {
       uploadPreset: uploadPreset,
       multiple: false,
       sources: ["camera"],
+      showAdvancedOptions: false,
       defaultSource: 'camera',
       cameraFacing: 'environment',
       maxImageWidth: 500,

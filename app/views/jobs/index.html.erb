@@ -4,7 +4,7 @@
   </div>
   <div id="filters">
     <% if current_user.admin? %>
-      <%= form_with(url: jobs_path, method: :get, local: true, class: "my-4") do %>
+      <%= form_with(url: jobs_path, method: :get, local: true, class: "my-4", data: { controller: "loader", action: "submit->loader#show" }) do %>
         <div class="mb-4 mx-2 flex justify-between items-center">
           <label for="store" class="block text-sm font-medium text-gray-700">Select Store</label>
           <%= select_tag :store, options_for_select(@stores, selected: params[:store]), prompt: "Choose a store", class: "block w-[10rem] pl-1 py-1 ml-2 text-sm border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md" %>
@@ -28,7 +28,7 @@
     </div>
     <div data-toggle-job-form-target="formDiv" class="hidden flex-col justify-center items-center pb-8 mt-8">
       <div data-controller="qr-code-scanner">
-        <%= form_with url: jobs_path, method: :post do |form| %>
+        <%= form_with url: jobs_path, method: :post, data: { controller: "loader", action: "submit->loader#show" } do |form| %>
           <div data-qr-code-scanner-target="formDiv" class="flex flex-col justify-center items-center">
             <%= form.text_field :part_number, placeholder: "Enter Part Number", data: { qr_code_scanner_target: "input" }, class: "border p-2 mb-2 rounded w-40 text-center" %>
             <p class="text-lg mb-2">OR</p>

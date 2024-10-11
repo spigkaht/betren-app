@@ -11,7 +11,7 @@
     <p>Branch <%= @job.item.CurrentStore %></p>
     <p><%= Time.now.strftime("%a %d/%m/%Y %H:%M") %></p>
   </div>
-  <%= form_with model: @job, url: job_path(@job), method: :patch, local: true, multipart: true do |f| %>
+  <%= form_with model: @job, url: job_path(@job), method: :patch, local: true, multipart: true, data: { controller: "loader", action: "submit->loader#show" } do |f| %>
     <%= f.hidden_field :id, value: @job.id %>
     <%= f.hidden_field :item_num, value: @job.item_num %>
     <%= f.hidden_field :completed_at, value: Time.now %>
@@ -87,7 +87,7 @@
               <%= f.hidden_field :photo_url, data: { "file-upload-target": "photoUrl" } %>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="30" height="30" id="uploadStatus0" class="opacity-0" data-file-upload-target="loading"><radialGradient id="a2" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)"><stop offset="0" stop-color="#0CC500"></stop><stop offset=".3" stop-color="#0CC500" stop-opacity=".9"></stop><stop offset=".6" stop-color="#0CC500" stop-opacity=".6"></stop><stop offset=".8" stop-color="#0CC500" stop-opacity=".3"></stop><stop offset="1" stop-color="#0CC500" stop-opacity="0"></stop></radialGradient><circle transform-origin="center" fill="none" stroke="url(#a2)" stroke-width="30" stroke-linecap="round" stroke-dasharray="200 1000" stroke-dashoffset="0" cx="100" cy="100" r="70"><animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="5" values="360;0" keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform></circle><circle transform-origin="center" fill="none" opacity=".2" stroke="#0CC500" stroke-width="30" stroke-linecap="round" cx="100" cy="100" r="70"></circle></svg>
-            <%= f.check_box "photo_uploaded", checked: false, disabled: true, data: { "file-upload-target": "checkBox", index: "0" }, class: "w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2", name: nil %>
+            <%= f.check_box "photo_uploaded", checked: false, disabled: true, required: true, data: { "file-upload-target": "checkBox", index: "0" }, class: "w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2", name: nil %>
           </div>
           <% end %>
         </div>
@@ -116,7 +116,7 @@
           <%= f.hidden_field "photo_url#{i+1}", data: { "file-upload-target": "photoUrl" } %>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="30" height="30" id="uploadStatus<%= i+1 %>" class="opacity-0" data-file-upload-target="loading"><radialGradient id="a2" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)"><stop offset="0" stop-color="#0CC500"></stop><stop offset=".3" stop-color="#0CC500" stop-opacity=".9"></stop><stop offset=".6" stop-color="#0CC500" stop-opacity=".6"></stop><stop offset=".8" stop-color="#0CC500" stop-opacity=".3"></stop><stop offset="1" stop-color="#0CC500" stop-opacity="0"></stop></radialGradient><circle transform-origin="center" fill="none" stroke="url(#a2)" stroke-width="30" stroke-linecap="round" stroke-dasharray="200 1000" stroke-dashoffset="0" cx="100" cy="100" r="70"><animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="5" values="360;0" keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform></circle><circle transform-origin="center" fill="none" opacity=".2" stroke="#0CC500" stroke-width="30" stroke-linecap="round" cx="100" cy="100" r="70"></circle></svg>
-        <%= f.check_box "photo_uploaded_#{i+1}", checked: false, disabled: true, data: { "file-upload-target": "checkBox", index: "#{i+1}" }, class: "w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2", name: nil %>
+        <%= f.check_box "photo_uploaded_#{i+1}", checked: false, disabled: true, required: true, data: { "file-upload-target": "checkBox", index: "#{i+1}" }, class: "w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2", name: nil %>
       </div>
     <% end %>
     <div class="flex justify-between items-center my-8">

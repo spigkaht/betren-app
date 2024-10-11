@@ -3,7 +3,7 @@
     <h1>PHC Reports</h1>
   </div>
     <div id="filters">
-      <%= form_with(url: reports_path, method: :get, local: true, class: "my-4") do %>
+      <%= form_with(url: reports_path, method: :get, local: true, class: "my-4", data: { controller: "loader", action: "submit->loader#show" }) do %>
         <div class="mb-4 mx-2 flex justify-between items-center">
           <%= label_tag :start_date, "From:", class: "text-sm font-medium text-gray-700" %>
           <%= text_field_tag :start_date, params[:start_date], class: "w-[8rem] pl-3 pr-3 py-1 text-sm border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { controller: "datepicker" } %>

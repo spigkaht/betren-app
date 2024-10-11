@@ -19,10 +19,11 @@
   </head>
   <body class="container max-w-md border mx-auto px-2 flex flex-col min-h-dvh">
     <div>
+      <%= render "shared/loader" %>
       <%= render "shared/header" %>
       <%= render "shared/flashes" %>
     </div>
-    <main class="flex-grow">
+    <main id="main" class="flex-grow">
       <%= yield %>
     </main>
     <footer class="sticky bottom-0 bg-white">

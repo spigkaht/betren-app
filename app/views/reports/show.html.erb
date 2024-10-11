@@ -41,14 +41,15 @@
     <% end %>
   </div>
   <div class="flex flex-col border-b pb-2 mt-2">
-    <%= image_tag @report.photo1, class: "mb-2" if @report.photo1.present? %>
-    <%= image_tag @report.photo2, class: "mb-2" if @report.photo2.present? %>
-    <%= image_tag @report.photo3, class: "mb-2" if @report.photo3.present? %>
-    <%= image_tag @report.photo4, class: "mb-2" if @report.photo4.present? %>
-    <%= image_tag @report.photo5, class: "mb-2" if @report.photo5.present? %>
-    <%= image_tag @report.photo6, class: "mb-2" if @report.photo6.present? %>
-    <%= image_tag @report.photo7, class: "mb-2" if @report.photo7.present? %>
-    <%= image_tag @report.photo8, class: "mb-2" if @report.photo8.present? %>
+    <%= image_tag @report.photo_url, class: "mb-2" if @report.photo_url.present? %>
+    <%= image_tag @report.photo_url1, class: "mb-2" if @report.photo_url1.present? %>
+    <%= image_tag @report.photo_url2, class: "mb-2" if @report.photo_url2.present? %>
+    <%= image_tag @report.photo_url3, class: "mb-2" if @report.photo_url3.present? %>
+    <%= image_tag @report.photo_url4, class: "mb-2" if @report.photo_url4.present? %>
+    <%= image_tag @report.photo_url5, class: "mb-2" if @report.photo_url5.present? %>
+    <%= image_tag @report.photo_url6, class: "mb-2" if @report.photo_url6.present? %>
+    <%= image_tag @report.photo_url7, class: "mb-2" if @report.photo_url7.present? %>
+    <%= image_tag @report.photo_url8, class: "mb-2" if @report.photo_url8.present? %>
   </div>
   <div class="flex justify-between items-center my-8">
     <%= link_to "Back to reports", reports_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>

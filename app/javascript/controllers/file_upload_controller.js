@@ -1,75 +1,83 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["fileInput", "photoUrl", "status", "checkBox"]
+  static targets = ["fileInput", "photoUrl", "loading", "checkBox"]
 
-  connect() {
-    console.log("Connected!");
+  triggerFileInput(event) {
+    this.currentIndex = event.target.dataset.index;
+    this.fileInputTargets.find((input) => input.dataset.index === this.currentIndex).click();
   }
 
-  triggerFileInput() {
-    this.fileInputTarget.click();  // Simulate a click on the hidden file input
-  }
-  
-  uploadToCloudinary(event) {
+  async uploadToCloudinary(event) {
     const cloudName = this.element.dataset.cloudinaryUploadCloudName;
     const uploadPreset = this.element.dataset.cloudinaryUploadUploadPreset;
 
     const fileInput = event.target;
-    const file = fileInput.files[0];  // Get the captured file
+    const file = fileInput.files[0];
 
     if (file) {
-      const statusElement = this.statusTargets[this.fileInputTargets.indexOf(fileInput)];
+      this.currentIndex = fileInput.dataset.index;
+
+      const resizedFile = await this.resizeImage(file, 1000);
+      const loadingElement = this.loadingTargets.find((loading) => loading.id === `uploadStatus${this.currentIndex}`);
       const photoUrlElement = this.photoUrlTargets[this.fileInputTargets.indexOf(fileInput)];
+      const checkboxElement = this.checkBoxTarget;
 
-      // Update the status to show that the upload is in progress
-      statusElement.textContent = "Uploading photo...";
+      loadingElement.style.opacity = "1";
+      checkboxElement.classList.add("hidden");
 
-      // Create the FormData object for Cloudinary upload
       const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', uploadPreset);  // Replace with your preset
+      formData.append('file', resizedFile);
+      formData.append('upload_preset', uploadPreset);
 
-      // Upload to Cloudinary using the fetch API
       fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
         method: 'POST',
         body: formData
       })
       .then(response => response.json())
       .then(data => {
-        // Set the hidden input value to the Cloudinary URL
         photoUrlElement.value = data.secure_url;
 
-        // Update the status to show that the upload is completed
-        statusElement.textContent = "Photo uploaded successfully!";
+        loadingElement.style.opacity = "0";
+        checkboxElement.classList.remove("hidden");
+        this.updateCheckBox();
       })
       .catch(error => {
         console.error('Error uploading to Cloudinary:', error);
-        statusElement.textContent = "Upload failed!";
+        window.alert("Upload failed!")
       });
     }
   }
 
-  chooseFile(event) {
-    console.log("choosing file");
-    this.currentIndex = event.target.dataset.index;
-    this.cloudinaryWidget.open();
-  }
+  resizeImage(file, maxWidth) {
+    return new Promise((resolve, reject) => {
+      const img = document.createElement('img');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
 
-  updateFileInput(photoUrl) {
-    console.log("updating file input");
-    const input = this.fileInputTargets.find((input) => input.dataset.index === this.currentIndex);
-    if (input) {
-      input.value = photoUrl;
-    }
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        img.src = event.target.result;
+        img.onload = function() {
+          const ratio = maxWidth / img.width;
+          canvas.width = maxWidth;
+          canvas.height = img.height * ratio;
+
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          canvas.toBlob((blob) => {
+            resolve(new File([blob], file.name, { type: file.type }));
+          }, file.type, 0.8);
+        };
+      };
+      reader.onerror = reject;
+
+      reader.readAsDataURL(file);
+    });
   }
 
   updateCheckBox() {
-    console.log("updating checkbox");
-    console.log(this.currentIndex);
-    console.log(this.checkBoxTargets);
     const checkBox = this.checkBoxTargets.find((checkbox) => checkbox.dataset.index === this.currentIndex);
-    this.checkBoxTargets.find((checkbox) => console.log(checkbox.dataset.index, this.currentIndex));
     if (checkBox) {
       checkBox.checked = true;
       checkBox.disabled = false;

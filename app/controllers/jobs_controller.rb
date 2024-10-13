@@ -76,7 +76,7 @@ class JobsController < ApplicationController
   end
 
   def show
-    @job.build_answer if @job.answer.nil?
+    @job.build_answer unless @job.answer.present?
     @operators = Operator.where(Inactive: false)
 
     item = @job.item
@@ -136,7 +136,10 @@ class JobsController < ApplicationController
         redirect_to jobs_path, notice: 'Job was successfully updated'
       end
     else
-      render :show, alert: "Error updating job"
+      redirect_to job_path(@job)
+      # load_job_associations
+      # flash.now[:alert] = @job.errors.full_messages.to_sentence
+      # render :show, status: :unprocessable_entity
     end
   end
 
@@ -147,6 +150,20 @@ class JobsController < ApplicationController
   end
 
   private
+
+  # def load_job_associations
+  #   @job.build_answer if @job.answer.nil?
+  #   @operators = Operator.where(Inactive: false)
+
+  #   item = @job.item
+  #   item_header = Item.find_by(KEY: item.Header)
+  #   @accessories = item_header.accessories
+
+  #   accessory_items = @accessories.map { |accessory| Item.find(accessory.ItemKey) }
+  #   @dbmm = true if accessory_items.any? { |accessory| accessory.FUEL.end_with? "MM" }
+
+  #   @template = Template.find_by(header: item.Header)
+  # end
 
   def set_job
     @job = Job.find(params[:id])

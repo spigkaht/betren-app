@@ -6,10 +6,12 @@
       <%= f.input :email,
                   required: false,
                   autofocus: true,
-                  input_html: { autocomplete: "email" } %>
+                  input_html: { autocomplete: "email" },
+                  class: "bg-gray-50 border border-gray-300 text-gray-900 h-8 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-40 p-1.5 ml-3 mt-0.25" %>
       <%= f.input :password,
                   required: false,
-                  input_html: { autocomplete: "current-password" } %>
+                  input_html: { autocomplete: "current-password" },
+                  class: "bg-gray-50 border border-gray-300 text-gray-900 h-8 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-40 p-1.5 ml-3 mt-0.25" %>
       <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
     </div>
 

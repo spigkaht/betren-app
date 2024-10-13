@@ -10,4 +10,6 @@ class Item < ApplicationRecord
   def calculate_min_sum
     self.min_sum = (self.QTY.to_i || 0) - (self.QYOT.to_i || 0)
   end
+
+  default_scope { where(Inactive: false) }
 end

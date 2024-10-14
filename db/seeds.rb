@@ -10,21 +10,97 @@
 
 Job.establish_connection(:secondary)
 
-# puts "Clearing out your junk.."
+puts "Clearing out your junk.."
+
+store = "001"
+
+items = [
+  "1507001",
+  "3223024",
+  "3701057",
+  "0805067",
+  "1908005",
+  "3201001",
+  "1918018",
+  "2005014",
+  "2206002",
+  "0941009",
+  "0803005",
+  "0921003",
+  "1013007",
+  "0706043",
+  "3101037",
+  "1906009",
+  "0708025",
+  "0811006",
+  "0701116",
+  "1206023",
+  "3221022",
+  "3707139",
+  "3701064",
+  "3218003",
+  "1704029",
+  "1002031",
+  "3201003",
+  "1002029",
+  "1208001",
+  "1230003",
+  "0805060",
+  "3240003",
+  "1230013",
+  "1350005",
+  "1350004",
+  "2504004",
+  "1204099",
+  "1298004",
+  "3226051",
+  "1202042",
+  "3200023",
+  "1260022",
+  "0803007",
+  "0921007",
+  "1003084",
+  "1202044",
+  "1303033",
+  "1303032",
+  "1710015",
+  "3200003",
+  "0706038",
+  "2730044",
+  "2710021",
+  "1260020",
+  "3226026",
+  "1260015"
+]
+
+item_nums = Item.where(PartNumber: items).pluck(:NUM)
+
+item_nums.each do |item_num|
+  item = Item.find_by(num: item_num)
+  template = Template.find_by(header: item.Header)
+  job = Job.new(item: item, template: template, store: store)
+  last_contract = job.item.CNTR
+  last_return = job.item.LDATE
+  job.last_contract = last_contract
+  job.last_return = last_return
+  job.save
+  puts "job created #{job.id}"
+end
+
 # Job.destroy_all
 # # Template.destroy_all
 # puts "All clean!"
 
-jobs = Job.where(completed_at: nil)
+# jobs = Job.where(completed_at: nil)
 
-jobs.each do |job|
-  time = Time.now
-  puts "time #{time}"
-  job.completed_at = time
-  job.save
-  puts "job ##{job.id} item #{job.item_num}"
-  puts "completed date: #{job.completed_at}"
-end
+# jobs.each do |job|
+#   time = Time.now
+#   puts "time #{time}"
+#   job.completed_at = time
+#   job.save
+#   puts "job ##{job.id} item #{job.item_num}"
+#   puts "completed date: #{job.completed_at}"
+# end
 
 
 # templates = Template.all

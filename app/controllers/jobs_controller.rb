@@ -72,7 +72,7 @@ class JobsController < ApplicationController
       ]
     end
 
-    @jobs = @jobs
+    @jobs = @jobs.take(5)
   end
 
   def show

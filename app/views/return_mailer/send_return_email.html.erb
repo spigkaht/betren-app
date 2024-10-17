@@ -60,8 +60,7 @@
       <h2 style="color:red;">Damage was recorded</h2>
       <h4>Damage details</h4>
       <p>Notes: <%= @return.damage_notes %></p>
-      <p>image 1: <%= @return.damage_photo %></p>
-      <p>image 2: <%= @return.remote_damage_photo_url %></p>
+      <p>image: <%= @return.damage_photo_url %></p>
     <% end %>
 
     <% if @return.notes_attached %>

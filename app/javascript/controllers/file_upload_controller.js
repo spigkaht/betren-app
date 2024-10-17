@@ -18,7 +18,7 @@ export default class extends Controller {
     if (file) {
       this.currentIndex = fileInput.dataset.index;
 
-      const resizedFile = await this.resizeImage(file, 1000);
+      const resizedFile = await this.resizeImage(file, 750);
       const loadingElement = this.loadingTargets.find((loading) => loading.id === `uploadStatus${this.currentIndex}`);
       const photoUrlElement = this.photoUrlTargets[this.fileInputTargets.indexOf(fileInput)];
       const checkboxElement = this.checkBoxTarget;
@@ -67,7 +67,7 @@ export default class extends Controller {
 
           canvas.toBlob((blob) => {
             resolve(new File([blob], file.name, { type: file.type }));
-          }, file.type, 0.8);
+          }, file.type, 0.5);
         };
       };
       reader.onerror = reject;

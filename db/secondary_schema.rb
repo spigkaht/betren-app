@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_10_205257) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_17_032932) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -135,6 +135,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_10_205257) do
     t.boolean "taped"
     t.boolean "notes_attached"
     t.text "notes"
+    t.string "damage_photo_url"
     t.index ["contract_cntr"], name: "index_returns_on_contract_cntr"
   end
 

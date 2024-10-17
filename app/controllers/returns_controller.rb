@@ -95,6 +95,6 @@ class ReturnsController < ApplicationController
   end
 
   def return_params
-    params.require(:return).permit(:opid, :opnm, :return_step, :damage, :damage_notes, :damage_photo, :taped, :notes_attached, :notes)
+    params.require(:return).permit(:opid, :opnm, :return_step, :damage, :damage_notes, :damage_photo, :damage_photo_url, :taped, :notes_attached, :notes)
   end
 end

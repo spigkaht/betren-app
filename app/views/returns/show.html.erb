@@ -134,13 +134,17 @@
     <div class="hidden flex-col items-center py-4 border-b" data-item-return-target="damageDiv">
       <p>Details of damage</p>
       <%= f.text_area :damage_notes, rows: "6", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 w-4/5 mt-4" %>
-      <div class="flex justify-between items-center pb-4 mt-4" data-controller="file-upload">
-        <div class="flex items-center">
+      <div class="flex justify-between items-center w-full pb-4 mt-4 px-8" data-controller="file-upload" data-cloudinary-upload-cloud-name="<%= ENV['CLOUDINARY_CLOUD_NAME'] %>" data-cloudinary-upload-upload-preset="<%= ENV['CLOUDINARY_UPLOAD_PRESET'] %>">
+        <div class="flex justify-start items-center">
           <%= f.label :damage_photo, "Add photo:", class: "text-sm font-bold" %>
-          <%= f.file_field :damage_photo, accept: 'image/*', capture: 'camera', class: "hidden", data: { "file-upload-target": "fileInput", "action": "change->file-upload#updateCheckBox", index: "0" } %>
-          <button type="button" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 ml-4 focus:outline-none" data-action="click->file-upload#chooseFile" data-index="<%= 0 %>">Capture</button>
+          <%= f.file_field :damage_photo, accept: 'image/*', capture: 'camera', class: "hidden", data: { action: "change->file-upload#uploadToCloudinary", "file-upload-target": "fileInput", index: "0" }, name: nil %>
+          <button type="button" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 ml-4 focus:outline-none" data-action="click->file-upload#triggerFileInput" data-index="<%= 0 %>">Capture</button>
+          <%= f.hidden_field :damage_photo_url, data: { "file-upload-target": "photoUrl" } %>
         </div>
-        <%= f.check_box "photo_uploaded", checked: false, disabled: true, data: { "file-upload-target": "checkBox", index: "0" }, class: "w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2" %>
+        <div class="flex justify-end items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="30" height="30" id="uploadStatus0" class="opacity-0" data-file-upload-target="loading"><radialGradient id="a2" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)"><stop offset="0" stop-color="#0CC500"></stop><stop offset=".3" stop-color="#0CC500" stop-opacity=".9"></stop><stop offset=".6" stop-color="#0CC500" stop-opacity=".6"></stop><stop offset=".8" stop-color="#0CC500" stop-opacity=".3"></stop><stop offset="1" stop-color="#0CC500" stop-opacity="0"></stop></radialGradient><circle transform-origin="center" fill="none" stroke="url(#a2)" stroke-width="30" stroke-linecap="round" stroke-dasharray="200 1000" stroke-dashoffset="0" cx="100" cy="100" r="70"><animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="5" values="360;0" keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform></circle><circle transform-origin="center" fill="none" opacity=".2" stroke="#0CC500" stroke-width="30" stroke-linecap="round" cx="100" cy="100" r="70"></circle></svg>
+          <%= f.check_box "photo_uploaded", checked: false, disabled: true, required: true, data: { "file-upload-target": "checkBox", index: "0" }, class: "w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2", name: nil %>
+        </div>
       </div>
     </div>
     <div class="flex flex-col py-4 mx-3 border-b">

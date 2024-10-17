@@ -17,6 +17,7 @@ class JobsController < ApplicationController
                                  .where('TransactionItems.TXTY IN (?)', ["RR", "RX"])
                                  .where('TransactionItems.HRSC > ?', 0)
                                  .where('TransactionItems.QTY > ?', 0)
+                                #  .where.not('item.QYOT > ?', 0)
                                  .where.not('TransactionItems.CNTR LIKE ?', 'r%')
                                  .where.not('TransactionItems.CNTR LIKE ?', 't%')
                                  .where.not('item.PartNumber LIKE ?', '%000')
@@ -33,9 +34,11 @@ class JobsController < ApplicationController
     ProcessJobs.new(contract_items, item_nums, templates, current_store).process_jobs
 
     # collect all jobs that have not been completed
-    jobs = Job.includes(item: :contract_items).where(completed_at: nil)
-    # refine jobs to current store & destroy jobs at other stores / back onhire
-    jobs = jobs.where(store: params[:store] || current_store).where(completed_at: nil)
+    jobs = Job.includes(item: :contract_items)
+              .where(completed_at: nil)
+              .where(store: current_store)
+
+    jobs = jobs.map { |job| job if job.item.QYOT.zero? && job.item.CurrentStore == current_store }.compact
 
     # collect list of headers for all contract items
     item_headers = jobs.map { |job| job.item.Header }.uniq
@@ -72,7 +75,7 @@ class JobsController < ApplicationController
       ]
     end
 
-    @jobs = @jobs.take(5)
+    @jobs = @jobs
   end
 
   def show

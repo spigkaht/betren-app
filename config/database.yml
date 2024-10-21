@@ -36,6 +36,10 @@ development:
   secondary:
     <<: *postgres_default
     database: betren_app_development
+  cable:
+    <<: *postgres_default
+    database: betren_app_development_cable
+    migrations_paths: db/cable_migrate
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.

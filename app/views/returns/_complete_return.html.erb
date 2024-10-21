@@ -1,0 +1,22 @@
+<div class="flex flex-col m-2 border-2 rounded-lg border-gray-700">
+  <%= link_to edit_return_path(ret.id) do %>
+    <div class="flex justify-between border-b-2 rounded-t-lg p-2 bg-green-300">
+      <p><%= ret.contract.CNTR %></p>
+      <p>Return #<%= ret.id %> | Store: <%= ret.contract.STR %></p>
+    </div>
+    <div class="flex flex-col p-2">
+      <p>Customer: <%= ret.contract.customer.NAME %></p>
+      <p>Returned Date: <%= ret.created_at.strftime("%a %d/%m/%Y %H:%M") %></p>
+      <p>Returned by: <%= ret.opnm %></p>
+      <div class="flex flex-col mt-2">
+        <p class="font-semibold text-base mb-1">Items</p>
+        <% ret.return_items.each do |item| %>
+          <div class="flex justify-between">
+            <p class="text-xs"><%= item.key %></p>
+            <p class="text-xs"><%= item.name %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

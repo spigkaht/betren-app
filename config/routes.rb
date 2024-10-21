@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
   scope format: false do
     get "/settings", to: "pages#settings", as: "settings"
+    get "/complete", to: "pages#complete", as: "complete"
     resources :contracts, only: [:index, :show]
     resources :invoices, only: [:index, :show]
     resources :jobs, only: [:index, :show, :create, :update] do
@@ -18,7 +19,7 @@ Rails.application.routes.draw do
         get 'related'
       end
     end
-    resources :returns, only: [:index, :show, :update]
+    resources :returns, only: [:index, :new, :create, :edit, :update]
     resources :reports, only: [:index, :show]
     resources :templates, param: :header, only: [:show, :edit, :update], constraints: { header: /[^\/]+/ } do
       resources :questions, only: [:new, :create, :edit, :update, :destroy] do

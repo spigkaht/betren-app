@@ -1,0 +1,89 @@
+<div class="flex flex-col mb-auto px-2 pt-5">
+  <div class="flex pb-2">
+    <h2>Complete return for <%= @return.contract.CNTR %></h2>
+  </div>
+  <div class="flex justify-between border-b pb-4">
+    <p>Into branch: <%= @return.store %></p>
+    <p>Returned at: <%= @return.created_at.strftime("%a %d/%m/%Y %H:%M") %></p>
+  </div>
+  <div class="flex justify-between mt-2">
+    <p>Contract out date: <%= @return.contract.DATE.strftime("%a %d/%m/%Y %H:%M") %></p>
+  </div>
+  <div class="flex justify-between mt-2">
+    <p>Customer name: <%= @return.contract.customer.NAME %></p>
+  </div>
+  <div class="flex justify-between border-b pb-2 mt-2">
+    <p>Return completed by: <%= @return.opnm %></p>
+  </div>
+  <%= form_with model: @return, method: :patch, local: true, multipart: true do |f| %>
+    <%= f.hidden_field :complete, value: true %>
+    <%= hidden_field_tag :contract, @return.contract.CNTR %>
+    <div class="flex flex-col items-center py-4 border-b">
+      <div class="flex justify-between">
+        <h4 class="px-2">Returned items</h4>
+        <h4 class="px-2">Contract #<%= @return.contract.CNTR %></h4>
+      </div>
+      <table class="text-xs w-full text-left my-4">
+        <thead class="text-xs uppercase">
+          <tr>
+            <th class="px-3 py-1.5 bg-green-50">Item</th>
+            <th class="px-3 py-1.5 bg-green-50">Name</th>
+            <th class="px-3 py-1.5 bg-green-50">Ret Qty</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @return.return_items.each do |return_item| %>
+            <tr class="bg-white">
+              <td class="px-3 pb-0.5 pt-1.5"><%= return_item.key %></td>
+              <td class="px-3 pb-0.5 pt-1.5"><%= return_item.name %></td>
+              <td class="px-3 pb-0.5 pt-1.5 text-center"><%= return_item.return_qty ? "#{return_item.return_qty}" : "1" %></td>
+              <tr>
+                <td colspan="3" class="w-full">
+                  <div class="w-full flex pb-1">
+                    <p class="px-3 text-xs"><%= "Hours: #{return_item.hours}" if return_item.hours %></p>
+                    <p class="px-3 text-xs"><%= "Fuel: #{return_item.fuel}L" if return_item.fuel %></p>
+                    <p class="px-3 text-xs"><%= "DBmm: #{return_item.dbmm}" if return_item.dbmm %></p>
+                    <p class="px-3 text-xs"><%= "Jerry: #{return_item.jerry}" if return_item.jerry %></p>
+                  </div>
+                </td>
+              </tr>
+            </tr>
+            <tr class="border-b">
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <% if @return.return_accessories.any? %>
+      <div class="flex justify-between border-b pb-2 mt-2">
+        <h3>Returned accessories:</h3>
+        <% @return.return_accessories.each do |accessory| %>
+          <p>Name: <%= accessory.name %></p>
+        <% end %>
+      </div>
+    <% end %>
+    <div class="flex justify-between items-center border-b pb-2 mt-2">
+      <h3>All items yellow/red taped accordingly?</h3>
+      <h3><%= @return.taped? ? "Yes" : "NO, see staff member who completed return" %></h3>
+    </div>
+    <% if @return.notes_attached %>
+      <div class="flex justify-between items-center border-b pb-2 mt-2">
+        <h4>Return notes:</h4>
+        <%= @return.notes %>
+      </div>
+    <% end %>
+    <% if @return.damage %>
+      <div class="flex flex-col border-b pb-2 mt-2">
+        <h2 class="text-red-600">Damage was recorded</h2>
+        <h4 class="py-2">Damage details</h4>
+        <p>Notes: <%= @return.damage_notes %></p>
+        <p>Image: <%= link_to "click here to open in a new window", @return.damage_photo_url, target: '_blank', rel: 'noopener', class: "text-blue-600 underline" %></p>
+        <%= image_tag @return.damage_photo_url %>
+      </div>
+    <% end %>
+    <div class="flex justify-between items-center my-8 mx-4">
+      <%= link_to "Back to Returns", complete_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+      <%= f.submit "Complete", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+    </div>
+  <% end %>
+</div>

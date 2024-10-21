@@ -81,11 +81,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_18_055360) do
     t.index ["template_id"], name: "index_jobs_on_template_id"
   end
 
-  create_table "phc_entries", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "questions", force: :cascade do |t|
     t.string "content"
     t.bigint "template_id", null: false

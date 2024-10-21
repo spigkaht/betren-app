@@ -58,6 +58,7 @@ gem "heroicon"
 gem "cloudinary"
 gem "mini_magick"
 gem "font-awesome-rails"
+gem "solid_cable"
 
 group :development, :test do
   gem "dotenv-rails"

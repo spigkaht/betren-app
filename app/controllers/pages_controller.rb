@@ -6,4 +6,8 @@ class PagesController < ApplicationController
     # @customers = Customer.all
     # @items = Item.all
   end
+
+  def complete
+    @returns = Return.where(complete: false)
+  end
 end

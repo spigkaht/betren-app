@@ -1,11 +1,11 @@
 development:
-  adapter: redis
-  url: redis://localhost:6379/1
-
-test:
-  adapter: test
+  adapter: solid_cable
+  connects_to:
+    database:
+      writing: cable
+  polling_interval: 5.seconds
+  message_retention: 1.day
 
 production:
-  adapter: redis
-  url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } %>
-  channel_prefix: betren_app_production
+  adapter: solid_cable
+  database: betren_app_development_cable

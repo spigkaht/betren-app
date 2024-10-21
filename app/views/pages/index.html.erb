@@ -35,6 +35,18 @@
       <p>View all completed pre-hire checks with detail</p>
     </div>
   </div>
+  <div class="flex" id="main-complete">
+    <%= link_to complete_path, class: "border-4 border-green-600 rounded m-2 w-16 text-center" do %>
+      <span class="material-symbols-outlined !text-4xl text-green-800">
+        task
+      </span>
+      <p class="text-xxs -mt-2">Complete</p>
+    <% end %>
+    <div class="flex flex-col justify-center ml-2">
+      <h2>Complete Returns</h2>
+      <p>View yard returns and complete on PoR</p>
+    </div>
+  </div>
   <div class="flex" id="main-contracts">
     <%= link_to contracts_path, class: "border-4 border-green-600 rounded m-2 w-16 text-center opacity-50" do %>
       <span class="material-symbols-outlined !text-4xl text-green-800">

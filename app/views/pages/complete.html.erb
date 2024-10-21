@@ -1,0 +1,14 @@
+<div class="flex flex-col mb-auto px-2">
+  <div class="flex justify-center">
+    <h2>Contract Returns</h2>
+  </div>
+  <%= turbo_stream_from "returns" %>
+  <div id="returns" class="returns pb-4 mt-4 border-b">
+    <% if @returns.empty? %>
+      <h3 class="font-bold text-center mt-10">No items to load</h3>
+    <% end %>
+    <% @returns.each do |ret| %>
+      <%= render "returns/complete_return", ret: ret %>
+    <% end %>
+  </div>
+</div>

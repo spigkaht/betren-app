@@ -25,20 +25,20 @@ class JobsController < ApplicationController
                                  .where.not('item.PartNumber LIKE ?', '')
                                  .select('TransactionItems.id, TransactionItems.ITEM, TransactionItems.CNTR, TransactionItems.DDT, item.Header, item.CurrentStore')
 
-    # collect list of item nums only for all contract items
-    item_nums = contract_items.map(&:ITEM)
-    # collect list of templates for all contract items
-    templates = Template.where(header: contract_items.map(&:Header)).index_by(&:header)
     # process jobs for all contract items
-    # checks if any jobs exist for item, creates a job if none exist or last job has been completed
-    ProcessJobs.new(contract_items, item_nums, templates, current_store).process_jobs
+    ProcessJobs.new(contract_items, current_store).process_jobs
 
+    ##### should this be refined so more relevant jobs are shown (esp duplicates)
     # collect all jobs that have not been completed
     jobs = Job.includes(item: :contract_items)
-              .where(completed_at: nil)
-              .where(store: current_store)
+          .where(completed_at: nil)
+          .where(store: current_store)
+          .order('created_at DESC')
 
-    jobs = jobs.map { |job| job if job.item.QYOT.zero? && job.item.CurrentStore == current_store }.compact
+    # removes jobs that are hired out again, at another store, removes jobs that are duplicated
+    jobs = jobs.map { |job| job if job.item.QYOT.zero? && job.item.CurrentStore == current_store }
+           .compact
+           .uniq { |job| job.item_num }
 
     # collect list of headers for all contract items
     item_headers = jobs.map { |job| job.item.Header }.uniq

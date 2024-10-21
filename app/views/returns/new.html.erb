@@ -9,7 +9,10 @@
   <div class="flex justify-between border-b pb-2 mt-2">
     <p>Customer name: <%= @return.contract.customer.NAME %></p>
   </div>
-  <%= form_with model: @return, url: return_path(@return), method: :patch, local: true, multipart: true do |f| %>
+  <%= form_with model: @return, method: :post, local: true, multipart: true do |f| %>
+    <%= f.hidden_field :store, value: current_user.store %>
+    <%= f.hidden_field :complete, value: false %>
+    <%= hidden_field_tag :contract, @return.contract.CNTR %>
     <div data-controller="operator" data-operator-operators='<%= @operators.to_json(only: [:OPID, :OPNM]) %>'>
       <div class="flex justify-between items-center w-full border-b pb-3 mt-3">
         <%= f.label :opid, "Enter initials:", class: "text-sm font-bold"%>

@@ -91,15 +91,15 @@ class ReturnsController < ApplicationController
     end
 
     if @return.save
+      # Trigger Turbo Stream for other views
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.append(:returns, partial: "returns/complete_return", locals: { ret: @return }),
-            turbo_stream.replace("flash", partial: "shared/flash", locals: { notice: "Return successfully created" }),
-            turbo_stream.replace("redirect", turbo_stream_tag { turbo_frame_tag "redirect", src: root_path, target: "_top" })
-          ]
+          render turbo_stream: turbo_stream.append(:returns, partial: "returns/complete_return", locals: { ret: @return })
         end
-        format.html { redirect_to root_path, notice: "Return was successfully created." }
+        format.html do
+          flash[:notice] = "Return was successfully created."
+          redirect_to root_path
+        end
       end
     else
       render :new, alert: "Error updating return"

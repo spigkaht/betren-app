@@ -1,13 +1,16 @@
 <div class="flex flex-col m-2 border-2 rounded-lg border-gray-700">
   <%= link_to edit_return_path(ret.id) do %>
     <div class="flex justify-between border-b-2 rounded-t-lg p-2 bg-green-300">
-      <p><%= ret.contract.CNTR %></p>
-      <p>Return #<%= ret.id %> | Store: <%= ret.contract.STR %></p>
+      <p>Return #<%= ret.id %></p>
+        <p>Contract: <%= ret.contract.CNTR %> | Store: <%= ret.contract.STR %></p>
     </div>
     <div class="flex flex-col p-2">
       <p>Customer: <%= ret.contract.customer.NAME %></p>
       <p>Returned Date: <%= ret.created_at.strftime("%a %d/%m/%Y %H:%M") %></p>
       <p>Returned by: <%= ret.opnm %></p>
+      <% if ret.store != ret.contract.STR %>
+        <p class="text-red-700 mt-2">Contract is from another store</p>
+      <% end %>
       <div class="flex flex-col mt-2">
         <p class="font-semibold text-base mb-1">Items</p>
         <% ret.return_items.each do |item| %>

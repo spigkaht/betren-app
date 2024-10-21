@@ -2,9 +2,9 @@
   <div class="flex pb-2">
     <h2>Complete return for <%= @return.contract.CNTR %></h2>
   </div>
-  <div class="flex justify-between border-b pb-4">
+  <div class="flex flex-col sm:flex-row justify-between border-b pb-4">
     <p>Into branch: <%= @return.store %></p>
-    <p>Returned at: <%= @return.created_at.strftime("%a %d/%m/%Y %H:%M") %></p>
+    <p class="mt-2 sm:mt-0">Returned at: <%= @return.created_at.strftime("%a %d/%m/%Y %H:%M") %></p>
   </div>
   <div class="flex justify-between mt-2">
     <p>Contract out date: <%= @return.contract.DATE.strftime("%a %d/%m/%Y %H:%M") %></p>
@@ -28,7 +28,7 @@
           <tr>
             <th class="px-3 py-1.5 bg-green-50">Item</th>
             <th class="px-3 py-1.5 bg-green-50">Name</th>
-            <th class="px-3 py-1.5 bg-green-50">Ret Qty</th>
+            <th class="px-3 py-1.5 bg-green-50">Qty</th>
           </tr>
         </thead>
         <tbody>
@@ -62,14 +62,14 @@
         <% end %>
       </div>
     <% end %>
-    <div class="flex justify-between items-center border-b pb-2 mt-2">
+    <div class="flex justify-between items-center border-b pb-2 mt-2 text-sm sm:text-base">
       <h3>All items yellow/red taped accordingly?</h3>
       <h3><%= @return.taped? ? "Yes" : "NO, see staff member who completed return" %></h3>
     </div>
     <% if @return.notes_attached %>
-      <div class="flex justify-between items-center border-b pb-2 mt-2">
-        <h4>Return notes:</h4>
-        <%= @return.notes %>
+      <div class="flex flex-col border-b pb-2 mt-2">
+        <h4 class="pb-2">Return notes:</h4>
+        <p class="text-sm"><%= @return.notes %></p>
       </div>
     <% end %>
     <% if @return.damage %>
@@ -77,7 +77,7 @@
         <h2 class="text-red-600">Damage was recorded</h2>
         <h4 class="py-2">Damage details</h4>
         <p>Notes: <%= @return.damage_notes %></p>
-        <p>Image: <%= link_to "click here to open in a new window", @return.damage_photo_url, target: '_blank', rel: 'noopener', class: "text-blue-600 underline" %></p>
+        <p class="py-2">Image: <%= link_to "click here to open in a new window", @return.damage_photo_url, target: '_blank', rel: 'noopener', class: "text-blue-600 underline" %></p>
         <%= image_tag @return.damage_photo_url %>
       </div>
     <% end %>

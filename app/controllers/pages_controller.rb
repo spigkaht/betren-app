@@ -8,6 +8,6 @@ class PagesController < ApplicationController
   end
 
   def complete
-    @returns = Return.where(complete: false)
+    @returns = Return.where(complete: false).where(store: current_user.store)
   end
 end

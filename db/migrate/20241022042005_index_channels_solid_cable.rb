@@ -1,11 +1,5 @@
-class CreateSolidCableMessages < ActiveRecord::Migration[6.1]
+class CreateIndexChannels < ActiveRecord::Migration[7.0]
   def change
-    create_table :solid_cable_messages do |t|
-      t.string :channel
-      t.text :payload
-      t.timestamps
-    end
-
-    add_index :solid_cable_messages, :channel
+    add_index :solid_cable_messages, [:channel], name: "index_channels_solid_cable"
   end
 end

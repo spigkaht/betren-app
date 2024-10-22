@@ -104,3 +104,7 @@ production:
   secondary:
     <<: *postgres_default
     url: <%= ENV['DATABASE_URL'] %>
+  cable:
+    <<: *postgres_default
+    database: betren_app_development_cable
+    migrations_paths: db/cable_migrate

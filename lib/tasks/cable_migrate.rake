@@ -1,10 +1,8 @@
 namespace :db do
-  desc "Migrate cable database"
-  task migrate:with_cable => :environment do
-    # Establish connection to the cable database
-    ActiveRecord::Base.establish_connection(:cable)
-
-    # Run migrations for the cable database
-    ActiveRecord::Migrator.migrate("db/migrate/cable_migrate/")
+  desc "Migrate the cable database"
+  task migrate_with_cable: :environment do
+    ActiveRecord::Base.establish_connection(:cable) do
+      ActiveRecord::Migrator.migrate("db/cable_migrate")
+    end
   end
 end

@@ -7,24 +7,28 @@
   <% end %>
 
   <% if @jobs %>
-    <h3>Item # <%= params[:item] %>
-    <table class="text-xs w-full text-left my-4">
+    <h3>Item # <%= params[:item] %></h3>
+    <table class="text-xs w-full text-left">
       <thead class="text-xs uppercase">
         <tr>
-          <th class="px-3 py-1.5 bg-green-50">Job</th>
-          <th class="px-3 py-1.5 bg-green-50">CNTR</th>
-          <th class="px-3 py-1.5 bg-green-50">Returned</th>
-          <th class="px-3 py-1.5 bg-green-50">Completed</th>
+          <th class="px-3 py-1 bg-green-50">Job</th>
+          <th class="px-3 py-1 bg-green-50">CNTR</th>
+          <th class="px-3 py-1 bg-green-50">Completed</th>
         </tr>
       </thead>
       <tbody>
         <% @jobs.each do |job| %>
-          <tr class="bg-white border-b">
-            <td class="px-3 py-1.5"><%= job.id %></td>
-            <td class="px-3 py-1.5"><%= job.last_contract %></td>
-            <td class="px-3 py-1.5"><%= job.last_return.strftime("%d/%m/%Y %H:%M") %></td>
-            <td class="px-3 py-1.5"><%= job.completed_at ? job.completed_at.strftime("%d/%m/%Y %H:%M") : "not completed" %></td>
+          <tr>
+            <td class="px-3 pt-1.5 pb-0.5"><%= job.id %></td>
+            <td class="px-3 pt-1.5 pb-0.5"><%= job.last_contract %></td>
+            <td class="px-3 pt-1.5 pb-0.5"><%= job.completed_at ? job.completed_at.strftime("%d/%m/%Y %H:%M") : "not completed" %></td>
           </tr>
+          <table>
+            <tr class="border-b">
+              <td class="px-3 pb-1.5 pt-0.5 text-xs"><strong>Returned:</strong> <%= job.last_return.strftime("%d/%m/%Y %H:%M") %></td>
+              <td class="px-3 pb-1.5 pt-0.5 text-xs"><strong>Created:</strong> <%= job.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+            </tr>
+          </table>
         <% end %>
       </tbody>
     </table>

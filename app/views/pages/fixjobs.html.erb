@@ -23,11 +23,18 @@
             <td class="px-3 pt-1.5 pb-0.5 text-xs"><%= job.last_contract %></td>
             <td class="px-3 pt-1.5 pb-0.5 text-xs"><%= job.completed_at ? job.completed_at.strftime("%d/%m/%Y %H:%M") : "not completed" %></td>
           </tr>
-          <table>
-            <tr class="border-b">
-              <td class="px-3 pb-1.5 pt-0.5 text-xs"><strong>Returned:</strong> <%= job.last_return.strftime("%d/%m/%Y %H:%M") %></td>
-              <td class="px-3 pb-1.5 pt-0.5 text-xs"><strong>Created:</strong> <%= job.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+          <%# create separate row from table here %>
+            <tr>
+              <td colspan="3">
+                <table class="w-full">
+                  <tr class="border-b">
+                    <td class="px-3 pb-1.5 pt-0.5 text-xs"><strong>Returned:</strong> <%= job.last_return.strftime("%d/%m/%Y %H:%M") %></td>
+                    <td class="pb-1.5 pt-0.5 text-xs"><strong>Created:</strong> <%= job.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+                  </tr>
+                </table>
+              </td>
             </tr>
+          <%# end here %>
           </table>
         <% end %>
       </tbody>

@@ -23,7 +23,7 @@
             <td class="px-3 py-1.5"><%= job.id %></td>
             <td class="px-3 py-1.5"><%= job.last_contract %></td>
             <td class="px-3 py-1.5"><%= job.last_return.strftime("%d/%m/%Y %H:%M") %></td>
-            <td class="px-3 py-1.5"><%= job.completed_at.strftime("%d/%m/%Y %H:%M") %></td>
+            <td class="px-3 py-1.5"><%= job.completed_at ? job.completed_at.strftime("%d/%m/%Y %H:%M") : "not completed" %></td>
           </tr>
         <% end %>
       </tbody>

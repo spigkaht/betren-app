@@ -19,9 +19,9 @@
       <tbody>
         <% @jobs.each do |job| %>
           <tr>
-            <td class="px-3 pt-1.5 pb-0.5"><%= job.id %></td>
-            <td class="px-3 pt-1.5 pb-0.5"><%= job.last_contract %></td>
-            <td class="px-3 pt-1.5 pb-0.5"><%= job.completed_at ? job.completed_at.strftime("%d/%m/%Y %H:%M") : "not completed" %></td>
+            <td class="px-3 pt-1.5 pb-0.5 text-xs"><%= job.id %></td>
+            <td class="px-3 pt-1.5 pb-0.5 text-xs"><%= job.last_contract %></td>
+            <td class="px-3 pt-1.5 pb-0.5 text-xs"><%= job.completed_at ? job.completed_at.strftime("%d/%m/%Y %H:%M") : "not completed" %></td>
           </tr>
           <table>
             <tr class="border-b">

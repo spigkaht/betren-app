@@ -3,7 +3,6 @@ class ReturnsController < ApplicationController
   def index
     contracts = Contract.where(Status: "O").where.not(SecondaryStatus: "R").includes(:customer)
     @customer_names = contracts.map { |contract| { num: contract.customer.CNUM, name: contract.customer.NAME } }
-    contract_param = params.keys.find { |key| key.start_with?('contract_') }
 
     if params[:part_number].present? || params[:qr_number].present?
       part_number = params[:part_number].present? ? params[:part_number] : params[:qr_number]
@@ -14,8 +13,8 @@ class ReturnsController < ApplicationController
       @contract_nums = customer_contracts.pluck(:CNTR)
     end
 
-    if contract_param && params[contract_param].present?
-      contract_number = params[contract_param]
+    if params[:contract].present?
+      contract_number = params[:contract]
       @contract = Contract.find_by(CNTR: contract_number)
     end
   end
@@ -40,7 +39,7 @@ class ReturnsController < ApplicationController
     @contract_items_with_accessories = contract.contract_items
       .where.not(QTY: 0)
       .where.not(HRSC: 0)
-      .where(TXTY: "R")
+      .where(TXTY: ["R", "RH"])
       .order(:ITEM)
       .map do |contract_item|
     item_header = Item.find_by(KEY: contract_item.item.Header)

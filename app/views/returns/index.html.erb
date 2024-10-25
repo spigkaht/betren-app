@@ -17,7 +17,7 @@
         <%= button_tag "Customer", type: "button", data: { action: "returns-entry#showCustomerInput" }, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
       </div>
     </div>
-    <%= form_with url: returns_path, method: :get, autocomplete: "off", class: "hidden", data: { returns_entry_target: "formDiv" } do |form| %>
+    <%= form_with url: returns_path, method: :get, autocomplete: "off", class: "hidden", data: { returns_entry_target: "formDiv", controller: "loader", action: "submit->loader#show" } do |form| %>
       <div class="flex flex-col items-center border-b pt-2 mt-2 pb-2">
         <%# plant number input %>
         <div data-returns-entry-target="plantNumberInput" class="hidden">
@@ -53,18 +53,18 @@
       </div>
     <% end %>
     <% if params[:cust_name].present? %>
-      <%= form_with url: returns_path, autocomplete: "off", method: :get, class: "" do |form| %>
+      <%= form_with url: returns_path, autocomplete: "off", method: :get, class: "", data: { controller: "loader", action: "input->loader#show" } do |form| %>
         <div class="flex flex-col items-center mt-2 pt-2">
           <h3>Customer selected:</h3>
           <h3><%= @customer.NAME %></h3>
         </div>
         <div class="flex justify-center border-b mt-2 pb-4">
-          <%= form.text_field :contract, name: "contract_#{SecureRandom.hex(8)}", placeholder: "Select contract", list: "contract_nums", class: "block w-44 px-2 py-1 ml-2 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", onchange: "this.form.submit();" %>
-          <datalist id="contract_nums">
-            <% @contract_nums.each do |contract_num| %>
-              <option value="<%= contract_num %>"></option>
-            <% end %>
-          </datalist>
+          <%= form.select :contract,
+            options_for_select(@contract_nums),  # Dynamic contract numbers from @contract_nums
+            { prompt: "Select contract" },  # Placeholder option
+            class: "block w-44 px-2 py-1 ml-2 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md",
+            onchange: "this.form.submit();"  # Submit form when selection changes
+          %>
           <%= form.hidden_field :customer, value: params[:customer] %>
           </div>
       <% end %>

@@ -1,29 +1,29 @@
 <div class="flex justify-between align-self-end border border-gray-800 rounded p-1 mb-2" id="footer">
-  <%= link_to root_path, class: "border-4 border-green-600 rounded m-1 w-16 text-center" do %>
+  <%= link_to root_path, class: "border-4 border-green-600 rounded m-1 w-16 text-center", data: { controller: "loader", action: "click->loader#show" } do %>
     <span class="material-symbols-outlined !text-4xl text-green-800">
       home
     </span>
     <p class="text-xxs -mt-2">Home</p>
   <% end %>
-  <%= link_to jobs_path, class: "border-4 border-green-600 rounded m-1 w-16 text-center" do %>
+  <%= link_to jobs_path, class: "border-4 border-green-600 rounded m-1 w-16 text-center", data: { controller: "loader", action: "click->loader#show" } do %>
     <span class="material-symbols-outlined !text-4xl text-green-800">
       home_repair_service
     </span>
     <p class="text-xxs -mt-2">PHC</p>
   <% end %>
-  <%= link_to returns_path, class: "border-4 border-green-600 rounded m-1 w-16 text-center" do %>
+  <%= link_to returns_path, class: "border-4 border-green-600 rounded m-1 w-16 text-center", data: { controller: "loader", action: "click->loader#show" } do %>
     <span class="material-symbols-outlined !text-4xl text-green-800">
       assignment_returned
     </span>
     <p class="text-xxs -mt-2">Returns</p>
   <% end %>
-  <%= link_to root_path, class: "border-4 border-green-600 rounded m-1 w-16 text-center opacity-50" do %>
+  <%= link_to root_path, class: "border-4 border-green-600 rounded m-1 w-16 text-center opacity-50", data: { controller: "loader", action: "click->loader#show" } do %>
     <span class="material-symbols-outlined !text-4xl text-green-800">
       local_shipping
     </span>
     <p class="text-xxs -mt-2">DEL PU</p>
   <% end %>
-  <%= link_to root_path, class: "border-4 border-green-600 rounded m-1 w-16 text-center opacity-50" do %>
+  <%= link_to root_path, class: "border-4 border-green-600 rounded m-1 w-16 text-center opacity-50", data: { controller: "loader", action: "click->loader#show" } do %>
     <span class="material-symbols-outlined !text-4xl text-green-800">
       forum
     </span>

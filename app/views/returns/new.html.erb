@@ -9,7 +9,7 @@
   <div class="flex justify-between border-b pb-2 mt-2">
     <p>Customer name: <%= @return.contract.customer.NAME %></p>
   </div>
-  <%= form_with model: @return, method: :post, local: true, multipart: true, data: { turbo: false } do |f| %>
+  <%= form_with model: @return, method: :post, local: true, multipart: true, data: { turbo: false, controller: "loader", action: "submit->loader#show" } do |f| %>
     <%= f.hidden_field :store, value: current_user.store %>
     <%= f.hidden_field :complete, value: false %>
     <%= hidden_field_tag :contract, @return.contract.CNTR %>

@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
     .section-404 {
-      padding: 2.5rem 0;
       background-color: white;
     }
 
     .container {
+      height: 100%;
       width: 100%;
       display: flex;
       flex-direction: column;
+      justify-content: center;
       margin: auto;
     }
 
@@ -29,9 +30,10 @@
     }
 
     .background {
-      background-image: url('https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif');
+      background-image: url('./br-logo-square-transparent.png');
       background-position: center;
-      height: 400px;
+      background-repeat: no-repeat;
+      height: 250px;
     }
 
     h1 {
@@ -47,7 +49,6 @@
 
     .link {
       padding: 2.5rem 1.25rem;
-      margin: 2.5rem 0;
       display: inline-block
     }
   </style>
@@ -57,9 +58,9 @@
   <section class="section-404">
     <div class="container">
       <div class="background">
-        <h1>404</h1>
       </div>
       <div class="content">
+        <h1>404</h1>
         <h3>Looks like you're lost</h3>
         <p>The page you are looking for does not exist!</p>
         <a href="/" class="link">Home</a>

@@ -60,10 +60,10 @@
         </div>
         <div class="flex justify-center border-b mt-2 pb-4">
           <%= form.select :contract,
-            options_for_select(@contract_nums),  # Dynamic contract numbers from @contract_nums
-            { prompt: "Select contract" },  # Placeholder option
+            options_for_select(@contract_nums),
+            { prompt: "Select contract" },
             class: "block w-44 px-2 py-1 ml-2 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md",
-            onchange: "this.form.submit();"  # Submit form when selection changes
+            onchange: "this.form.submit();"
           %>
           <%= form.hidden_field :customer, value: params[:customer] %>
           </div>

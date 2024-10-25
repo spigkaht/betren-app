@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   end
 
   scope format: false do
+    get "/fixjobs", to: "pages#fixjobs", as: "fixjobs"
     get "/settings", to: "pages#settings", as: "settings"
     get "/complete", to: "pages#complete", as: "complete"
     resources :contracts, only: [:index, :show]

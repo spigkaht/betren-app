@@ -6,7 +6,17 @@ class ReturnsController < ApplicationController
 
     if params[:part_number].present? || params[:qr_number].present?
       part_number = params[:part_number].present? ? params[:part_number] : params[:qr_number]
-      @contract = contracts.find_by(CNTR: Item.find_by(PartNumber: part_number)&.CNTR)
+      item = Item.find_by(PartNumber: part_number)
+
+      if item.CNTR.present? && item.CNTR != ""
+        @contract = contracts.find_by(CNTR: item.CNTR)
+      else
+        @contract = Contract.joins(:contract_items)
+        .where('Transactions.CNTR LIKE ?', 't%')
+        .where('TransactionItems.ITEM = ?', item.NUM)
+        .first
+      end
+
     elsif params[:cust_name].present?
       @customer = Customer.find_by(CNUM: params[:customer])
       customer_contracts = contracts.where(CUSN: @customer.CNUM)

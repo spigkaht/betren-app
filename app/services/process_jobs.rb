@@ -6,6 +6,9 @@ class ProcessJobs
 
   def process_jobs
     @contract_items.each do |contract_item|
+      puts " "
+      puts "============================== DDT: #{contract_item.DDT} ==============================="
+      puts " "
       # find contract item's item number
       item_num = contract_item.ITEM
       # find latest job for item
@@ -21,9 +24,11 @@ class ProcessJobs
       if last_job.nil?
         Job.create(item_num: item_num, store: contract_item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil, template: template)
       elsif last_job.completed_at.nil?
-        puts "====== skipping, last job not completed yet ======"
+        puts " "
+        puts "============================== skipping, last job not completed yet ==============================="
+        puts " "
       elsif contract_item.DDT.to_s.include?("00:00:00")
-        puts "====== skipping, due date time is invalid ======" 
+        puts "============================== skipping, due date time is invalid ================================="
       elsif last_job
         if contract_item.DDT > last_job.completed_at
           Job.create(item_num: item_num, store: contract_item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil, template: template)

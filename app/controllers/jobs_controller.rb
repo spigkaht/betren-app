@@ -101,9 +101,10 @@ class JobsController < ApplicationController
 
   def create
     item = Item.find_by(PartNumber: params[:part_number])
-    template = Template.find_by(header: item.Header)
-    last_return = item.LDATE
     last_contract = item.CNTR
+    contract_item = ContractItem.where(ITEM: item.NUM).find_by(CNTR: last_contract)
+    last_return = contract_item.DDT
+    template = Template.find_by(header: item.Header)
 
     if item
       @job = Job.new(item: item, template: template, store: current_user.store, last_return: last_return, last_contract: last_contract)
@@ -142,9 +143,6 @@ class JobsController < ApplicationController
       end
     else
       redirect_to job_path(@job)
-      # load_job_associations
-      # flash.now[:alert] = @job.errors.full_messages.to_sentence
-      # render :show, status: :unprocessable_entity
     end
   end
 
@@ -155,20 +153,6 @@ class JobsController < ApplicationController
   end
 
   private
-
-  # def load_job_associations
-  #   @job.build_answer if @job.answer.nil?
-  #   @operators = Operator.where(Inactive: false)
-
-  #   item = @job.item
-  #   item_header = Item.find_by(KEY: item.Header)
-  #   @accessories = item_header.accessories
-
-  #   accessory_items = @accessories.map { |accessory| Item.find(accessory.ItemKey) }
-  #   @dbmm = true if accessory_items.any? { |accessory| accessory.FUEL.end_with? "MM" }
-
-  #   @template = Template.find_by(header: item.Header)
-  # end
 
   def set_job
     @job = Job.find(params[:id])

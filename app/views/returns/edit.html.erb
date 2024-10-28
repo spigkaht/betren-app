@@ -43,7 +43,13 @@
                     <p class="px-3 font-semibold text-red-950"><%= "Jerry: #{return_item.jerry}" if return_item.jerry %></p>
                     <p class="px-3 font-semibold text-red-950"><%= "DBmm: #{return_item.dbmm}" if return_item.dbmm %></p>
                     <p class="px-3 font-semibold text-red-950"><%= "Hours: #{return_item.hours}" if return_item.hours %></p>
-                    <p class="px-3 font-semibold text-red-950"><%= "Fuel: #{return_item.fuel}L" if return_item.fuel %></p>
+                    <p class="px-3 font-semibold text-red-950">
+                      <% if return_item.fuel == "" %>
+                        Fuel: FULL
+                      <% elsif return_item.fuel %>
+                        <%= "Fuel: #{return_item.fuel}L" %>
+                      <% end %>
+                    </p>
                   </div>
                 </td>
               </tr>

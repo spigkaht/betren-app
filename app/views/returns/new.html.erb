@@ -50,18 +50,24 @@
               </tr>
               <tr class="hidden" data-item-return-target="returnDetailsDiv">
                 <td class="px-1.5 pb-1.5 pt-0.5" colspan="4">
-                  <div class="flex justify-end items-center">
+                  <div class="flex justify-end items-center" data-controller="fuel">
                     <% if item_data[:contract_item].item.FUEL == "cFUEL" || item_data[:contract_item].item.FUEL == "cUNFUEL" %>
-                      <%= ff.label "return#{index}-fuel", "Fuel req", class: "font-bold" %>
-                      <%= ff.number_field "return#{index}-fuel", step: "any", min: 0, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 mx-2 py-1 px-2" %>
+                      <div data-fuel-target="fuelAdd" class="flex items-center mr-4">
+                        <%= f.label :fuel_req, "Fuel req?", class: "font-bold w-2/3" %>
+                        <%= f.check_box :fuel_req, { class: "cursor-pointer w-6 h-6 mx-2 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2", data: { action: "input->fuel#fuelRequired" } }, name: nil %>
+                      </div>
+                      <div data-fuel-target="fuelEntry" class="justify-between items-center hidden">
+                        <%= ff.label "return#{index}-fuel", "Fuel req", class: "font-bold" %>
+                        <%= ff.number_field "return#{index}-fuel", step: "any", min: 0, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 mx-2 py-1 px-2" %>
+                      </div>
                     <% end %>
                     <% if item_data[:contract_item].item.TYPE == "H" %>
                       <%= ff.label "return#{index}-hours", "Hours", class: "font-bold" %>
-                      <%= ff.number_field "return#{index}-hours", step: "any", min: 0, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-24 mx-2 py-1 px-2" %>
+                      <%= ff.number_field "return#{index}-hours", step: "any", min: 0, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 mx-2 py-1 px-2" %>
                     <% end %>
                     <% if item_data[:dbmm] %>
                       <%= ff.label "return#{index}-dbmm", "Blade mm", class: "font-bold" %>
-                      <%= ff.number_field "return#{index}-dbmm", step: "any", min: 0, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-16 mx-2 py-1 px-2" %>
+                      <%= ff.number_field "return#{index}-dbmm", step: "any", min: 0, class: "w-10 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-16 mx-2 py-1 px-2" %>
                     <% end %>
                     <% if item_data[:contract_item].QTY > 1 %>
                       <%= ff.label "return#{index}-qty", "Returned Qty", class: "font-bold" %>

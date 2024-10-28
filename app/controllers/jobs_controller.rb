@@ -35,9 +35,12 @@ class JobsController < ApplicationController
           .order('created_at DESC')
 
     # removes jobs that are hired out again, at another store, removes jobs that are duplicated
-    jobs = jobs.map { |job| job if job.item.QYOT.zero? && job.item.CurrentStore == current_store }
-           .compact
-           .uniq { |job| job.item_num }
+    jobs = jobs.map do |job|
+      if job.item.QYOT.zero? && job.item.CurrentStore == current_store &&
+         job.item.contract_items.none? { |contract_item| contract_item.DDT > job.created_at }
+        job
+      end
+    end.compact.uniq { |job| job.item_num }
 
     # collect list of headers for all contract items
     item_headers = jobs.map { |job| job.item.Header }.uniq

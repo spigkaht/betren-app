@@ -1,7 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["fileInput", "photoUrl", "loading", "checkBox"]
+  static targets = ["fileInput", "photoUrl", "loading", "checkBox", "submitButton"]
+
+  connect() {
+    this.totalUploads = this.fileInputTargets.length;
+    this.completedUploads = 0;
+  }
 
   triggerFileInput(event) {
     this.currentIndex = event.target.dataset.index;
@@ -21,7 +26,7 @@ export default class extends Controller {
       const resizedFile = await this.resizeImage(file, 750);
       const loadingElement = this.loadingTargets.find((loading) => loading.id === `uploadStatus${this.currentIndex}`);
       const photoUrlElement = this.photoUrlTargets[this.fileInputTargets.indexOf(fileInput)];
-      const checkboxElement = this.checkBoxTarget;
+      const checkboxElement = this.checkBoxTargets.find((checkbox) => checkbox.dataset.index === this.currentIndex);
 
       loadingElement.style.opacity = "1";
       checkboxElement.classList.add("hidden");
@@ -37,10 +42,9 @@ export default class extends Controller {
       .then(response => response.json())
       .then(data => {
         photoUrlElement.value = data.secure_url;
-
         loadingElement.style.opacity = "0";
         checkboxElement.classList.remove("hidden");
-        this.updateCheckBox();
+        this.updateCheckBox(checkboxElement);
       })
       .catch(error => {
         console.error('Error uploading to Cloudinary:', error);
@@ -76,11 +80,17 @@ export default class extends Controller {
     });
   }
 
-  updateCheckBox() {
-    const checkBox = this.checkBoxTargets.find((checkbox) => checkbox.dataset.index === this.currentIndex);
-    if (checkBox) {
-      checkBox.checked = true;
-      checkBox.disabled = false;
+  updateCheckBox(checkboxElement) {
+    if (checkboxElement) {
+      checkboxElement.checked = true;
+      this.completedUploads += 1;
+      this.checkUploadsStatus();
+    }
+  }
+
+  checkUploadsStatus() {
+    if (this.completedUploads === this.totalUploads) {
+      this.submitButtonTarget.disabled = false;
     }
   }
 }

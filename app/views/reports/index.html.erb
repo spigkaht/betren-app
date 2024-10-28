@@ -2,26 +2,29 @@
   <div class="flex justify-center">
     <h1>PHC Reports</h1>
   </div>
-    <div id="filters">
-      <%= form_with(url: reports_path, method: :get, local: true, class: "my-4", data: { controller: "loader", action: "submit->loader#show" }) do %>
-        <div class="mb-4 mx-2 flex justify-between items-center">
-          <%= label_tag :start_date, "From:", class: "text-sm font-medium text-gray-700" %>
-          <%= text_field_tag :start_date, params[:start_date], class: "w-[8rem] pl-3 pr-3 py-1 text-sm border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { controller: "datepicker" } %>
-          <%= label_tag :end_date, "To:", class: "text-sm font-medium text-gray-700" %>
-          <%= text_field_tag :end_date, params[:end_date], class: "w-[8rem] pl-3 pr-3 py-1 text-sm border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { controller: "datepicker" } %>
-        </div>
-        <% if current_user.admin? %>
-          <div class="mb-4 mx-2 flex justify-center items-center">
-            <label for="store" class="block mx-4 text-sm font-medium text-gray-700">Select Store</label>
-            <%= select_tag :store, options_for_select(@stores, selected: params[:store]), prompt: "Store", class: "block w-[7rem] pl-3 pr-3 py-1 mx-4 text-sm border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md" %>
-          </div>
-        <% end %>
+  <div id="filters">
+    <%= form_with(url: reports_path, method: :get, local: true, class: "my-4", data: { controller: "loader", action: "submit->loader#show" }) do %>
+      <div class="mb-4 mx-2 flex justify-between items-center">
+        <%= label_tag :start_date, "From:", class: "text-sm font-medium text-gray-700" %>
+        <%= text_field_tag :start_date, params[:start_date], class: "w-[8rem] pl-3 pr-3 py-1 text-sm border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { controller: "datepicker" } %>
+        <%= label_tag :end_date, "To:", class: "text-sm font-medium text-gray-700" %>
+        <%= text_field_tag :end_date, params[:end_date], class: "w-[8rem] pl-3 pr-3 py-1 text-sm border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { controller: "datepicker" } %>
+      </div>
+      <% if current_user.admin? %>
         <div class="mb-4 mx-2 flex justify-center items-center">
-          <%= link_to "Reset", reports_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm mx-4 px-5 py-1 focus:outline-none" %>
-          <%= submit_tag "Apply filters", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-1 mx-4 focus:outline-none" %>
+          <label for="store" class="block mx-4 text-sm font-medium text-gray-700">Select Store</label>
+          <%= select_tag :store, options_for_select(@stores, selected: params[:store]), prompt: "Store", class: "block w-[7rem] pl-3 pr-3 py-1 mx-4 text-sm border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md" %>
         </div>
       <% end %>
-    </div>
+      <div class="mb-4 mx-2 flex justify-center items-center">
+        <%= link_to "Reset", reports_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm mx-4 px-5 py-1 focus:outline-none" %>
+        <%= submit_tag "Apply filters", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-1 mx-4 focus:outline-none" %>
+      </div>
+    <% end %>
+  </div>
+  <div class="flex justify-center">
+    <p class="text-xs"><em>Displaying <%= @start_date.strftime("%a %d/%m/%Y") %> - <%= @end_date.strftime("%a %d/%m/%Y") %>, store: <%= @current_store ? @current_store : "All" %></em></p>
+  </div>
   <div id="cards">
     <% @reports.each do |report| %>
       <div class="flex flex-col m-2 border-2 rounded-lg border-gray-700">
@@ -35,7 +38,12 @@
               <p><%= report.item.Name %></p>
               <p><%= report.item.PartNumber %></p>
             </div>
-            <p>Completed Date: <%= report.completed_at.strftime("%a %d/%m/%Y %H:%M") %></p>
+            <div class="flex justify-between">
+              <p>Completed Date: <%= report.completed_at.strftime("%a %d/%m/%Y %H:%M") %></p>
+            </div>
+            <div class="flex justify-between">
+              <p>Completed By: <%= report.opnm %></p>
+            </div>
           <% end %>
           <div class="flex justify-between">
             <p>Last Contract: <%= link_to "#{report.last_contract}", contract_path(report.last_contract), class: "text-blue-600 hover:underline" %></p>

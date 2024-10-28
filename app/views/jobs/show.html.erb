@@ -1,4 +1,4 @@
-<div class="flex flex-col mb-auto px-2 pt-5" id="main">
+<div class="flex flex-col mb-auto px-2 pt-5" id="main" data-controller="file-upload" data-cloudinary-upload-cloud-name="<%= ENV['CLOUDINARY_CLOUD_NAME'] %>" data-cloudinary-upload-upload-preset="<%= ENV['CLOUDINARY_UPLOAD_PRESET'] %>">
   <div class="flex justify-between pb-2">
     <h2>Pre-hire Check <%= @job.id %></h2>
     <%= link_to "View Template", template_path(@job.template, job_id: @job.id), class: "text-green-600 hover:underline text-base" if current_user.admin? %>
@@ -108,20 +108,22 @@
       </div>
     <% end %>
     <% @job.template.photo_qty.times do |i| %>
-      <div class="flex justify-between items-center border-b pb-4 mt-4" data-controller="file-upload" data-cloudinary-upload-cloud-name="<%= ENV['CLOUDINARY_CLOUD_NAME'] %>" data-cloudinary-upload-upload-preset="<%= ENV['CLOUDINARY_UPLOAD_PRESET'] %>">
+      <div class="flex justify-between items-center border-b pb-4 mt-4">
         <div class="flex justify-between items-center">
           <%= f.label "photo#{i+1}", "Add photo:", class: "text-sm font-bold" %>
           <%= f.file_field "photo#{i+1}", accept: "image/*", capture: "camera", class: "hidden", data: { action: "change->file-upload#uploadToCloudinary", "file-upload-target": "fileInput", index: "#{i+1}" }, name: nil %>
           <button type="button" class="custom-button text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 ml-4 focus:outline-none" data-action="click->file-upload#triggerFileInput" data-index="<%= i+1 %>">Capture</button>
           <%= f.hidden_field "photo_url#{i+1}", data: { "file-upload-target": "photoUrl" } %>
         </div>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="30" height="30" id="uploadStatus<%= i+1 %>" class="opacity-0" data-file-upload-target="loading"><radialGradient id="a2" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)"><stop offset="0" stop-color="#0CC500"></stop><stop offset=".3" stop-color="#0CC500" stop-opacity=".9"></stop><stop offset=".6" stop-color="#0CC500" stop-opacity=".6"></stop><stop offset=".8" stop-color="#0CC500" stop-opacity=".3"></stop><stop offset="1" stop-color="#0CC500" stop-opacity="0"></stop></radialGradient><circle transform-origin="center" fill="none" stroke="url(#a2)" stroke-width="30" stroke-linecap="round" stroke-dasharray="200 1000" stroke-dashoffset="0" cx="100" cy="100" r="70"><animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="5" values="360;0" keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform></circle><circle transform-origin="center" fill="none" opacity=".2" stroke="#0CC500" stroke-width="30" stroke-linecap="round" cx="100" cy="100" r="70"></circle></svg>
-        <%= f.check_box "photo_uploaded_#{i+1}", checked: false, disabled: true, required: true, data: { "file-upload-target": "checkBox", index: "#{i+1}" }, class: "w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2", name: nil %>
+        <div class="flex justify-center items-center relative">
+          <%= f.check_box "photo_uploaded_#{i+1}", checked: false, disabled: true, required: true, data: { "file-upload-target": "checkBox", index: "#{i+1}" }, class: "w-6 h-6 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2", name: nil %>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="30" height="30" id="uploadStatus<%= i+1 %>" class="opacity-0 absolute right-1/2" data-file-upload-target="loading"><radialGradient id="a2" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)"><stop offset="0" stop-color="#0CC500"></stop><stop offset=".3" stop-color="#0CC500" stop-opacity=".9"></stop><stop offset=".6" stop-color="#0CC500" stop-opacity=".6"></stop><stop offset=".8" stop-color="#0CC500" stop-opacity=".3"></stop><stop offset="1" stop-color="#0CC500" stop-opacity="0"></stop></radialGradient><circle transform-origin="center" fill="none" stroke="url(#a2)" stroke-width="30" stroke-linecap="round" stroke-dasharray="200 1000" stroke-dashoffset="0" cx="100" cy="100" r="70"><animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="5" values="360;0" keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform></circle><circle transform-origin="center" fill="none" opacity=".2" stroke="#0CC500" stroke-width="30" stroke-linecap="round" cx="100" cy="100" r="70"></circle></svg>
+        </div>
       </div>
     <% end %>
     <div class="flex justify-between items-center my-8">
       <%= link_to "Back to PHCs", jobs_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
-      <%= f.submit "Complete", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+      <%= f.submit "Complete", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none", data: { "file-upload-target": "submitButton" }, disabled: true %>
     </div>
   <% end %>
 </div>

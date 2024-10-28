@@ -42,17 +42,25 @@ class ReturnsController < ApplicationController
       .where(TXTY: ["R", "RH"])
       .order(:ITEM)
       .map do |contract_item|
-    item_header = Item.find_by(KEY: contract_item.item.Header)
-    accessories = item_header.accessories
 
-    accessory_items = accessories.map { |accessory| Item.find(accessory.ItemKey) }
-    dbmm = accessory_items.any? { |accessory| accessory.FUEL&.end_with?("MM") }
+      item_header = Item.find_by(KEY: contract_item.item.Header)
 
-    {
-      contract_item: contract_item,
-      accessory_items: accessory_items,
-      dbmm: dbmm
-    }
+      if item_header
+        accessories = item_header.accessories
+
+        accessory_items = accessories.map { |accessory| Item.find(accessory.ItemKey) }
+        dbmm = accessory_items.any? { |accessory| accessory.FUEL&.end_with?("MM") }
+
+        {
+          contract_item: contract_item,
+          accessory_items: accessory_items,
+          dbmm: dbmm
+        }
+      else
+        {
+          contract_item: contract_item
+        }
+      end
     end.compact
   end
 

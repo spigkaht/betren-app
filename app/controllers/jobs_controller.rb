@@ -28,7 +28,6 @@ class JobsController < ApplicationController
     # process jobs for all contract items
     ProcessJobs.new(contract_items, current_store).process_jobs
 
-    ##### should this be refined so more relevant jobs are shown (esp duplicates)
     # collect all jobs that have not been completed
     jobs = Job.includes(item: :contract_items)
           .where(completed_at: nil)

@@ -1,10 +1,112 @@
-<h2 class="border-t text-center">Intended for future use</h2>
-<h3 class="border-b text-center">Details may not be accurate</h3>
-<div class="flex flex-col mb-auto px-2 pt-5" id="main">
+<div class="flex flex-col">
+  <div class="flex justify-center">
+    <h1 class="text-xl font-bold">Closed Contracts</h1>
+  </div>
   <% @contracts.each do |contract| %>
-    <div class="flex justify-between">
-      <p><%= link_to "#{contract.CNTR}", contract_path(contract.CNTR), class: "text-green-600 hover:underline" %></p>
-      <p><%= contract.customer.NAME %></p>
+    <div class="flex flex-col px-2 pt-5 mb-8" id="main">
+      <h1><%= contract.CNTR %></h2>
+      <div class="flex justify-between">
+        <p><%= contract.customer.NAME %></p>
+        <p><%= contract.DATE.strftime("%a %d/%m/%Y %H:%M") %></p>
+      </div>
+      <table class="mt-3">
+        <tr class="mt-2">
+          <td>Store <%= contract.STR %></td>
+          <td><%= contract.status %></td>
+          <td><%= contract.payment_type %></td>
+        </tr>
+        <tr class="mt-2">
+          <td>Rent: <%= number_to_currency(contract.RENT) %></td>
+          <td>Sale: <%= number_to_currency(contract.SALE) %></td>
+          <td>Total: <%= number_to_currency(contract.TOTL) %></td>
+        </tr>
+        <tr class="mt-2">
+          <td>Owed: <%= number_to_currency(contract.TOTL - contract.PAID) %></td>
+          <td>Dep: <%= number_to_currency(contract.DEPP) %></td>
+          <td>Paid: <%= number_to_currency(contract.PAID) %></td>
+        </tr>
+      </table>
+      <div class="flex justify-between mt-2">
+        <p>Purchase Order: <%= contract.JBPO %></p>
+      </div>
+      <p>Contract Info: <%= contract.JOBN %></p>
+      <p>Ordered By: <%= contract.OrderedBy %></p>
+      <p>Picked Up By: <%= contract.PickedUpBy %></p>
+
+      <table class="mt-2">
+        <% contract.contract_items.each do |contract_item| %>
+          <tr class="border-t">
+            <td class="text-xxxs font-bold border-none"><%= contract_item.item.KEY %></td>
+            <td class="text-xxxs font-bold"><%= contract_item.item.Name %></td>
+            <td class="text-xxxs font-bold"><%= contract_item.item.PartNumber if contract_item.item.PartNumber =~ /\A\d+\z/ %></td>
+          </tr>
+          <tr>
+            <td class="text-xxxs">Out: <%= contract_item.OutDate.strftime("%a %d/%m/%Y %H:%M") if contract_item.OutDate %></td>
+            <td class="text-xxxs">Due: <%= contract_item.DDT.strftime("%a %d/%m/%Y %H:%M") %></td>
+            <td class="text-xxxs"><%= contract.status == "Open" && contract_item.status == "Reserved" ? "Open" : contract_item.status %></td>
+          </tr>
+          <tr class="border-b">
+            <td class="text-xxxs"><%= contract_item.ReadingOut.positive? ? "Hrs Out: #{contract_item.ReadingOut.round(1)}" : ""  %></td>
+            <td class="text-xxxs"><%= contract_item.ReadingIn.positive? ? "Hrs In: #{contract_item.ReadingIn.round(1)}" : "" %></td>
+            <td class="text-xxxs"><%= contract_item.ReadingIn.positive? ? "Hrs Used: #{(contract_item.ReadingIn - contract_item.ReadingOut).round(1)}" : "" %></td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  <% end %>
+  <div class="flex justify-center">
+    <h1 class="text-xl font-bold">Review Billing Contracts</h1>
+  </div>
+  <% @review_contracts.each do |contract| %>
+    <div class="flex flex-col px-2 pt-5 mb-8" id="main">
+      <h1><%= contract.CNTR %></h2>
+      <div class="flex justify-between">
+        <p><%= contract.customer.NAME %></p>
+        <p><%= contract.DATE.strftime("%a %d/%m/%Y %H:%M") %></p>
+      </div>
+      <table class="mt-3">
+        <tr class="mt-2">
+          <td>Store <%= contract.STR %></td>
+          <td><%= contract.status %></td>
+          <td><%= contract.payment_type %></td>
+        </tr>
+        <tr class="mt-2">
+          <td>Rent: <%= number_to_currency(contract.RENT) %></td>
+          <td>Sale: <%= number_to_currency(contract.SALE) %></td>
+          <td>Total: <%= number_to_currency(contract.TOTL) %></td>
+        </tr>
+        <tr class="mt-2">
+          <td>Owed: <%= number_to_currency(contract.TOTL - contract.PAID) %></td>
+          <td>Dep: <%= number_to_currency(contract.DEPP) %></td>
+          <td>Paid: <%= number_to_currency(contract.PAID) %></td>
+        </tr>
+      </table>
+      <div class="flex justify-between mt-2">
+        <p>Purchase Order: <%= contract.JBPO %></p>
+      </div>
+      <p>Contract Info: <%= contract.JOBN %></p>
+      <p>Ordered By: <%= contract.OrderedBy %></p>
+      <p>Picked Up By: <%= contract.PickedUpBy %></p>
+
+      <table class="mt-2">
+        <% contract.contract_items.each do |contract_item| %>
+          <tr class="border-t">
+            <td class="text-xxxs font-bold border-none"><%= contract_item.item.KEY %></td>
+            <td class="text-xxxs font-bold"><%= contract_item.item.Name %></td>
+            <td class="text-xxxs font-bold"><%= contract_item.item.PartNumber if contract_item.item.PartNumber =~ /\A\d+\z/ %></td>
+          </tr>
+          <tr>
+            <td class="text-xxxs">Out: <%= contract_item.OutDate.strftime("%a %d/%m/%Y %H:%M") if contract_item.OutDate %></td>
+            <td class="text-xxxs">Due: <%= contract_item.DDT.strftime("%a %d/%m/%Y %H:%M") %></td>
+            <td class="text-xxxs"><%= contract.status == "Open" && contract_item.status == "Reserved" ? "Open" : contract_item.status %></td>
+          </tr>
+          <tr class="border-b">
+            <td class="text-xxxs"><%= contract_item.ReadingOut.positive? ? "Hrs Out: #{contract_item.ReadingOut.round(1)}" : ""  %></td>
+            <td class="text-xxxs"><%= contract_item.ReadingIn.positive? ? "Hrs In: #{contract_item.ReadingIn.round(1)}" : "" %></td>
+            <td class="text-xxxs"><%= contract_item.ReadingIn.positive? ? "Hrs Used: #{(contract_item.ReadingIn - contract_item.ReadingOut).round(1)}" : "" %></td>
+          </tr>
+        <% end %>
+      </table>
     </div>
   <% end %>
 </div>

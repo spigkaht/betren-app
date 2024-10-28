@@ -10,6 +10,7 @@ class ProcessJobs
       item_num = contract_item.ITEM
       # find latest job for item
       last_job = Job.where(item_num: contract_item.ITEM).order(created_at: :desc).first
+      puts "== item num: #{item_num}, last job: #{last_job} =="
       # find template for item
       template = Template.find_by(header: contract_item.item.Header) || Template.find_by(header: "NOTEMPLATE")
 
@@ -21,6 +22,8 @@ class ProcessJobs
         Job.create(item_num: item_num, store: contract_item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil, template: template)
       elsif last_job.completed_at.nil?
         puts "====== skipping, last job not completed yet ======"
+      elsif contract_item.DDT.to_s.include?("00:00:00")
+        puts "====== skipping, due date time is invalid ======" 
       elsif last_job
         if contract_item.DDT > last_job.completed_at
           Job.create(item_num: item_num, store: contract_item.CurrentStore, last_contract: contract_item.CNTR, last_return: contract_item.DDT, completed_at: nil, template: template)

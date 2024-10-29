@@ -36,8 +36,8 @@ class JobsController < ApplicationController
 
     # removes jobs that are hired out again, at another store, removes jobs that are duplicated
     jobs = jobs.map do |job|
-      if job.item.QYOT.zero? && job.item.CurrentStore == current_store &&
-         job.item.contract_items.none? { |contract_item| contract_item.DDT > job.created_at }
+      if job.item.QYOT.zero? && job.item.CurrentStore == current_store # &&
+         # job.item.contract_items.none? { |contract_item| contract_item.DDT > job.created_at }
         job
       end
     end.compact.uniq { |job| job.item_num }

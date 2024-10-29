@@ -45,7 +45,7 @@ class JobsController < ApplicationController
     # collect list of headers for all contract items
     item_headers = jobs.map { |job| job.item.Header }.uniq
     # group all items by header, calculate available quantity, collate in hash for each item
-    @min_sum_hash = GroupItems.new(item_headers, current_store).group_and_calculate_min_sum
+    # @min_sum_hash = GroupItems.new(item_headers, current_store).group_and_calculate_min_sum
 
     @reservation_headers = ContractItem.joins(:contract, :item)
                                        .where("CONVERT(date, OutDate) = ?", 1.day.from_now.to_date)
@@ -53,8 +53,12 @@ class JobsController < ApplicationController
                                        .pluck(:header)
                                        .reject(&:blank?)
 
+    reservation_count = @reservation_headers.tally
+
+    @min_sum_hash = GroupItems.new(item_headers, current_store).group_and_calculate_min_sum(reservation_count)
+
     jobs.each do |job|
-      if @reservation_headers.include?(job.item.Header)
+      if reservation_count[job.item.Header].to_i > 0
         job.reserved = 1.day.from_now
         job.reserved_store = current_store
       else
@@ -66,7 +70,7 @@ class JobsController < ApplicationController
     # sort jobs
     @jobs = jobs.sort_by do |job|
       is_numeric_location = job.item.Location.to_s.match?(/^\d+$/)
-      is_reserved = job.reserved.present? if @min_sum_hash[job.item.Header] < @reservation_headers.count(job.item.Header)
+      is_reserved = job.reserved.present? if @min_sum_hash[job.item.Header] <= 0
 
       [
         is_reserved ? 0 : 1,

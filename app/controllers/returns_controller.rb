@@ -8,13 +8,19 @@ class ReturnsController < ApplicationController
       part_number = params[:part_number].present? ? params[:part_number] : params[:qr_number]
       item = Item.find_by(PartNumber: part_number)
 
-      if item.CNTR.present? && item.CNTR != ""
-        @contract = contracts.find_by(CNTR: item.CNTR)
-      else
-        @contract = Contract.joins(:contract_items)
+      transfer = Contract.joins(:contract_items)
         .where('Transactions.CNTR LIKE ?', 't%')
         .where('TransactionItems.ITEM = ?', item.NUM)
+        .where('Transactions.STAT LIKE ?', 'O%')
         .first
+
+      puts "=========== PART NUMBER PRESENT ==============="
+      if transfer
+        @contract = transfer
+        puts "=========== FOUND TRANSFER ===================="
+      elsif item.CNTR.present? && item.CNTR != ""
+        puts "=========== FOUND CONTRACT ===================="
+        @contract = contracts.find_by(CNTR: item.CNTR)
       end
 
     elsif params[:cust_name].present?

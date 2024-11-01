@@ -8,20 +8,20 @@
     </div>
     <div class="flex justify-center items-center pb-2 border-b">
       <div data-returns-entry-target="plantNumberBtn" class="mx-2">
-        <%= button_tag "Plant #", type: "button", data: { action: "returns-entry#showPlantNumberInput" }, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
+        <%= button_tag "Plant #", type: "button", data: { action: "returns-entry#showPlantNumberInput" }, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 my-1.5 focus:outline-none" %>
       </div>
       <div data-returns-entry-target="qrCodeBtn" class="mx-2">
-        <%= button_tag "QR", type: "button", data: { action: "returns-entry#showScanInput" }, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
+        <%= button_tag "QR", type: "button", data: { action: "returns-entry#showScanInput" }, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 my-1.5 focus:outline-none" %>
       </div>
       <div data-returns-entry-target="customerBtn" class="mx-2">
-        <%= button_tag "Customer", type: "button", data: { action: "returns-entry#showCustomerInput" }, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
+        <%= button_tag "Customer", type: "button", data: { action: "returns-entry#showCustomerInput" }, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 py-2 my-1.5 focus:outline-none" %>
       </div>
     </div>
     <%= form_with url: returns_path, method: :get, autocomplete: "off", class: "hidden", data: { returns_entry_target: "formDiv", controller: "loader", action: "submit->loader#show" } do |form| %>
       <div class="flex flex-col items-center border-b pt-2 mt-2 pb-2">
         <%# plant number input %>
-        <div data-returns-entry-target="plantNumberInput" class="hidden">
-          <%= form.text_field :part_number, placeholder: "Enter plant number", class: "block w-36 px-2 py-1 text-sm text-center bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md" %>
+        <div data-returns-entry-target="plantNumberInput" class="hidden mb-2">
+          <%= form.text_field :part_number, placeholder: "Enter plant number", class: "block w-40 px-4 py-2 text-sm text-center bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md" %>
         </div>
         <%# qr code scanner %>
         <div data-returns-entry-target="qrCodeInput" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center">
@@ -29,7 +29,7 @@
             <div data-returns-entry-target="qrCodeCanvas" class="flex-col items-center">
               <video data-returns-entry-target="video" class="w-3/4 h-auto bg-gray-200 border-green-600 border-3 mb-2" style="border: 4px solid rgb(22 163 74); width: 75%; height: auto;"></video>
               <canvas data-returns-entry-target="canvas" class="hidden"></canvas>
-              <%= link_to "Cancel", returns_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
+              <%= link_to "Cancel", returns_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 py-2 my-1.5 focus:outline-none" %>
             </div>
           </div>
         </div>
@@ -37,8 +37,8 @@
           <%= form.text_field :qr_number, placeholder: "Enter plant number", class: "block w-36 px-2 py-1 text-sm text-center bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { returns_entry_target: "input" } %>
         </div>
         <%# customer input %>
-        <div data-returns-entry-target="customerInput" class="hidden">
-          <%= form.text_field :cust_name, placeholder: "Enter customer name", autocomplete: "off", class: "block w-72 px-2 py-1 ml-2 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { action: "input->returns-entry#updateCustomerNum" } %>
+        <div data-returns-entry-target="customerInput" class="hidden mb-2">
+          <%= form.text_field :cust_name, placeholder: "Enter customer name", autocomplete: "off", class: "block w-72 px-4 py-2 ml-2 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { action: "input->returns-entry#updateCustomerNum" } %>
           <%= form.hidden_field :customer, class: "customer-num" %>
           <datalist id="customer_names">
             <% @customer_names.uniq.each do |customer| %>
@@ -47,8 +47,8 @@
           </datalist>
         </div>
         <div class="flex justify-between items-center mx-4">
-          <%= link_to "Cancel", returns_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-2 mx-1 focus:outline-none" %>
-          <%= form.submit "Search", class: "hidden text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-2 mx-1 focus:outline-none", data: { returns_entry_target: "formSubmitBtn" } %>
+          <%= link_to "Cancel", returns_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 py-2 my-2 mx-1 focus:outline-none" %>
+          <%= form.submit "Search", class: "hidden text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 py-2 my-2 mx-1 focus:outline-none", data: { returns_entry_target: "formSubmitBtn" } %>
         </div>
       </div>
     <% end %>
@@ -100,9 +100,9 @@
           </table>
         </div>
         <div class="flex justify-between w-full px-8 my-4">
-          <%= link_to "Reset", returns_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
+          <%= link_to "Reset", returns_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 py-2 my-1.5 focus:outline-none" %>
           <%= link_to new_return_path(@contract, contract: @contract) do %>
-            <%= button_tag "Return Contract", type: "button", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 my-1.5 focus:outline-none" %>
+            <%= button_tag "Return Contract", type: "button", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 py-2 my-1.5 focus:outline-none" %>
           <% end %>
         </div>
       </div>

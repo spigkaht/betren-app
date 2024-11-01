@@ -14,13 +14,18 @@
   <div class="flex justify-between border-b pb-2">
     <p>User: <%= @report.opnm %></p>
   </div>
-  <% if @report.fuel || @report.hours %>
+  <% if @report.fuel || @report.hours || @report.dbmm %>
     <div class="flex justify-between border-b pb-2 mt-2">
       <% if @report.fuel %>
-          <p>Req fuel? <strong><%= @report.fuel_req ? "yes" : "no" %></strong></p>
-          <p>Fuel taken: <strong><%= @report.fuel %></strong></p>
+        <p>Req fuel? <strong><%= @report.fuel_req ? "yes" : "no" %></strong></p>
+        <p>Fuel taken: <strong><%= @report.fuel %></strong></p>
       <% end %>
-      <p>Engine hours: <strong><%= @report.hours %></strong></p>
+      <% if @report.hours %>
+        <p>Engine hours: <strong><%= @report.hours %></strong></p>
+      <% end %>
+      <% if @report.dbmm %>
+        <p>DBmm: <strong><%= @report.dbmm %></strong></p>
+      <% end %>
     </div>
   <% end %>
   <div class="flex flex-col border-b pb-2 mt-4">

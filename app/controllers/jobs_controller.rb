@@ -55,7 +55,7 @@ class JobsController < ApplicationController
 
     reservation_count = @reservation_headers.tally
 
-    @min_sum_hash = GroupItems.new(item_headers, current_store).group_and_calculate_min_sum(reservation_count)
+    @min_sum_hash = GroupItems.new(item_headers, current_store, jobs).group_and_calculate_min_sum(reservation_count)
 
     jobs.each do |job|
       if reservation_count[job.item.Header].to_i > 0

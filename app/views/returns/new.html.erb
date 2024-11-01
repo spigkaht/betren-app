@@ -16,9 +16,9 @@
     <div data-controller="operator" data-operator-operators='<%= @operators.to_json(only: [:OPID, :OPNM]) %>'>
       <div class="flex justify-between items-center w-full border-b pb-3 mt-3">
         <%= f.label :opid, "Enter initials:", class: "text-sm font-bold"%>
-        <%= f.text_field :opid, class: "block w-12 px-2 py-1 mx-2 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { action: "input->operator#updateName" } %>
+        <%= f.text_field :opid, class: "block w-12 px-2 py-2 mx-2 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { action: "input->operator#updateName" } %>
         <%= f.label :opnm, "User", class: "text-sm ml-2 font-bold" %>
-        <%= f.text_field :opnm, class: "block w-40 px-1.5 py-1 ml-1.5 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { operator_target: "name" }, required: true, onfocus: "this.blur();" %>
+        <%= f.text_field :opnm, class: "block w-40 px-1.5 py-2 ml-1.5 text-sm bg-gray-50 border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-800 rounded-md", data: { operator_target: "name" }, required: true, onfocus: "this.blur();" %>
       </div>
     </div>
     <div class="flex flex-col items-center py-4 border-b">
@@ -44,7 +44,7 @@
                 <td class="px-3 py-1.5"><%= item_data[:contract_item].item.Name %></td>
                 <td class="px-3 py-1.5 text-center"><%= item_data[:contract_item].QTY.round(0) %></td>
                 <td class="px-3 py-1.5 text-center">
-                  <%= ff.check_box "return#{index}", checked: false, class: "cursor-pointer w-6 h-6 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2",
+                  <%= ff.check_box "return#{index}", checked: false, class: "cursor-pointer w-8 h-8 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2",
                     data: { action: "change->item-return#toggleDetails", returndetailsdivtarget: index } %>
                 </td>
               </tr>
@@ -55,28 +55,28 @@
                       <% if item_data[:contract_item].item.FUEL == "cFUEL" || item_data[:contract_item].item.FUEL == "cUNFUEL" %>
                         <div data-fuel-target="fuelAdd" class="flex items-center mr-4">
                           <%= f.label :fuel_req, "Fuel req?", class: "font-bold w-2/3" %>
-                          <%= f.check_box :fuel_req, { class: "cursor-pointer w-6 h-6 mx-2 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2", data: { action: "input->fuel#fuelRequired" } }, name: nil %>
+                          <%= f.check_box :fuel_req, { class: "cursor-pointer w-8 h-8 mx-2 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2", data: { action: "input->fuel#fuelRequired" } }, name: nil %>
                         </div>
                         <div data-fuel-target="fuelEntry" class="justify-between items-center hidden">
                           <%= ff.label "return#{index}-fuel", "Fuel req", class: "font-bold" %>
-                          <%= ff.number_field "return#{index}-fuel", step: "any", min: 0, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 mx-2 py-1 px-2" %>
+                          <%= ff.number_field "return#{index}-fuel", step: "any", min: 0, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 mx-2 py-2 px-2" %>
                         </div>
                       <% end %>
                       <% if item_data[:contract_item].item.TYPE == "H" %>
                         <%= ff.label "return#{index}-hours", "Hours", class: "font-bold" %>
-                        <%= ff.number_field "return#{index}-hours", step: "any", min: 0, required: true, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 mx-2 py-1 px-2" %>
+                        <%= ff.number_field "return#{index}-hours", step: "any", min: 0, required: true, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 mx-2 py-2 px-2" %>
                       <% end %>
                       <% if item_data[:dbmm] %>
                         <%= ff.label "return#{index}-dbmm", "Blade mm", class: "font-bold" %>
-                        <%= ff.number_field "return#{index}-dbmm", step: "any", min: 0, required: true, class: "w-10 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-16 mx-2 py-1 px-2" %>
+                        <%= ff.number_field "return#{index}-dbmm", step: "any", min: 0, required: true, class: "w-10 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-16 mx-2 py-2 px-2" %>
                       <% end %>
                       <% if item_data[:contract_item].QTY > 1 %>
                         <%= ff.label "return#{index}-qty", "Returned Qty", class: "font-bold" %>
-                        <%= ff.number_field "return#{index}-qty", min: 0, required: true, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-16 mx-2 py-1 px-2" %>
+                        <%= ff.number_field "return#{index}-qty", min: 0, required: true, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-16 mx-2 py-2 px-2" %>
                       <% end %>
                       <% if item_data[:contract_item].item.FUEL == "cJERRY5L" %>
                         <%= ff.label "return#{index}-jerry", "Jerry can returned?", class: "font-bold" %>
-                        <%= ff.check_box "return#{index}-jerry", checked: false, class: "cursor-pointer w-6 h-6 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2 mx-2" %>
+                        <%= ff.check_box "return#{index}-jerry", checked: false, class: "cursor-pointer w-8 h-8 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2 mx-2" %>
                       <% end %>
                     </div>
                     <% if item_data[:contract_item].item.Header == "SCISSOR5.7" || item_data[:contract_item].item.Header == "SCIS8E" %>
@@ -133,13 +133,13 @@
     <div class="flex flex-col items-center py-4 border-b">
       <div class="flex justify-center items-center">
         <h4 class="font-bold">Yellow (or red if damaged) tape on ALL items</h4>
-        <%= f.check_box :taped, checked: false, required: true, class: "cursor-pointer w-6 h-6 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2 ml-4" %>
+        <%= f.check_box :taped, checked: false, required: true, class: "cursor-pointer w-8 h-8 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2 ml-4" %>
       </div>
     </div>
     <div class="flex flex-col py-4 mx-3 border-b">
       <div class="flex justify-between items-center">
         <h4>Damage to any items?</h4>
-        <%= f.check_box :damage, checked: false, class: "cursor-pointer w-6 h-6 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2 ml-4", data: { action: "change->item-return#toggleDamage"} %>
+        <%= f.check_box :damage, checked: false, class: "cursor-pointer w-8 h-8 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2 ml-4", data: { action: "change->item-return#toggleDamage"} %>
       </div>
     </div>
     <div class="hidden flex-col items-center py-4 border-b" data-item-return-target="damageDiv">
@@ -149,27 +149,27 @@
         <div class="flex justify-start items-center">
           <%= f.label :damage_photo, "Add photo:", class: "text-sm font-bold" %>
           <%= f.file_field :damage_photo, accept: 'image/*', capture: 'camera', class: "hidden", data: { action: "change->file-upload#uploadToCloudinary", "file-upload-target": "fileInput", index: "0" }, name: nil %>
-          <button type="button" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 ml-4 focus:outline-none" data-action="click->file-upload#triggerFileInput" data-index="<%= 0 %>">Capture</button>
+          <button type="button" class="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 ml-4 focus:outline-none" data-action="click->file-upload#triggerFileInput" data-file-upload-target="submitButton" data-index="<%= 0 %>">Capture</button>
           <%= f.hidden_field :damage_photo_url, data: { "file-upload-target": "photoUrl" } %>
         </div>
         <div class="flex justify-end items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="30" height="30" id="uploadStatus0" class="opacity-0" data-file-upload-target="loading"><radialGradient id="a2" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)"><stop offset="0" stop-color="#0CC500"></stop><stop offset=".3" stop-color="#0CC500" stop-opacity=".9"></stop><stop offset=".6" stop-color="#0CC500" stop-opacity=".6"></stop><stop offset=".8" stop-color="#0CC500" stop-opacity=".3"></stop><stop offset="1" stop-color="#0CC500" stop-opacity="0"></stop></radialGradient><circle transform-origin="center" fill="none" stroke="url(#a2)" stroke-width="30" stroke-linecap="round" stroke-dasharray="200 1000" stroke-dashoffset="0" cx="100" cy="100" r="70"><animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="5" values="360;0" keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform></circle><circle transform-origin="center" fill="none" opacity=".2" stroke="#0CC500" stroke-width="30" stroke-linecap="round" cx="100" cy="100" r="70"></circle></svg>
-          <%= f.check_box "photo_uploaded", checked: false, disabled: true, required: true, data: { "file-upload-target": "checkBox", index: "0" }, class: "w-6 h-6 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2", name: nil %>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="38" height="38" id="uploadStatus0" class="opacity-0" data-file-upload-target="loading"><radialGradient id="a2" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)"><stop offset="0" stop-color="#0CC500"></stop><stop offset=".3" stop-color="#0CC500" stop-opacity=".9"></stop><stop offset=".6" stop-color="#0CC500" stop-opacity=".6"></stop><stop offset=".8" stop-color="#0CC500" stop-opacity=".3"></stop><stop offset="1" stop-color="#0CC500" stop-opacity="0"></stop></radialGradient><circle transform-origin="center" fill="none" stroke="url(#a2)" stroke-width="30" stroke-linecap="round" stroke-dasharray="200 1000" stroke-dashoffset="0" cx="100" cy="100" r="70"><animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="5" values="360;0" keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform></circle><circle transform-origin="center" fill="none" opacity=".2" stroke="#0CC500" stroke-width="30" stroke-linecap="round" cx="100" cy="100" r="70"></circle></svg>
+          <%= f.check_box "photo_uploaded", checked: false, disabled: true, required: true, data: { "file-upload-target": "checkBox", index: "0" }, class: "w-8 h-8 ml-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2", name: nil %>
         </div>
       </div>
     </div>
     <div class="flex flex-col py-4 mx-3 border-b">
       <div class="flex justify-between items-center">
         <h4>Any further notes for PoR return?</h4>
-        <%= f.check_box :notes_attached, checked: false, class: "cursor-pointer w-6 h-6 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2 ml-4", data: { action: "change->item-return#toggleNotes"} %>
+        <%= f.check_box :notes_attached, checked: false, class: "cursor-pointer w-8 h-8 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2 ml-4", data: { action: "change->item-return#toggleNotes"} %>
       </div>
       <div class="flex justify-center">
         <%= f.text_area :notes, rows: "6", class: "hidden block bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 w-4/5 mt-4", data: { item_return_target: "notes" } %>
       </div>
     </div>
     <div class="flex justify-between items-center my-8 mx-4">
-      <%= link_to "Back to Returns", returns_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
-      <%= f.submit "Complete", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-4 py-2 focus:outline-none" %>
+      <%= link_to "Back to Returns", returns_path, class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none" %>
+      <%= f.submit "Complete", class: "text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none" %>
     </div>
   <% end %>
 </div>

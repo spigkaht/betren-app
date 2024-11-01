@@ -58,9 +58,10 @@ class JobsController < ApplicationController
     @min_sum_hash = GroupItems.new(item_headers, current_store, jobs).group_and_calculate_min_sum(reservation_count)
 
     jobs.each do |job|
-      if reservation_count[job.item.Header].to_i > 0
+      if reservation_count[job.item.Header].to_i > @min_sum_hash[job.item.Header].to_i
         job.reserved = 1.day.from_now
         job.reserved_store = current_store
+        reservation_count[job.item.Header] = reservation_count[job.item.Header] - 1
       else
         job.reserved = nil
         job.reserved_store = nil
@@ -70,7 +71,7 @@ class JobsController < ApplicationController
     # sort jobs
     @jobs = jobs.sort_by do |job|
       is_numeric_location = job.item.Location.to_s.match?(/^\d+$/)
-      is_reserved = job.reserved.present? if @min_sum_hash[job.item.Header] <= 0
+      is_reserved = job.reserved.present? if @min_sum_hash[job.item.Header]
 
       [
         is_reserved ? 0 : 1,

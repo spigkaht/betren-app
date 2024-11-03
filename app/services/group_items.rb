@@ -30,8 +30,8 @@ class GroupItems
       #   puts "header: #{header}, plant num: #{item.PartNumber}"
       #   puts "item qty: #{item.QTY.to_i}, qty out: #{item.QYOT.to_i}, qty to runup: #{header_count}"
       # end
-      total_available = total_qty - total_out - item_counts[header]
-      min_sum_hash[header] = total_available
+      total_available = total_qty - total_out - item_counts[header] unless item_counts[header].nil?
+      min_sum_hash[header] = item_counts[header].nil? ? 0 : total_available
       # - reservation_count[header].to_i
     end
 

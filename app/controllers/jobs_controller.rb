@@ -33,6 +33,7 @@ class JobsController < ApplicationController
           .where(completed_at: nil)
           .where(store: current_store)
           .order('created_at DESC')
+          .first
 
     # removes jobs that are hired out again, at another store, removes jobs that are duplicated
     jobs = jobs.map do |job|

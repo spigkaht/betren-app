@@ -14,14 +14,13 @@
     <% end %>
   </div>
   <div class="flex justify-end px-2">
-    <p><em>Total count: <%= @jobs.count unless @jobs.nil? %></em></p>
+    <p><em>Total count: <%= @jobs.count %></em></p>
   </div>
   <div id="cards" data-loading-target="content" class="pb-4 mt-4 border-b">
-    <% if @jobs.nil? %>
+    <% if @jobs.empty? %>
       <h3 class="font-bold text-center mt-10">No items to load</h3>
-    <% else %>
-      <%= render @jobs %>
     <% end %>
+    <%= render @jobs %>
   </div>
   <div data-controller="toggle-job-form">
     <div class="flex justify-center items-center pb-4 mt-4 border-b" data-toggle-job-form-target="buttonDiv">
@@ -32,18 +31,16 @@
     </div>
     <div data-toggle-job-form-target="formDiv" class="hidden flex-col justify-center items-center pb-8 mt-8">
       <div data-controller="qr-code-scanner">
-        <% if @jobs %>
-          <%= form_with url: jobs_path, method: :post, data: { controller: "loader", action: "submit->loader#show" } do |form| %>
-            <% @jobs.each do |job| %>
-              <%= hidden_field_tag "job_ids[]", job.id %>
-            <% end %>
-            <div data-qr-code-scanner-target="formDiv" class="flex flex-col justify-center items-center">
-              <%= form.text_field :part_number, placeholder: "Enter Part Number", data: { qr_code_scanner_target: "input" }, class: "border p-2 mb-2 rounded w-40 text-center" %>
-              <p class="text-lg mb-2">OR</p>
-              <%= button_tag "Scan QR Code", type: "button", data: { action: "qr-code-scanner#openScanner" }, class: "bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 text-white px-4 py-2 mb-2 rounded" %>
-              <%= form.submit "Create Job", class: "bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 text-white px-4 py-2 rounded" %>
-            </div>
+        <%= form_with url: jobs_path, method: :post, data: { controller: "loader", action: "submit->loader#show" } do |form| %>
+          <% @jobs.each do |job| %>
+            <%= hidden_field_tag "job_ids[]", job.id %>
           <% end %>
+          <div data-qr-code-scanner-target="formDiv" class="flex flex-col justify-center items-center">
+            <%= form.text_field :part_number, placeholder: "Enter Part Number", data: { qr_code_scanner_target: "input" }, class: "border p-2 mb-2 rounded w-40 text-center" %>
+            <p class="text-lg mb-2">OR</p>
+            <%= button_tag "Scan QR Code", type: "button", data: { action: "qr-code-scanner#openScanner" }, class: "bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 text-white px-4 py-2 mb-2 rounded" %>
+            <%= form.submit "Create Job", class: "bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 text-white px-4 py-2 rounded" %>
+          </div>
         <% end %>
         <div data-qr-code-scanner-target="scannerDiv" class="hidden flex-col justify-center items-center pt-4">
           <video data-qr-code-scanner-target="video" class="w-3/4 h-auto bg-gray-200 border-green-600 border-3 mb-4" style="border: 4px solid rgb(22 163 74); width: 75%; height: auto;"></video>

@@ -28,64 +28,58 @@ class JobsController < ApplicationController
     # process jobs for all contract items
     ProcessJobs.new(contract_items, current_store).process_jobs
 
-    latest_jobs_subquery = Job.select('DISTINCT ON (item_num) *')
-                              .where(completed_at: nil, store: current_store)
-                              .where(item_num: contract_items.pluck(:NUM))
-                              .order('item_num, created_at DESC')
-
     # collect all jobs that have not been completed
     jobs = Job.includes(item: :contract_items)
-              .from("(#{latest_jobs_subquery.to_sql}) AS jobs")
-              .order('jobs.created_at DESC')
+          .where(completed_at: nil)
+          .where(store: current_store)
+          .order('created_at DESC')
 
     # removes jobs that are hired out again, at another store, removes jobs that are duplicated
-    if jobs
-      jobs = jobs.map do |job|
-        if job.item.QYOT.zero? && job.item.CurrentStore == current_store # &&
-          # job.item.contract_items.none? { |contract_item| contract_item.DDT > job.created_at }
-          job
-        end
-      end.compact.uniq { |job| job.item_num }
-
-      # collect list of headers for all contract items
-      item_headers = jobs.map { |job| job.item.Header }.uniq
-      # group all items by header, calculate available quantity, collate in hash for each item
-      # @min_sum_hash = GroupItems.new(item_headers, current_store).group_and_calculate_min_sum
-
-      @reservation_headers = ContractItem.joins(:contract, :item)
-                                        .where("CONVERT(date, OutDate) = ?", 1.day.from_now.to_date)
-                                        .where(contract: { STR: current_store })
-                                        .pluck(:header)
-                                        .reject(&:blank?)
-
-      reservation_count = @reservation_headers.tally
-
-      @min_sum_hash = GroupItems.new(item_headers, current_store, jobs).group_and_calculate_min_sum(reservation_count)
-
-      jobs.each do |job|
-        if reservation_count[job.item.Header].to_i > @min_sum_hash[job.item.Header].to_i
-          job.reserved = 1.day.from_now
-          job.reserved_store = current_store
-          reservation_count[job.item.Header] = reservation_count[job.item.Header] - 1
-        else
-          job.reserved = nil
-          job.reserved_store = nil
-        end
+    jobs = jobs.map do |job|
+      if job.item.QYOT.zero? && job.item.CurrentStore == current_store # &&
+         # job.item.contract_items.none? { |contract_item| contract_item.DDT > job.created_at }
+        job
       end
+    end.compact.uniq { |job| job.item_num }
 
-      # sort jobs
-      @jobs = jobs.sort_by do |job|
-        is_numeric_location = job.item.Location.to_s.match?(/^\d+$/)
-        is_reserved = job.reserved.present? if @min_sum_hash[job.item.Header]
+    # collect list of headers for all contract items
+    item_headers = jobs.map { |job| job.item.Header }.uniq
+    # group all items by header, calculate available quantity, collate in hash for each item
+    # @min_sum_hash = GroupItems.new(item_headers, current_store).group_and_calculate_min_sum
 
-        [
-          is_reserved ? 0 : 1,
-          is_reserved ? nil : (is_numeric_location ? 0 : 1),
-          is_reserved ? nil : (is_numeric_location ? job.item.Location.to_i : @min_sum_hash[job.item.Header] || 0),
-          is_reserved ? nil : (is_numeric_location ? nil : (job.item.Location.blank? ? 'a' : job.item.Location.to_s)),
-          is_reserved ? nil : job.last_return
-        ]
+    @reservation_headers = ContractItem.joins(:contract, :item)
+                                       .where("CONVERT(date, OutDate) = ?", 1.day.from_now.to_date)
+                                       .where(contract: { STR: current_store })
+                                       .pluck(:header)
+                                       .reject(&:blank?)
+
+    reservation_count = @reservation_headers.tally
+
+    @min_sum_hash = GroupItems.new(item_headers, current_store, jobs).group_and_calculate_min_sum(reservation_count)
+
+    jobs.each do |job|
+      if reservation_count[job.item.Header].to_i > @min_sum_hash[job.item.Header].to_i
+        job.reserved = 1.day.from_now
+        job.reserved_store = current_store
+        reservation_count[job.item.Header] = reservation_count[job.item.Header] - 1
+      else
+        job.reserved = nil
+        job.reserved_store = nil
       end
+    end
+
+    # sort jobs
+    @jobs = jobs.sort_by do |job|
+      is_numeric_location = job.item.Location.to_s.match?(/^\d+$/)
+      is_reserved = job.reserved.present? if @min_sum_hash[job.item.Header]
+
+      [
+        is_reserved ? 0 : 1,
+        is_reserved ? nil : (is_numeric_location ? 0 : 1),
+        is_reserved ? nil : (is_numeric_location ? job.item.Location.to_i : @min_sum_hash[job.item.Header] || 0),
+        is_reserved ? nil : (is_numeric_location ? nil : (job.item.Location.blank? ? 'a' : job.item.Location.to_s)),
+        is_reserved ? nil : job.last_return
+      ]
     end
 
     @jobs = @jobs

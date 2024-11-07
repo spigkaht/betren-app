@@ -14,6 +14,8 @@ class ReturnsController < ApplicationController
           .where('TransactionItems.ITEM = ?', item.NUM)
           .where('Transactions.STAT LIKE ?', 'O%')
           .first
+      else
+        return
       end
 
       if transfer

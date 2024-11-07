@@ -7,12 +7,12 @@ class JobsController < ApplicationController
     # set current store based on params
     current_store = params[:store].presence || current_user.store
     # set cutoff for searching for new items to create jobs from
-    one_day_ago = 1.day.ago
+    three_months_ago = 3.months.ago
 
     # gather list of contract items to create jobs for
     contract_items = ContractItem.joins(:item)
                                  .includes(:contract)
-                                 .where('TransactionItems.DDT >= ?', one_day_ago)
+                                 .where('TransactionItems.DDT >= ?', three_months_ago)
                                  .where(item: { Inactive: false, BulkItem: false, CurrentStore: current_store })
                                  .where('TransactionItems.TXTY IN (?)', ["RR", "RX"])
                                  .where('TransactionItems.HRSC > ?', 0)
@@ -24,6 +24,12 @@ class JobsController < ApplicationController
                                  .where.not('item.PartNumber LIKE ?', '%[^0-9]%')
                                  .where.not('item.PartNumber LIKE ?', '')
                                  .select('TransactionItems.id, TransactionItems.ITEM, TransactionItems.CNTR, TransactionItems.DDT, item.Header, item.CurrentStore')
+
+    # get list of all returned items (txty == RR or RX) where contract date is newest
+    # keep only items where the last return is greater than item's last job (or job.nil)
+
+
+
 
     # process jobs for all contract items
     ProcessJobs.new(contract_items, current_store).process_jobs

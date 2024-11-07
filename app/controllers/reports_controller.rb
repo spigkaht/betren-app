@@ -1,7 +1,7 @@
 class ReportsController < ApplicationController
   def index
     @stores = ["001", "002", "003", "004", "005"]
-    @astore = params[:store].present? ? params[:store] : current_user.store
+    @store = params[:store].present? ? params[:store] : current_user.store
     # @start_date = Date.today.beginning_of_day
     # @end_date = Date.today.end_of_day
     # @current_store = params[:store] if params[:store].present?

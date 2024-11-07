@@ -15,6 +15,7 @@ class ReturnsController < ApplicationController
           .where('Transactions.STAT LIKE ?', 'O%')
           .first
       else
+        @incorrect_item = true
         return
       end
 

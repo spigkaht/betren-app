@@ -111,6 +111,11 @@
         <p class="font-bold"><%= params[:part_number] %><%= params[:qr_number] %> is not on an open contract</p>
         <p>Please search again</p>
       </div>
+    <% elsif @incorrect_item %>
+      <div class="flex flex-col items-center border-y py-2">
+        <p class="font-bold"><%= params[:part_number] %><%= params[:qr_number] %> is not a valid hire item</p>
+        <p>Please search again</p>
+      </div>
     <% end %>
   </div>
 </div>

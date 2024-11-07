@@ -10,10 +10,12 @@ class ReportsController < ApplicationController
       @end_date = Date.strptime(params[:end_date], "%d/%m/%Y").end_of_day
 
       @reports = Job
+        .includes(:item)
         .where(completed_at: @start_date..@end_date)
         .order(completed_at: :desc)
     else
       @reports = Job
+        .includes(:item)
         .where(completed_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
         .order(completed_at: :desc)
     end

@@ -10,42 +10,52 @@ class JobsController < ApplicationController
     three_months_ago = 3.months.ago
 
     # gather list of contract items to create jobs for
-    # Step 1: Get the most recent job creation date for each item
-    recent_job_dates = Job.where(store: current_store)
-                          .group(:item_num)
-                          .maximum(:created_at)
-
-    # Step 2: Retrieve contract items and filter based on recent job dates
+    # Step 1: Retrieve all contract items
     contract_items = ContractItem.joins(:item)
-                                .includes(:contract)
-                                .where('TransactionItems.DDT >= ?', three_months_ago)
-                                .where(item: { Inactive: false, BulkItem: false, CurrentStore: current_store })
-                                .where('TransactionItems.TXTY IN (?)', ["RR", "RX"])
-                                .where('TransactionItems.HRSC > ?', 0)
-                                .where('TransactionItems.QTY > ?', 0)
-                                .where.not('TransactionItems.CNTR LIKE ?', 'r%')
-                                .where.not('TransactionItems.CNTR LIKE ?', 't%')
-                                .where.not('item.PartNumber LIKE ?', '%000')
-                                .where.not('item.PartNumber LIKE ?', '%[^0-9]%')
-                                .where.not('item.PartNumber LIKE ?', '')
-                                .select('TransactionItems.id, TransactionItems.ITEM, TransactionItems.CNTR, TransactionItems.DDT, item.Header, item.CurrentStore')
-                                .to_a
+      .includes(:contract)
+      .where('TransactionItems.DDT >= ?', three_months_ago)
+      .where(item: { Inactive: false, BulkItem: false, CurrentStore: current_store })
+      .where('TransactionItems.TXTY IN (?)', ["RR", "RX"])
+      .where('TransactionItems.HRSC > ?', 0)
+      .where('TransactionItems.QTY > ?', 0)
+      .where.not('TransactionItems.CNTR LIKE ?', 'r%')
+      .where.not('TransactionItems.CNTR LIKE ?', 't%')
+      .where.not('item.PartNumber LIKE ?', '%000')
+      .where.not('item.PartNumber LIKE ?', '%[^0-9]%')
+      .where.not('item.PartNumber LIKE ?', '')
+      .select('TransactionItems.id, TransactionItems.ITEM, TransactionItems.CNTR, TransactionItems.DDT, item.Header, item.CurrentStore')
 
-    # Filter out contract_items where DDT is older than the most recent job date
-    contract_items = contract_items.reject do |contract_item|
-      recent_job_date = recent_job_dates[contract_item.ITEM]
-      recent_job_date && contract_item.DDT < recent_job_date
-    end
+    # Step 2: Process jobs for all contract items
+    # ProcessJobs.new(contract_items, current_store).process_jobs
 
-    # Process jobs for all contract items
-    ProcessJobs.new(contract_items, current_store).process_jobs
+    most_recent_dates = Job.where(store: current_store)
+    .where(item_num: contract_items.map(&:ITEM))
+    .group(:item_num)
+    .select('item_num, MAX(created_at) AS max_created_at')
 
-    # Collect and filter jobs
-    jobs = Job.includes(item: :contract_items)
-              .where(completed_at: nil, store: current_store)
-              .order(created_at: :desc)
-              .select { |job| job.item.QYOT.zero? && job.item.CurrentStore == current_store }
-              .uniq { |job| job.item_num }
+    # Join the original jobs table with the subquery to get full job details
+    jobs = Job.where(store: current_store)
+    .where(completed_at: nil)
+    .where(item_num: contract_items.map(&:ITEM))
+    .select('DISTINCT ON (item_num) jobs.*')
+    .order('item_num, created_at DESC')
+
+    # # Step 4: Filter jobs based on the contract item's DDT
+    # jobs = recent_jobs.select do |recent_job|
+    #   puts "======================= RECENT JOB ================================="
+    #   p recent_job
+    #   puts "job id: #{recent_job.id}"
+    #   puts "job item num: #{recent_job.item_num}"
+    #   contract_item = contract_items.find { |ci| ci.ITEM == recent_job.item_num }
+    #   puts "====================== CONTRACT ITEM ==============================="
+    #   puts "item name: #{contract_item.item.Name}"
+    #   puts "item num: #{contract_item.ITEM}"
+    #   puts "ddt: #{contract_item.DDT}"
+    #   contract_item && contract_item.DDT > recent_job.max_created_at
+    # end
+
+   puts "============================ JOBS ==================================="
+    p jobs
 
     # collect list of headers for all contract items
     item_headers = jobs.map { |job| job.item.Header }.uniq
@@ -63,7 +73,7 @@ class JobsController < ApplicationController
     @min_sum_hash = GroupItems.new(item_headers, current_store, jobs).group_and_calculate_min_sum(reservation_count)
 
     jobs.each do |job|
-      if reservation_count[job.item.Header].to_i > @min_sum_hash[job.item.Header].to_i
+      if reservation_count[job.item.Header] && reservation_count[job.item.Header].to_i > @min_sum_hash[job.item.Header].to_i
         job.reserved = 1.day.from_now
         job.reserved_store = current_store
         reservation_count[job.item.Header] = reservation_count[job.item.Header] - 1

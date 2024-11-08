@@ -7,13 +7,13 @@ class JobsController < ApplicationController
     # set current store based on params
     current_store = params[:store].presence || current_user.store
     # set cutoff for searching for new items to create jobs from
-    three_months_ago = 3.months.ago
+    one_day_ago = 1.day.ago
 
     # gather list of contract items to create jobs for
     # Step 1: Retrieve all contract items
     contract_items = ContractItem.joins(:item)
       .includes(:contract)
-      .where('TransactionItems.DDT >= ?', three_months_ago)
+      .where('TransactionItems.DDT >= ?', one_day_ago)
       .where(item: { Inactive: false, BulkItem: false, CurrentStore: current_store })
       .where('TransactionItems.TXTY IN (?)', ["RR", "RX"])
       .where('TransactionItems.HRSC > ?', 0)
@@ -26,12 +26,13 @@ class JobsController < ApplicationController
       .select('TransactionItems.id, TransactionItems.ITEM, TransactionItems.CNTR, TransactionItems.DDT, item.Header, item.CurrentStore')
 
     # Step 2: Process jobs for all contract items
-    # ProcessJobs.new(contract_items, current_store).process_jobs
+    ProcessJobs.new(contract_items, current_store).process_jobs
 
-    most_recent_dates = Job.where(store: current_store)
-    .where(item_num: contract_items.map(&:ITEM))
-    .group(:item_num)
-    .select('item_num, MAX(created_at) AS max_created_at')
+    # get most recent job for each item
+    # most_recent_dates = Job.where(store: current_store)
+    # .where(item_num: contract_items.map(&:ITEM))
+    # .group(:item_num)
+    # .select('item_num, MAX(created_at) AS max_created_at')
 
     # Join the original jobs table with the subquery to get full job details
     jobs = Job.where(store: current_store)
@@ -39,6 +40,25 @@ class JobsController < ApplicationController
     .where(item_num: contract_items.map(&:ITEM))
     .select('DISTINCT ON (item_num) jobs.*')
     .order('item_num, created_at DESC')
+
+    jobs.map do |job|
+      puts "=================== JOB ======================"
+      puts "job: #{job}"
+      contract_item = contract_items.find_by(ITEM: job.item_num)
+      puts "================== DETAILS ======================="
+      puts "contract item: #{contract_item.item.Name}"
+      puts "plant num: #{contract_item.item.PartNumber}"
+      puts "ddt: #{contract_item.DDT}"
+      puts "completed at: #{job.completed_at}"
+      puts "=================== PASS / FAIL ======================"
+      if job.completed_at
+        puts contract_item.DDT > job.completed_at
+      else
+        puts "nil"
+      end
+
+      job if contract_item.DDT > job.created_at
+    end
 
     # # Step 4: Filter jobs based on the contract item's DDT
     # jobs = recent_jobs.select do |recent_job|

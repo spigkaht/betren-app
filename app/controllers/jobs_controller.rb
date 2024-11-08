@@ -10,40 +10,42 @@ class JobsController < ApplicationController
     three_months_ago = 3.months.ago
 
     # gather list of contract items to create jobs for
+    # Step 1: Get the most recent job creation date for each item
+    recent_job_dates = Job.where(store: current_store)
+                          .group(:item_num)
+                          .maximum(:created_at)
+
+    # Step 2: Retrieve contract items and filter based on recent job dates
     contract_items = ContractItem.joins(:item)
-                                 .includes(:contract)
-                                 .where('TransactionItems.DDT >= ?', three_months_ago)
-                                 .where(item: { Inactive: false, BulkItem: false, CurrentStore: current_store })
-                                 .where('TransactionItems.TXTY IN (?)', ["RR", "RX"])
-                                 .where('TransactionItems.HRSC > ?', 0)
-                                 .where('TransactionItems.QTY > ?', 0)
-                                #  .where.not('item.QYOT > ?', 0)
-                                 .where.not('TransactionItems.CNTR LIKE ?', 'r%')
-                                 .where.not('TransactionItems.CNTR LIKE ?', 't%')
-                                 .where.not('item.PartNumber LIKE ?', '%000')
-                                 .where.not('item.PartNumber LIKE ?', '%[^0-9]%')
-                                 .where.not('item.PartNumber LIKE ?', '')
-                                 .select('TransactionItems.id, TransactionItems.ITEM, TransactionItems.CNTR, TransactionItems.DDT, item.Header, item.CurrentStore')
+                                .includes(:contract)
+                                .where('TransactionItems.DDT >= ?', three_months_ago)
+                                .where(item: { Inactive: false, BulkItem: false, CurrentStore: current_store })
+                                .where('TransactionItems.TXTY IN (?)', ["RR", "RX"])
+                                .where('TransactionItems.HRSC > ?', 0)
+                                .where('TransactionItems.QTY > ?', 0)
+                                .where.not('TransactionItems.CNTR LIKE ?', 'r%')
+                                .where.not('TransactionItems.CNTR LIKE ?', 't%')
+                                .where.not('item.PartNumber LIKE ?', '%000')
+                                .where.not('item.PartNumber LIKE ?', '%[^0-9]%')
+                                .where.not('item.PartNumber LIKE ?', '')
+                                .select('TransactionItems.id, TransactionItems.ITEM, TransactionItems.CNTR, TransactionItems.DDT, item.Header, item.CurrentStore')
+                                .to_a
 
-    # get list of all returned items (txty == RR or RX) where contract date is newest
-    # keep only items where the last return is greater than item's last job (or job.nil)
+    # Filter out contract_items where DDT is older than the most recent job date
+    contract_items = contract_items.reject do |contract_item|
+      recent_job_date = recent_job_dates[contract_item.ITEM]
+      recent_job_date && contract_item.DDT < recent_job_date
+    end
 
-    # process jobs for all contract items
+    # Process jobs for all contract items
     ProcessJobs.new(contract_items, current_store).process_jobs
 
-    # collect all jobs that have not been completed
+    # Collect and filter jobs
     jobs = Job.includes(item: :contract_items)
-          .where(completed_at: nil)
-          .where(store: current_store)
-          .order('created_at DESC')
-
-    # removes jobs that are hired out again, at another store, removes jobs that are duplicated
-    jobs = jobs.map do |job|
-      if job.item.QYOT.zero? && job.item.CurrentStore == current_store # &&
-         # job.item.contract_items.none? { |contract_item| contract_item.DDT > job.created_at }
-        job
-      end
-    end.compact.uniq { |job| job.item_num }
+              .where(completed_at: nil, store: current_store)
+              .order(created_at: :desc)
+              .select { |job| job.item.QYOT.zero? && job.item.CurrentStore == current_store }
+              .uniq { |job| job.item_num }
 
     # collect list of headers for all contract items
     item_headers = jobs.map { |job| job.item.Header }.uniq

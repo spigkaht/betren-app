@@ -10,6 +10,83 @@ class JobsController < ApplicationController
     three_months_ago = 3.months.ago
 
     # gather list of contract items to create jobs for
+    contract_items = ContractItem.joins(:item)
+                                 .includes(:contract)
+                                 .where('TransactionItems.DDT >= ?', three_months_ago)
+                                 .where(item: { Inactive: false, BulkItem: false, CurrentStore: current_store })
+                                 .where('TransactionItems.TXTY IN (?)', ["RR", "RX"])
+                                 .where('TransactionItems.HRSC > ?', 0)
+                                 .where('TransactionItems.QTY > ?', 0)
+                                #  .where.not('item.QYOT > ?', 0)
+                                 .where.not('TransactionItems.CNTR LIKE ?', 'r%')
+                                 .where.not('TransactionItems.CNTR LIKE ?', 't%')
+                                 .where.not('item.PartNumber LIKE ?', '%000')
+                                 .where.not('item.PartNumber LIKE ?', '%[^0-9]%')
+                                 .where.not('item.PartNumber LIKE ?', '')
+                                 .select('TransactionItems.id, TransactionItems.ITEM, TransactionItems.CNTR, TransactionItems.DDT, item.Header, item.CurrentStore')
+
+    # get list of all returned items (txty == RR or RX) where contract date is newest
+    # keep only items where the last return is greater than item's last job (or job.nil)
+
+    # process jobs for all contract items
+    ProcessJobs.new(contract_items, current_store).process_jobs
+
+    # collect all jobs that have not been completed
+    jobs = Job.includes(item: :contract_items)
+          .where(completed_at: nil)
+          .where(store: current_store)
+          .order('created_at DESC')
+
+    # removes jobs that are hired out again, at another store, removes jobs that are duplicated
+    jobs = jobs.map do |job|
+      if job.item.QYOT.zero? && job.item.CurrentStore == current_store # &&
+         # job.item.contract_items.none? { |contract_item| contract_item.DDT > job.created_at }
+        job
+      end
+    end.compact.uniq { |job| job.item_num }
+
+    # collect list of headers for all contract items
+    item_headers = jobs.map { |job| job.item.Header }.uniq
+    # group all items by header, calculate available quantity, collate in hash for each item
+    # @min_sum_hash = GroupItems.new(item_headers, current_store).group_and_calculate_min_sum
+
+    @reservation_headers = ContractItem.joins(:contract, :item)
+                                       .where("CONVERT(date, OutDate) = ?", 1.day.from_now.to_date)
+                                       .where(contract: { STR: current_store })
+                                       .pluck(:header)
+                                       .reject(&:blank?)
+
+    reservation_count = @reservation_headers.tally
+
+    @min_sum_hash = GroupItems.new(item_headers, current_store, jobs).group_and_calculate_min_sum(reservation_count)
+
+    jobs.each do |job|
+      if reservation_count[job.item.Header].to_i > @min_sum_hash[job.item.Header].to_i
+        job.reserved = 1.day.from_now
+        job.reserved_store = current_store
+        reservation_count[job.item.Header] = reservation_count[job.item.Header] - 1
+      else
+        job.reserved = nil
+        job.reserved_store = nil
+      end
+    end
+
+    # sort jobs
+    @jobs = jobs.sort_by do |job|
+      is_numeric_location = job.item.Location.to_s.match?(/^\d+$/)
+      is_reserved = job.reserved.present? if @min_sum_hash[job.item.Header]
+
+      [
+        is_reserved ? 0 : 1,
+        is_reserved ? nil : (is_numeric_location ? 0 : 1),
+        is_reserved ? nil : (is_numeric_location ? job.item.Location.to_i : @min_sum_hash[job.item.Header] || 0),
+        is_reserved ? nil : (is_numeric_location ? nil : (job.item.Location.blank? ? 'a' : job.item.Location.to_s)),
+        is_reserved ? nil : job.last_return
+      ]
+    end
+
+    @jobs = @jobs
+
     # contract_items = ContractItem
     #   .joins(:item)
     #   .includes(:contract)
@@ -30,139 +107,28 @@ class JobsController < ApplicationController
     #   items.max_by(&:DDT)
     # end
 
-    # jobs = []
-
-    # contract_items_with_latest_ddt.each do |contract_item|
-    #   item = Item.find_by(NUM: contract_item.ITEM)
-    #   item_job = Job.where(item_num: item.NUM).order(completed_at: :DESC).last
-    #   if item_job.nil? || item_job.completed_at.nil?
-    #     next
-    #   elsif item_job.completed_at > contract_item.DDT
-    #     next
-    #   else
-    #     jobs << item_job
-    #   end
-    # end
-
-    # get list of all returned items (txty == RR or RX) where contract date is newest
-    # keep only items where the last return is greater than item's last job (or job.nil)
-
-    # process jobs for all contract items
-    # ProcessJobs.new(contract_items, current_store).process_jobs
-
-
-    # latest_completed_at_subquery = Job
-    #   .select('item_num, MAX(completed_at) AS max_completed_at')
-    #   .where(store: current_store)
-    #   .group(:item_num)
-
-    # # Main query to get the full job details for each item with the latest completed_at date
-    # jobs_with_latest_completed_at = Job
-    #   .joins("INNER JOIN (#{latest_completed_at_subquery.to_sql}) AS latest ON jobs.item_num = latest.item_num AND jobs.completed_at = latest.max_completed_at")
-    #   .where(store: current_store)
-    #   .includes(:item)
-
-
-    # # collect all jobs that have not been completed
-    # jobs = Job.includes(item: :contract_items)
-    #   .where(store: current_store)
+    # # Step 2: Retrieve the latest job per item in one query, allowing for `completed_at` to be nil
+    # latest_jobs = Job
+    #   .where(item_num: contract_items_with_latest_ddt.keys)
+    #   .order(item_num: :asc, completed_at: :desc)
+    #   .select('DISTINCT ON (item_num) *')
     #   .group_by(&:item_num)
-    # # .order('created_at DESC')
-    # .where(completed_at: nil)
 
-    # removes jobs that are hired out again, at another store, removes jobs that are duplicated
-    # jobs = jobs.map do |job|
-    #   if job.item.QYOT.zero? && job.item.CurrentStore == current_store # &&
-    #      # job.item.contract_items.none? { |contract_item| contract_item.DDT > job.created_at }
-    #     job
-    #   end
-    # end.compact.uniq { |job| job.item_num }
+    # # Step 3: Compare DDT with the latest job's completed_at and collect matching jobs
+    # matching_jobs = []
 
-    # # collect list of headers for all contract items
-    # item_headers = jobs.map { |job| job.item.Header }.uniq
-    # # group all items by header, calculate available quantity, collate in hash for each item
-    # # @min_sum_hash = GroupItems.new(item_headers, current_store).group_and_calculate_min_sum
-
-    # @reservation_headers = ContractItem.joins(:contract, :item)
-    #                                    .where("CONVERT(date, OutDate) = ?", 1.day.from_now.to_date)
-    #                                    .where(contract: { STR: current_store })
-    #                                    .pluck(:header)
-    #                                    .reject(&:blank?)
-
-    # reservation_count = @reservation_headers.tally
-
-    # @min_sum_hash = GroupItems.new(item_headers, current_store, jobs).group_and_calculate_min_sum(reservation_count)
-
-    # jobs.each do |job|
-    #   if reservation_count[job.item.Header].to_i > @min_sum_hash[job.item.Header].to_i
-    #     job.reserved = 1.day.from_now
-    #     job.reserved_store = current_store
-    #     reservation_count[job.item.Header] = reservation_count[job.item.Header] - 1
-    #   else
-    #     job.reserved = nil
-    #     job.reserved_store = nil
-    #   end
+    # contract_items_with_latest_ddt.each do |item_num, contract_item|
+    # job = latest_jobs[item_num]&.first # Get the latest job for the item, if it exists
+    # # Include jobs with nil `completed_at` or where `DDT` is more recent than `completed_at`
+    # if job && (job.completed_at.nil? || contract_item.DDT > job.completed_at)
+    #   matching_jobs << job
+    # end
     # end
 
-    # # sort jobs
-    # @jobs = jobs.sort_by do |job|
-    #   is_numeric_location = job.item.Location.to_s.match?(/^\d+$/)
-    #   is_reserved = job.reserved.present? if @min_sum_hash[job.item.Header]
+    # # Step 4: Convert the array to an ActiveRecord Relation
+    # matching_jobs_relation = Job.where(id: matching_jobs.map(&:id))
 
-    #   [
-    #     is_reserved ? 0 : 1,
-    #     is_reserved ? nil : (is_numeric_location ? 0 : 1),
-    #     is_reserved ? nil : (is_numeric_location ? job.item.Location.to_i : @min_sum_hash[job.item.Header] || 0),
-    #     is_reserved ? nil : (is_numeric_location ? nil : (job.item.Location.blank? ? 'a' : job.item.Location.to_s)),
-    #     is_reserved ? nil : job.last_return
-    #   ]
-    # end
-
-    # @jobs = @jobs
-
-    # Step 1: Retrieve all ContractItems with the latest DDT
-    contract_items = ContractItem
-      .joins(:item)
-      .includes(:contract)
-      .where('TransactionItems.DDT >= ?', three_months_ago)
-      .where(item: { Inactive: false, BulkItem: false, CurrentStore: current_store })
-      .where('TransactionItems.TXTY IN (?)', ["RR", "RX"])
-      .where('TransactionItems.HRSC > ?', 0)
-      .where('TransactionItems.QTY > ?', 0)
-      .where.not('TransactionItems.CNTR LIKE ?', 'r%')
-      .where.not('TransactionItems.CNTR LIKE ?', 't%')
-      .where.not('item.PartNumber LIKE ?', '%000')
-      .where.not('item.PartNumber LIKE ?', '%[^0-9]%')
-      .where.not('item.PartNumber LIKE ?', '')
-      .select('TransactionItems.id, TransactionItems.ITEM, TransactionItems.CNTR, TransactionItems.DDT, item.Header, item.CurrentStore')
-      .group_by(&:ITEM)
-
-    contract_items_with_latest_ddt = contract_items.transform_values do |items|
-      items.max_by(&:DDT)
-    end
-
-    # Step 2: Retrieve the latest job per item in one query, allowing for `completed_at` to be nil
-    latest_jobs = Job
-      .where(item_num: contract_items_with_latest_ddt.keys)
-      .order(item_num: :asc, completed_at: :desc)
-      .select('DISTINCT ON (item_num) *')
-      .group_by(&:item_num)
-
-    # Step 3: Compare DDT with the latest job's completed_at and collect matching jobs
-    matching_jobs = []
-
-    contract_items_with_latest_ddt.each do |item_num, contract_item|
-    job = latest_jobs[item_num]&.first # Get the latest job for the item, if it exists
-    # Include jobs with nil `completed_at` or where `DDT` is more recent than `completed_at`
-    if job && (job.completed_at.nil? || contract_item.DDT > job.completed_at)
-      matching_jobs << job
-    end
-    end
-
-    # Step 4: Convert the array to an ActiveRecord Relation
-    matching_jobs_relation = Job.where(id: matching_jobs.map(&:id))
-
-    @jobs = matching_jobs_relation
+    # @jobs = matching_jobs_relation
   end
 
   def show

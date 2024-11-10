@@ -10,21 +10,47 @@
 
 Job.establish_connection(:secondary)
 
-puts "Clearing out your junk.."
+puts "Commencing job creation"
 
-store = "001"
+items = Item
+  .where(Inactive: false, BulkItem: false)
+  .where.not('PartNumber LIKE ?', '%000')
+  .where.not('PartNumber LIKE ?', '%[^0-9]%')
+  .where.not('PartNumber LIKE ?', '')
+  .where('QTY > ?', 0)
 
-jobs = Job.where(store: store, completed_at: nil)
-
-jobs.each do |job|
-  contract_item = ContractItem.where(ITEM: job.item_num).order(:DDT).last
-  job.last_return = contract_item.DDT
-  if job.save
-    puts "updated #{job.id}"
-  else
-    puts "FAILED"
-  end
+items.each do |item|
+  last_contract = Contract.find_by(CNTR: item.CNTR)
+  template = Template.find_by(header: item.Header)
+  job = Job.new(
+    item: item,
+    created_at: 6.months.ago,
+    completed_at: 6.months.ago,
+    last_contract: last_contract.CNTR,
+    last_return: last_contract.Completed,
+    template: template,
+    store: "001")
+  job.save
+  puts "job #{job.id} created for item #{item.PartNumber} #{item.Name}"
 end
+
+puts "All done!"
+
+# puts "Clearing out your junk.."
+
+# store = "001"
+
+# jobs = Job.where(store: store, completed_at: nil)
+
+# jobs.each do |job|
+#   contract_item = ContractItem.where(ITEM: job.item_num).order(:DDT).last
+#   job.last_return = contract_item.DDT
+#   if job.save
+#     puts "updated #{job.id}"
+#   else
+#     puts "FAILED"
+#   end
+# end
 
 # items = [
 #   "1507001",

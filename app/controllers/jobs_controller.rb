@@ -28,39 +28,39 @@ class JobsController < ApplicationController
     # ProcessJobs.new(contract_items, current_store).process_jobs
 
     # get most recent job for each item
-    most_recent_jobs = Job.joins(
-      "INNER JOIN (
-        SELECT item_num, MAX(created_at) AS max_created_at
-        FROM jobs
-        WHERE store = #{Job.sanitize_sql_for_conditions(['?', current_store])}
-        GROUP BY item_num
-      ) AS most_recent_jobs ON jobs.item_num = most_recent_jobs.item_num AND jobs.created_at = most_recent_jobs.max_created_at"
-    ).where(store: current_store, item_num: contract_items.map(&:ITEM))
+    # most_recent_jobs = Job.joins(
+    #   "INNER JOIN (
+    #     SELECT item_num, MAX(created_at) AS max_created_at
+    #     FROM jobs
+    #     WHERE store = #{Job.sanitize_sql_for_conditions(['?', current_store])}
+    #     GROUP BY item_num
+    #   ) AS most_recent_jobs ON jobs.item_num = most_recent_jobs.item_num AND jobs.created_at = most_recent_jobs.max_created_at"
+    # ).where(store: current_store, item_num: contract_items.map(&:ITEM))
 
-    items_to_complete = contract_items.map do |item|
-      last_job = most_recent_jobs.find_by(item_num: item.ITEM)
-      item if last_job.nil? || last_job.completed_at.nil? || item.DDT > last_job.created_at
-    end
+    # items_to_complete = contract_items.map do |item|
+    #   last_job = most_recent_jobs.find_by(item_num: item.ITEM)
+    #   item if last_job.nil? || last_job.completed_at.nil? || item.DDT > last_job.created_at
+    # end
 
-    items_with_no_jobs = contract_items.select { |item| most_recent_jobs.none? { |job| job.item_num == item.ITEM } }
-    items_with_uncompleted_jobs = contract_items.select do |item|
-      last_job = most_recent_jobs.find { |job| job.item_num == item.ITEM }
-      last_job && last_job.completed_at.nil?
-    end
-    items_with_newer_ddt = contract_items.select do |item|
-      last_job = most_recent_jobs.find { |job| job.item_num == item.ITEM }
-      last_job && item.DDT > last_job.created_at
-    end
+    # items_with_no_jobs = contract_items.select { |item| most_recent_jobs.none? { |job| job.item_num == item.ITEM } }
+    # items_with_uncompleted_jobs = contract_items.select do |item|
+    #   last_job = most_recent_jobs.find { |job| job.item_num == item.ITEM }
+    #   last_job && last_job.completed_at.nil?
+    # end
+    # items_with_newer_ddt = contract_items.select do |item|
+    #   last_job = most_recent_jobs.find { |job| job.item_num == item.ITEM }
+    #   last_job && item.DDT > last_job.created_at
+    # end
 
-    puts "================================== ITEM COUNT ==========================================="
-    p most_recent_jobs.count
-    p items_to_complete.count
+    # puts "================================== ITEM COUNT ==========================================="
+    # p most_recent_jobs.count
+    # p items_to_complete.count
 
-    puts "Items with no jobs: #{items_with_no_jobs.count}"
-    puts "Items with uncompleted jobs: #{items_with_uncompleted_jobs.count}"
-    puts "Items with newer DDT: #{items_with_newer_ddt.count}"
+    # puts "Items with no jobs: #{items_with_no_jobs.count}"
+    # puts "Items with uncompleted jobs: #{items_with_uncompleted_jobs.count}"
+    # puts "Items with newer DDT: #{items_with_newer_ddt.count}"
 
-    Join the original jobs table with the subquery to get full job details
+    # Join the original jobs table with the subquery to get full job details
     jobs = Job.where(store: current_store)
     .where(completed_at: nil)
     .where(item_num: contract_items.map(&:ITEM))

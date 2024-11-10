@@ -224,12 +224,14 @@ class JobsController < ApplicationController
         @jobs = Job.find(params[:job_ids])
       end
 
-      @jobs.each do |job|
-        if job.item_num == item.NUM
-          redirect_to jobs_path, alert: 'Item is already on the list below' and return
+      if @jobs
+        @jobs.each do |job|
+          if job.item_num == item.NUM
+            redirect_to jobs_path, alert: 'Item is already on the list below' and return
+          end
         end
       end
-
+      
       if @job.save
         redirect_to @job, notice: 'Job was successfully created.'
       else

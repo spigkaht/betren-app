@@ -60,45 +60,45 @@ class JobsController < ApplicationController
     puts "Items with uncompleted jobs: #{items_with_uncompleted_jobs.count}"
     puts "Items with newer DDT: #{items_with_newer_ddt.count}"
 
-    # Join the original jobs table with the subquery to get full job details
-    # jobs = Job.where(store: current_store)
-    # .where(completed_at: nil)
-    # .where(item_num: contract_items.map(&:ITEM))
-    # .select('DISTINCT ON (item_num) jobs.*')
-    # .order('item_num, created_at DESC')
+    Join the original jobs table with the subquery to get full job details
+    jobs = Job.where(store: current_store)
+    .where(completed_at: nil)
+    .where(item_num: contract_items.map(&:ITEM))
+    .select('DISTINCT ON (item_num) jobs.*')
+    .order('item_num, created_at DESC')
 
-    # jobs.map do |job|
-    #   puts "=================== JOB ======================"
-    #   puts "job: #{job}"
-    #   contract_item = contract_items.find_by(ITEM: job.item_num)
-    #   puts "================== DETAILS ======================="
-    #   puts "contract item: #{contract_item.item.Name}"
-    #   puts "plant num: #{contract_item.item.PartNumber}"
-    #   puts "ddt: #{contract_item.DDT}"
-    #   puts "completed at: #{job.completed_at}"
-    #   puts "=================== PASS / FAIL ======================"
-    #   if job.completed_at
-    #     puts contract_item.DDT > job.completed_at
-    #   else
-    #     puts "nil"
-    #   end
+    jobs.map do |job|
+      puts "=================== JOB ======================"
+      puts "job: #{job}"
+      contract_item = contract_items.find_by(ITEM: job.item_num)
+      puts "================== DETAILS ======================="
+      puts "contract item: #{contract_item.item.Name}"
+      puts "plant num: #{contract_item.item.PartNumber}"
+      puts "ddt: #{contract_item.DDT}"
+      puts "completed at: #{job.completed_at}"
+      puts "=================== PASS / FAIL ======================"
+      if job.completed_at
+        puts contract_item.DDT > job.completed_at
+      else
+        puts "nil"
+      end
 
-    #   job if contract_item.DDT > job.created_at
-    # end
+      job if contract_item.DDT > job.created_at
+    end
 
-    # # Step 4: Filter jobs based on the contract item's DDT
-    # jobs = recent_jobs.select do |recent_job|
-    #   puts "======================= RECENT JOB ================================="
-    #   p recent_job
-    #   puts "job id: #{recent_job.id}"
-    #   puts "job item num: #{recent_job.item_num}"
-    #   contract_item = contract_items.find { |ci| ci.ITEM == recent_job.item_num }
-    #   puts "====================== CONTRACT ITEM ==============================="
-    #   puts "item name: #{contract_item.item.Name}"
-    #   puts "item num: #{contract_item.ITEM}"
-    #   puts "ddt: #{contract_item.DDT}"
-    #   contract_item && contract_item.DDT > recent_job.max_created_at
-    # end
+    # Step 4: Filter jobs based on the contract item's DDT
+    jobs = recent_jobs.select do |recent_job|
+      puts "======================= RECENT JOB ================================="
+      p recent_job
+      puts "job id: #{recent_job.id}"
+      puts "job item num: #{recent_job.item_num}"
+      contract_item = contract_items.find { |ci| ci.ITEM == recent_job.item_num }
+      puts "====================== CONTRACT ITEM ==============================="
+      puts "item name: #{contract_item.item.Name}"
+      puts "item num: #{contract_item.ITEM}"
+      puts "ddt: #{contract_item.DDT}"
+      contract_item && contract_item.DDT > recent_job.max_created_at
+    end
 
   #  puts "============================ JOBS ==================================="
   #   p jobs

@@ -136,6 +136,8 @@ class ReturnsController < ApplicationController
 
   def update
     if @return.update(return_params)
+      puts "==================== RETURN UPDATING ============================"
+      puts "complete: #{@return.complete}"
       redirect_to complete_path, notice: "Return completed successfully"
     else
       render :edit, alert: "Error updating return"

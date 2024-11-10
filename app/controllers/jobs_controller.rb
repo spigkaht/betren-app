@@ -87,18 +87,18 @@ class JobsController < ApplicationController
     end
 
     # Step 4: Filter jobs based on the contract item's DDT
-    jobs = recent_jobs.select do |recent_job|
-      puts "======================= RECENT JOB ================================="
-      p recent_job
-      puts "job id: #{recent_job.id}"
-      puts "job item num: #{recent_job.item_num}"
-      contract_item = contract_items.find { |ci| ci.ITEM == recent_job.item_num }
-      puts "====================== CONTRACT ITEM ==============================="
-      puts "item name: #{contract_item.item.Name}"
-      puts "item num: #{contract_item.ITEM}"
-      puts "ddt: #{contract_item.DDT}"
-      contract_item && contract_item.DDT > recent_job.max_created_at
-    end
+    # jobs = recent_jobs.select do |recent_job|
+    #   puts "======================= RECENT JOB ================================="
+    #   p recent_job
+    #   puts "job id: #{recent_job.id}"
+    #   puts "job item num: #{recent_job.item_num}"
+    #   contract_item = contract_items.find { |ci| ci.ITEM == recent_job.item_num }
+    #   puts "====================== CONTRACT ITEM ==============================="
+    #   puts "item name: #{contract_item.item.Name}"
+    #   puts "item num: #{contract_item.ITEM}"
+    #   puts "ddt: #{contract_item.DDT}"
+    #   contract_item && contract_item.DDT > recent_job.max_created_at
+    # end
 
   #  puts "============================ JOBS ==================================="
   #   p jobs

@@ -119,7 +119,7 @@ class ReturnsController < ApplicationController
       # Trigger Turbo Stream for other views
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: turbo_stream.append(:returns, partial: "returns/complete_return", locals: { ret: @return })
+          render turbo_stream: turbo_stream.replace(:returns, partial: "returns/complete_return", locals: { ret: @return })
         end
         format.html do
           flash[:notice] = "Return was successfully created."
